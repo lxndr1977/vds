@@ -17,7 +17,6 @@ return new class extends Migration
             $table->foreignId('choreographer_id')->constrained()->onDelete('cascade');
             $table->timestamps();
 
-            $table->unique(['choreography_id', 'choreographer_id']); // Evita duplicatas
         });
     }
 
