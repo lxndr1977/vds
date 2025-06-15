@@ -1,0 +1,76 @@
+<?php
+
+namespace App\Models;
+
+use Mary\Traits\Toast;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
+class School extends Model
+{
+    use HasFactory, Toast;
+
+    protected $fillable = [
+        'user_id',
+        'name',
+        'is_social_project',
+        'is_university_project',
+        'street',
+        'number',
+        'complement',
+        'district',
+        'city',
+        'state',
+        'zip_code',
+    ];
+
+    protected $casts = [
+        'is_social_project' => 'boolean',
+        'is_university_project' => 'boolean',
+    ];
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function dancers(): HasMany
+    {
+        return $this->hasMany(Dancer::class);
+    }
+
+    public function choreographers(): HasMany
+    {
+        return $this->hasMany(Choreographer::class);
+    }
+    
+    public function members(): HasMany
+    {
+        return $this->hasMany(Member::class);
+    }
+    
+    public function choreographies(): HasMany
+    {
+        return $this->hasMany(Choreography::class);
+    }
+
+    public function getTotalRegistrationFee(): float
+    {
+        return $this->choreographies->sum(function ($choreography) {
+            return $choreography->getRegistrationFee();
+        });
+    }
+
+    public function isOwnedBy(User $user): bool
+    {
+        return $this->user_id === $user->id;
+    }
+
+    public function registration(): HasOne
+    {
+        return $this->hasOne(Registration::class);
+    }
+}

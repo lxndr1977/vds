@@ -1,0 +1,171 @@
+<?php
+
+namespace App\Livewire\Site\Traits;
+
+use App\Mail\RegistrationFinished;
+// Certifique-se de que ChoreographyExtraFee está disponível e no namespace correto
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use App\Models\ChoreographyExtraFee; 
+
+trait WithFinalStep
+{
+    public $showConfirmationModal = false;
+
+    public $showTotals = false;
+
+    /**
+     * Finaliza a inscrição, mudando seu status e salvando os dados.
+     *
+     * @return \Illuminate\Http\RedirectResponse|void
+     */
+    public function finishRegistration()
+    {
+        if (!$this->registration) {
+            $this->dispatch('notify', message: 'Erro: Inscrição não encontrada.', type: 'error');
+            return;
+        }
+
+        // Validação final (exemplo: garantir que há pelo menos uma coreografia)
+        if ($this->choreographies->isEmpty()) {
+            $this->dispatch('notify', message: 'Você precisa cadastrar ao menos uma coreografia para finalizar.', type: 'warning');
+            $this->showConfirmationModal = false;
+            $this->goToStep(4); // Volta para a etapa de coreografias
+            return;
+        }
+
+        try {
+            // Chama a nova função para obter os dados formatados
+            $dataToSave = $this->getRegistrationDataForJson();
+
+            // Salva o status e os dados JSON
+            $this->registration->status_registration = 'finished';
+            $this->registration->registration_data = $dataToSave; // Atribui o array, o cast para 'array' cuidará do JSON
+            $this->registration->paid_amount =  $dataToSave['financial_summary']['total_general'];
+
+            $this->registration->save();
+
+            // Fecha o modal
+            $this->showConfirmationModal = false;
+
+            session()->flash('status', 'Inscrição finalizada com sucesso!');
+            
+            if ($this->registration->school && $this->registration->school->user && $this->registration->school->user->email) {
+                Mail::to($this->registration->school->user->email)->send(new RegistrationFinished($this->registration));
+            } else {
+                Log::warning('Email de confirmação não enviado: Usuário ou email não encontrado para a inscrição ' . $this->registration->id);
+            }
+
+            return redirect()->route('site');
+
+        } catch (\Exception $e) {
+            Log::error('Erro ao finalizar inscrição e salvar dados: ' . $e->getMessage());
+            $this->showConfirmationModal = false;
+            $this->dispatch('notify', message: 'Ocorreu um erro inesperado. Tente novamente.' . $e->getMessage(), type: 'error');
+        }
+    }
+
+    /**
+     * Coleta e estrutura todos os dados da inscrição para serem salvos como JSON.
+     *
+     * @return array
+     */
+    protected function getRegistrationDataForJson(): array
+    {
+        $data = [
+            'school' => [
+                'name' => $this->school->name,
+                'address' => [
+                    'street' => $this->school->street,
+                    'number' => $this->school->number,
+                    'district' => $this->school->district,
+                    'city' => $this->school->city,
+                    'state' => $this->school->state,
+                ],
+            ],
+            'members' => $this->members->map(function ($member) {
+                return [
+                    'id' => $member->id,
+                    'name' => $member->name,
+                    'role' => $member->role,
+                    'member_type' => optional($member->memberType)->name,
+                    'fee_amount' => optional(optional($member->memberType)->getCurrentFee())->amount ?? 0,
+                ];
+            })->toArray(),
+            'choreographers' => $this->choreographers->map(function ($choreographer) {
+                return [
+                    'id' => $choreographer->id,
+                    'name' => $choreographer->name,
+                ];
+            })->toArray(),
+            'dancers' => $this->dancers->map(function ($dancer) {
+                return [
+                    'id' => $dancer->id,
+                    'name' => $dancer->name,
+                ];
+            })->toArray(),
+            'choreographies' => $this->choreographies->map(function ($choreography) {
+                return [
+                    'id' => $choreography->id,
+                    'name' => $choreography->name,
+                    'type' => optional($choreography->choreographyType)->name,
+                    'min_dancers' => optional($choreography->choreographyType)->min_dancers,
+                    'max_dancers' => optional($choreography->choreographyType)->max_dancers,
+                    'fee_per_participant' => optional(optional($choreography->choreographyType)->getCurrentFee())->amount ?? 0,
+                    'choreographers' => $choreography->choreographers->map(fn($c) => ['id' => $c->id, 'name' => $c->name])->toArray(),
+                    'dancers' => $choreography->dancers->map(fn($d) => ['id' => $d->id, 'name' => $d->name])->toArray(),
+                ];
+            })->toArray(),
+            'financial_summary' => [
+                'member_fees' => [],
+                'choreography_fees' => [],
+                'extra_fees' => [],
+                'total_general' => 0,
+                'total_member_fees' => 0,
+                'total_choreography_fees' => 0,
+                'total_extra_fees' => 0,
+            ]
+        ];
+
+        // Cálculo das taxas
+        $totalMemberFees = 0;
+        foreach ($this->members as $member) {
+            $fee = optional(optional($member->memberType)->getCurrentFee())->amount ?? 0;
+            $totalMemberFees += $fee;
+            $data['financial_summary']['member_fees'][] = [
+                'name' => $member->name,
+                'type' => optional($member->memberType)->name ?? 'Desconhecido',
+                'fee' => $fee,
+            ];
+        }
+
+        $totalChoreographyFees = 0;
+        foreach ($this->choreographies as $choreography) {
+            $chFee = optional(optional($choreography->choreographyType)->getCurrentFee())->amount ?? 0;
+            $participantsCount = $choreography->dancers->count() + $choreography->choreographers->count();
+            $totalFeeForChoreography = $chFee * $participantsCount;
+
+            $totalChoreographyFees += $totalFeeForChoreography;
+
+            $data['financial_summary']['choreography_fees'][] = [
+                'name' => $choreography->name,
+                'type' => optional($choreography->choreographyType)->name,
+                'fee_per_participant' => $chFee,
+                'participants_count' => $participantsCount,
+                'total' => $totalFeeForChoreography,
+            ];
+        }
+
+        // Importante: Certifique-se de que a classe ChoreographyExtraFee esteja importada
+        // use App\Models\ChoreographyExtraFee; no topo do arquivo da trait.
+        $extraFeesResult = ChoreographyExtraFee::calculateTotalFees($this->choreographies->count());
+        $data['financial_summary']['extra_fees'] = $extraFeesResult['fees'];
+        $data['financial_summary']['total_extra_fees'] = $extraFeesResult['total'];
+
+        $data['financial_summary']['total_general'] = $totalMemberFees + $totalChoreographyFees + $extraFeesResult['total'];
+        $data['financial_summary']['total_member_fees'] = $totalMemberFees;
+        $data['financial_summary']['total_choreography_fees'] = $totalChoreographyFees;
+
+        return $data;
+    }
+}

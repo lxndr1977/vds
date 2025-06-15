@@ -1,0 +1,126 @@
+@import 'tailwindcss';
+@import '../../vendor/livewire/flux/dist/flux.css';
+
+@source '../views';
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../vendor/livewire/flux-pro/stubs/**/*.blade.php';
+@source '../../vendor/livewire/flux/stubs/**/*.blade.php';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+
+    --color-zinc-50: #fafafa;
+    --color-zinc-100: #f5f5f5;
+    --color-zinc-200: #e5e5e5;
+    --color-zinc-300: #d4d4d4;
+    --color-zinc-400: #a3a3a3;
+    --color-zinc-500: #737373;
+    --color-zinc-600: #525252;
+    --color-zinc-700: #404040;
+    --color-zinc-800: #262626;
+    --color-zinc-900: #171717;
+    --color-zinc-950: #0a0a0a;
+
+    --color-primary-50:	#fde9f0;
+    --color-primary-100: #fad2e1;
+    --color-primary-200: #f4a5c3;
+    --color-primary-300: #ed78a5;
+    --color-primary-400: #e74d88;
+    --color-primary-500: #cc2468;
+    --color-primary-600: #b21653;
+    --color-primary-700: #931144;
+    --color-primary-800: #740d36;
+    --color-primary-900: #550926;
+    --color-primary-950: #3d061b;
+
+    --color-accent: var(--color-neutral-800);
+    --color-accent-content: var(--color-neutral-800);
+    --color-accent-foreground: var(--color-white);
+}
+
+@layer theme {
+    .dark {
+        --color-accent: var(--color-white);
+        --color-accent-content: var(--color-white);
+        --color-accent-foreground: var(--color-neutral-800);
+    }
+}
+
+@layer base {
+
+    *,
+    ::after,
+    ::before,
+    ::backdrop,
+    ::file-selector-button {
+        border-color: var(--color-gray-200, currentColor);
+    }
+}
+
+[data-flux-field]:not(ui-radio, ui-checkbox) {
+    @apply grid gap-2;
+}
+
+[data-flux-label] {
+    @apply  !mb-0 !leading-tight;
+}
+
+input:focus[data-flux-control],
+textarea:focus[data-flux-control],
+select:focus[data-flux-control] {
+    @apply outline-hidden ring-2 ring-accent ring-offset-2 ring-offset-accent-foreground;
+}
+
+/* \[:where(&)\]:size-4 {
+    @apply size-4;
+} */
+
+
+
+/**
+    The lines above are intact.
+    The lines below were added by maryUI installer.
+*/
+
+/** daisyUI */
+@plugin "daisyui" {
+}
+
+@plugin "daisyui/theme" {
+   name: "mytheme";
+  default: true; /* set as default */
+  prefersdark: false; /* set as default dark mode (prefers-color-scheme:dark) */
+  color-scheme: light; 
+
+
+  --color-primary: #b21653;
+  --color-primary-content: #fff;
+}
+
+/* maryUI */
+@source "../../vendor/robsontenorio/mary/src/View/Components/**/*.php";
+
+/* Theme toggle */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/**
+* Paginator - Traditional style
+* Because Laravel defaults does not match well the design of daisyUI.
+*/
+
+.mary-table-pagination span[aria-current="page"] > span {
+    @apply bg-primary text-base-100
+}
+
+.mary-table-pagination button {
+    @apply cursor-pointer
+}
+
+@media(min-width: 900px) {
+    .modal-box-lg .modal-box {
+        min-width: 900px;
+        width: 100%;
+    }
+}

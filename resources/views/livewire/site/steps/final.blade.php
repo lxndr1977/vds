@@ -1,0 +1,327 @@
+{{-- Etapa 5: Revisão e Finalização --}}
+<div x-data="{ openChoreographies: [] }" class="space-y-6">
+    @if ($status === 'finished')
+        <h2 class="text-2xl font-bold mb-4">Sua inscrição no evento está confirmada!</h2>
+    
+    @else
+        <h2 class="text-2xl font-bold mb-4">Etapa 5: Revisão e Finalização</h2>
+        <p class="text-gray-600 mb-6">Confira todos os dados da sua inscrição antes de finalizar. Após a finalização, não será possível editar as informações.</p>
+    @endif
+    {{-- Stats Resumo --}}
+    <div class="grid grid-cols-2 lg:grid-cols-{{ $showTotals ? '3' : '2' }} gap-4 mb-6">
+        <x-mary-stat
+            title="Particpantes"
+            :value="$members->count() + $dancers->count() + $choreographers->count()"
+            icon="o-users"
+            color="text-primary-600"
+            class="bg-zinc-50 border border-zinc-100 shadow"
+            />
+        
+       
+        <x-mary-stat
+            title="Coreografias"
+            :value="$choreographies->count()"
+            icon="o-musical-note"
+            color="text-primary-600"
+            class="bg-zinc-50 border border-zinc-100 shadow"
+            />
+        
+        @php
+            $totalMemberFees = 0;
+            $memberFeeDetails = [];
+
+            foreach ($members as $member) {
+                $fee = optional($member->memberType->getCurrentFee())->amount ?? 0;
+                $totalMemberFees += $fee;
+                $memberFeeDetails[] = [
+                    'name' => $member->name,
+                    'type' => $member->memberType->name ?? 'Desconhecido',
+                    'fee' => $fee,
+                ];
+            }
+
+            $totalChoreographyFees = 0;
+            $choreographyFeeDetails = [];
+
+            foreach ($choreographies as $choreography) {
+                $chFee = optional($choreography->choreographyType->getCurrentFee())->amount ?? 0;
+                $dancersCount = $choreography->dancers->count();
+                $totalFeeForChoreography = $chFee * $dancersCount;
+                $totalChoreographyFees += $totalFeeForChoreography;
+
+                $choreographyFeeDetails[] = [
+                    'name' => $choreography->name,
+                    'type' => $choreography->choreographyType->name,
+                    'fee_per_participant' => $chFee,
+                    'participants_count' => $dancersCount,
+                    'total' => $totalFeeForChoreography,
+                ];
+            }
+
+            $extraFeesResult = \App\Models\ChoreographyExtraFee::calculateTotalFees($choreographies->count());
+            $totalGeral = $totalMemberFees + $totalChoreographyFees + $extraFeesResult['total'];
+        @endphp
+        
+
+        @if($showTotals)
+        <x-mary-stat
+            title="Valor Total"
+            :value="'R$ ' . number_format($totalGeral, 2, ',', '.')"
+            icon="o-currency-dollar"
+            color="text-primary-600"
+            class="bg-zinc-50 border border-zinc-100 shadow col-span-1"
+        />
+        @endif
+    </div>
+
+    {{-- Dados da Escola --}}
+    <x-mary-card 
+        title="Escola"
+        subtitle="Dados da escola, projeto ou companhia de dança"
+        class="border border-zinc-100 rounded-lg shadow"
+
+    >
+        <p><strong>Nome:</strong> {{ $school->name }}</p>
+        <p><strong>Endereço:</strong> {{ $school->street }}, {{ $school->number }} - {{ $school->district }}, {{ $school->city }}/{{ $school->state }}</p>
+    </x-mary-card>
+
+   
+    <x-mary-card 
+        title="Participantes" 
+        subtitle="Relação de membros, coreógrafos e dançarinos que participarão do evento" 
+        class="border border-zinc-100 rounded-lg shadow"
+    >
+        {{-- Acordeão Resumo da Equipe (Membros) --}}
+        <x-mary-collapse separator class="mb-6">
+            <x-slot:heading>
+                Membros ({{ $members->count() }})
+            </x-slot:heading>
+            <x-slot:content>
+                    @foreach($members as $member)
+                        <x-mary-list-item :item="$member" value="name" sub-value="memberType.name" separator />
+                    @endforeach
+            </x-slot:content>
+        </x-mary-collapse>
+
+        {{-- Acordeão Resumo dos Coreógrafos --}}
+        <x-mary-collapse separator class="mb-6">
+            <x-slot:heading>
+                Coreógrafos ({{ $choreographers->count() }})
+            </x-slot:heading>
+            <x-slot:content>
+                @foreach($choreographers as $choreographer)
+                    <x-mary-list-item :item="$choreographer" value="name" separator />
+                @endforeach
+            </x-slot:content>
+        </x-mary-collapse>
+
+        {{-- Acordeão Resumo dos Dançarinos --}}
+        <x-mary-collapse separator>
+            <x-slot:heading>
+            Dançarinos ({{ $dancers->count() }})
+            </x-slot:heading>
+            <x-slot:content>
+                @foreach($dancers as $dancer)
+                    <x-mary-list-item :item="$dancer" value="name" separator />
+                @endforeach
+            </x-slot:content>
+        </x-mary-collapse>
+    </x-mary-card>
+
+    {{-- Acordeão das Coreografias Inscritas --}}
+    <x-mary-card 
+        title="Coreografias  ({{ $choreographies->count() }})"
+        subtitle="Relação das coreografias inscritas no evento"
+        class="border border-zinc-100 rounded-lg shadow"
+    >
+        <div class="space-y-4">
+            @forelse($choreographies as $index => $choreography)
+                 <x-mary-collapse>
+                    <x-slot:heading>
+                        <div class="font-semibold">{{ $choreography->name }}</div>
+                            <div class="mt-3 text-base space-x-2">
+                                <x-mary-badge value="{{ $choreography->choreographyType->name }}" class="badge-soft" />
+                                <x-mary-badge value="{{ $choreography->choreographyCategory->name }}" class="badge-soft" />
+                                <x-mary-badge value="{{ $choreography->danceStyle->name }}" class="badge-soft" />
+                            </div>
+                    </x-slot:heading>    
+                    <x-slot:content>
+                        <div class="mt-2">
+                            <h4 class="text-md font-semibold mb-2">Coreógrafos</h4>
+                            @if($choreography->choreographers->count())
+                                <div class="space-y-1 mb-6">
+                                    @foreach($choreography->choreographers as $choreographer)
+                                        <x-mary-list-item :item="$choreographer" value="name"  />
+                                    @endforeach
+                                </div>
+                            @else
+                                <p class="text-gray-500 italic">Sem coreógrafos cadastrados.</p>
+                            @endif
+
+                            <h4 class="font-semibold mb-2">Dançarinos</h4>
+                            @if($choreography->dancers->count())
+                                <div class="space-y-1">
+                                    @foreach($choreography->dancers as $dancer)
+                                        <x-mary-list-item :item="$dancer" value="name"  />
+                                    @endforeach
+                                </div>
+                            @else
+                                <p class="text-gray-500 italic">Sem dançarinos cadastrados.</p>
+                            @endif
+                        </div>   
+                    </x-slot:content>
+                </x-mary-collapse>
+            @empty
+                <x-mary-card>
+                    <p class="text-gray-500 italic">Nenhuma coreografia cadastrada.</p>
+                </x-mary-card>
+            @endforelse
+        </div>
+    </x-mary-card>
+
+    @if($showTotals)
+    {{-- Resumo das Taxas --}}
+    <x-mary-card title="Resumo das Taxas" class="border border-zinc-100 shadow mt-6">
+        <div class="space-y-8">
+            {{-- Taxa por Membro --}}
+            <div>
+                <h4 class="font-semibold mb-3">Taxa por Membro ({{ count($memberFeeDetails) }} membros)</h4>
+                <div class="space-y-2">
+                    @foreach ($memberFeeDetails as $detail)
+                        <x-mary-card class="p-3 bg-zinc-50">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <span class="font-medium">{{ $detail['name'] }}</span>
+                                    <x-mary-badge value="{{ $detail['type'] }}" class="badge-soft ml-2" />
+                                </div>
+                                <span class="font-semibold">R$ {{ number_format($detail['fee'], 2, ',', '.') }}</span>
+                            </div>
+                        </x-mary-card>
+                    @endforeach
+                </div>
+                <div class="mt-3 p-3 bg-zinc-100 rounded-lg">
+                    <strong>Total taxa membros: R$ {{ number_format($totalMemberFees, 2, ',', '.') }}</strong>
+                </div>
+            </div>
+
+            {{-- Taxas por Coreografia --}}
+            <div>
+                <h4 class="font-semibold mb-3">Taxas por Coreografia</h4>
+                <div class="space-y-2">
+                    @foreach ($choreographyFeeDetails as $detail)
+                        <x-mary-card class="p-3 bg-zinc-50">
+                            <div class="space-y-1">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <span class="font-medium">{{ $detail['name'] }}</span>
+                                        <x-mary-badge value="{{ $detail['type'] }}" class="ml-2 badge-soft" />
+                                    </div>
+                                    <span class="font-semibold">R$ {{ number_format($detail['total'], 2, ',', '.') }}</span>
+                                </div>
+                                <div class="text-sm text-gray-600">
+                                    Taxa por dançarino: R$ {{ number_format($detail['fee_per_participant'], 2, ',', '.') }} • 
+                                    Dançarinos: {{ $detail['participants_count'] }}
+                                </div>
+                            </div>
+                        </x-mary-card>
+                    @endforeach
+                </div>
+                <div class="mt-3 p-3 bg-zinc-100 rounded-lg">
+                    <strong>Total taxa coreografias: R$ {{ number_format($totalChoreographyFees, 2, ',', '.') }}</strong>
+                </div>
+            </div>
+
+            {{-- Taxas Extras --}}
+            <div>
+                <h4 class="font-semibold mb-3">Taxas Extras (por {{ $choreographies->count() }} coreografias)</h4>
+                <div class="space-y-2">
+                    @foreach ($extraFeesResult['fees'] as $extra)
+                        <x-mary-card class="p-3 bg-zinc-50">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <span class="font-medium">{{ $extra['description'] }}</span>
+                                    <div class="text-sm text-gray-600">
+                                        R$ {{ number_format($extra['value_per_choreography'], 2, ',', '.') }} x {{ $extra['choreography_count'] }}
+                                    </div>
+                                </div>
+                                <span class="font-semibold">R$ {{ number_format($extra['total'], 2, ',', '.') }}</span>
+                            </div>
+                        </x-mary-card>
+                    @endforeach
+                </div>
+                <div class="mt-3 p-3 bg-zinc-100 rounded-lg">
+                    <strong>Total taxas extras: R$ {{ number_format($extraFeesResult['total'], 2, ',', '.') }}</strong>
+                </div>
+            </div>
+
+            {{-- Total Geral --}}
+            <div class="border-t pt-4">
+                <x-mary-card class="bg-primary-50 border-primary-200">
+                    <div class="text-center">
+                        <h3 class="font-bold text-xl text-primary-800">
+                            Valor Total da Inscrição: R$ {{ number_format($totalGeral, 2, ',', '.') }}
+                        </h3>
+                    </div>
+                </x-mary-card>
+            </div>
+        </div>
+    </x-mary-card>
+    @endif
+
+    
+
+</div>
+
+
+
+{{-- Modal de Confirmação --}}
+    <x-mary-modal wire:model="showConfirmationModal" title="Confirmar Finalização da Inscrição" subtitle="Esta ação não pode ser desfeita">
+        <div class="space-y-4">
+            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                <div class="flex items-start">
+                    <div class="flex-shrink-0">
+                        <x-mary-icon name="o-exclamation-triangle" class="h-5 w-5 text-yellow-400" />
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="text-sm font-medium text-yellow-800">
+                            Atenção!
+                        </h3>
+                        <div class="mt-2 text-sm text-yellow-700">
+                            <p>Após finalizar a inscrição, não será mais possível editar os dados cadastrados.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <h4 class="font-semibold text-blue-800 mb-2">Resumo da Inscrição:</h4>
+                <ul class="text-sm text-blue-700 space-y-1">
+                    <li><strong>Escola:</strong> {{ $school->name }}</li>
+                    <li><strong>Membros:</strong> {{ $members->count() }}</li>
+                    <li><strong>Coreografias:</strong> {{ $choreographies->count() }}</li>
+                    @if($showTotals)
+                    <li><strong>Valor Total:</strong> R$ {{ number_format($totalGeral, 2, ',', '.') }}</li>
+                    @endif
+                </ul>
+            </div>
+
+            <p class="text-gray-600 text-sm">
+                Deseja realmente finalizar a inscrição? Um e-mail de confirmação será enviado para o endereço cadastrado.
+            </p>
+        </div>
+
+        <x-slot:actions>
+            <x-mary-button 
+                label="Cancelar" 
+                @click="$wire.showConfirmationModal = false"
+                class="btn-ghost"
+            />
+            <x-mary-button 
+                label="Sim, Finalizar" 
+                icon="o-check"
+                class="btn-primary"
+                wire:click="finishRegistration"
+                spinner="finishRegistration"
+            />
+        </x-slot:actions>
+    </x-mary-modal>
