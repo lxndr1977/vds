@@ -16,7 +16,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(School::class)->constrained();
             $table->string('name');
-            $table->string('birth_date', 9)->nullable();
+            $table->string('birth_date', 10)->nullable();
             $table->timestamps();
         });
     }

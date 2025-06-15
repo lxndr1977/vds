@@ -12,9 +12,6 @@
             </x-mary-button>
         </div> 
     </div>
-    <div>
-        
-    </div>
 
     {{-- Lista de coreógrafos cadastrados responsiva --}}
     <h3 class="text-lg font-semibold mb-4">Coreógrafos Cadastrados</h3>
@@ -63,7 +60,6 @@
             <p class="text-sm text-gray-400 mt-1">Clique em "Adicionar Coreógrafo" para começar</p>
         </div>
     @endif
-</div>  
 
 
 {{-- Modal para Adicionar/Editar Coreógrafo --}}
@@ -151,3 +147,5 @@
                 </x-mary-button>
             </x-slot:actions>
         </x-mary-modal>
+
+</div>  

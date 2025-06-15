@@ -118,7 +118,7 @@
                         </div>
 
                     {{-- ETAPA 6: Botões de Voltar e Finalizar Inscrição --}}
-                    @elseif ($currentStep == 6 && $status === 'draft')
+                    @elseif ($currentStep == 6)
                         <div class="flex justify-between items-center">
                             <x-mary-button
                                 icon="o-chevron-left"
