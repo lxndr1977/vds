@@ -73,7 +73,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
             :placeholder="__('Password')"
             viewable
         />
-
+ 
         <!-- Confirm Password -->
         <x-mary-input
             wire:model="password_confirmation"
