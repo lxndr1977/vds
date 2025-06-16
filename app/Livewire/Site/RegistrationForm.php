@@ -24,7 +24,7 @@ class RegistrationForm extends Component
         WithChoreographyStep,
         WithFinalStep;
 
-    public int $currentStep = 4;
+    public int $currentStep = 1;
     public int $totalSteps = 6;
     public ?School $school = null;
     public ?Registration $registration = null;
