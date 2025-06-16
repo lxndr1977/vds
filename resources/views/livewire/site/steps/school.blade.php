@@ -1,11 +1,11 @@
 <div>
     <div class="mb-6">
-        <h2 class="text-xl md:text-2xl font-medium mb-1">Etapa 1: Dados da Escola</h2>
-        <p class="text-sm">Preencha as informações da sua escola, grupo ou companhia.</p>
+        <h2 class="text-xl md:text-2xl font-medium mb-1">Etapa 1: Dados da Grupo/Escola/Cia</h2>
+        <p class="text-zinc-700">Preencha as informações de contato do seu Grupo, Escola ou Cia</p>
     </div>
 
     <form wire:submit.prevent="saveSchool">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 mb-3">
             {{-- Nome da Escola --}}
             <div class="md:col-span-2" 
                 x-data 
@@ -19,53 +19,53 @@
                     error-class="font-bold text-red-600"
                 />
             </div>
-
-            {{-- Projetos Sociais/Universitários --}}
-            <div class="md:col-span-2 flex flex-col md:flex-row items-center space-y-6 md:space-y-0 md:space-x-8">
-                <div 
-                    x-data 
-                    @input="$wire.clearError('schoolState.is_social_project')"
-                >
-                    <x-mary-toggle 
-                        label="É um projeto social?" 
-                        wire:model.defer="schoolState.is_social_project" 
-                        id="is_social_project" 
-                    />
-                </div>
-
-                <div 
-                    x-data 
-                    @input="$wire.clearError('schoolState.is_university_project')"
-                >
-                    <x-mary-toggle 
-                        label="É um projeto universitário?" 
-                        wire:model.defer="schoolState.is_university_project" 
-                        id="is_university_project" 
-                    />
-                </div>
-            </div>
         </div>
 
-        {{-- Endereço --}}
-        <div class="grid grid-cols-1 md:grid-cols-4 py-6">
+       {{-- Endereço --}}
+        <div class="grid grid-cols-1 md:grid-cols-4 mb-3">
             <div 
-                x-data 
+                x-data="{ 
+                    formatZip(value) {
+                        if (!value) return '';
+                        let v = value.replace(/\D/g, '').substring(0, 8);
+                        if (v.length > 5) v = v.substring(0, 5) + '-' + v.substring(5);
+                        return v;
+                    }
+                }"
+                x-init="
+                    $nextTick(() => {
+                        let input = $el.querySelector('input');
+                        if (input && input.value) {
+                            input.value = formatZip(input.value);
+                        }
+                    })
+                "
                 @input="$wire.clearError('schoolState.zip_code')"
             >
                 <x-mary-input 
-                    label="CEP"
-                    wire:model.defer="schoolState.zip_code"
+                    label="CEP" 
+                    wire:model.defer="schoolState.zip_code" 
                     id="zip_code"
-                    placeholder="CEP"
+                    placeholder="00000-000" 
                     error-class="font-bold text-red-600"
+                    x-on:input="
+                        let v = formatZip($event.target.value);
+                        $event.target.value = v;
+                        $wire.set('schoolState.zip_code', v);
+                        if (v.replace('-', '').length === 8) {
+                            $wire.searchZipCode();
+                        }
+                    "
+                    maxlength="9"
                 />
             </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-6 gap-3 mb-3">
             <div 
                 x-data 
                 @input="$wire.clearError('schoolState.street')"
+                class="col-span-4"
             >
                 <x-mary-input 
                     label="Rua" 
@@ -73,6 +73,7 @@
                     id="street"
                     placeholder="Rua"  
                     error-class="font-bold text-red-600"
+                    
                 />
             </div>
 
@@ -105,6 +106,8 @@
             <div 
                 x-data 
                 @input="$wire.clearError('schoolState.district')"
+                class="col-span-2"
+
             >
                 <x-mary-input 
                     label="Bairro" 
@@ -118,6 +121,8 @@
             <div 
                 x-data 
                 @input="$wire.clearError('schoolState.city')"
+                class="col-span-2"
+
             >
                 <x-mary-input 
                     label="Cidade" 
@@ -128,16 +133,91 @@
                 />
             </div>
 
+            
             <div 
                 x-data 
                 @input="$wire.clearError('schoolState.state')"
+                class="col-span-2"
+            >
+                <x-mary-select
+                    id="state"
+                    label="Estado"
+                    wire:model.defer="schoolState.state"
+                    :options="$brazilStates"
+                    wire:loading.attr="disabled"
+                    wire:target="schoolZipCode"  
+                />
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div class="md:col-span-2" 
+                x-data 
+                @input="$wire.clearError('schoolState.responsible_name')"
             >
                 <x-mary-input 
-                    label="Estado" 
-                    wire:model.defer="schoolState.state" 
-                    id="state"
-                    placeholder="Estado" 
+                    label="Nome do Responsável pelo Grupo/Escola/Cia" 
+                    wire:model.defer="schoolState.responsible_name" 
+                    id="responsible_name"
+                    placeholder="Responsável" 
                     error-class="font-bold text-red-600"
+                />
+            </div>
+
+            <div 
+                x-data 
+                @input="$wire.clearError('schoolState.responsible_email')"
+            >
+                <x-mary-input 
+                label="Email do Responsável" 
+                wire:model.lazy="schoolState.responsible_email" 
+                id="responsible_email"
+                placeholder="Email"  
+                error-class="font-bold text-red-600"
+                />
+            </div>
+
+           <div
+                x-data="{ 
+                    formatPhone(value) {
+                        if (!value) return '';
+                        let v = value.replace(/\D/g, '').substring(0, 11);
+                        if (v.length >= 11) {
+                            // (99) 99999-9999
+                            v = v.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+                        } else if (v.length >= 10) {
+                            // (99) 9999-9999
+                            v = v.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
+                        } else if (v.length >= 6) {
+                            v = v.replace(/(\d{2})(\d{4})/, '($1) $2');
+                        } else if (v.length >= 2) {
+                            v = v.replace(/(\d{2})/, '($1) ');
+                        }
+                        return v;
+                    }
+                }"
+                x-init="
+                    $nextTick(() => {
+                        let input = $el.querySelector('input');
+                        if (input && input.value) {
+                            input.value = formatPhone(input.value);
+                        }
+                    })
+                "
+                @input="$wire.clearError('schoolState.responsible_phone')"
+            >
+                <x-mary-input 
+                    label="Whatsapp do Responsável" 
+                    wire:model.defer="schoolState.responsible_phone" 
+                    id="responsible_phone"
+                    placeholder="(99) 99999-9999" 
+                    error-class="font-bold text-red-600"
+                    x-on:input="
+                        let v = formatPhone($event.target.value);
+                        $event.target.value = v;
+                        $wire.set('schoolState.responsible_phone', v);
+                    "
+                    maxlength="15"
                 />
             </div>
         </div>

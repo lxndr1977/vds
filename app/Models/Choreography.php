@@ -14,15 +14,20 @@ class Choreography extends Model
         'choreography_type_id', 
         'dance_style_id',
         'choreography_category_id',
+        'is_social_project',
+        'is_university_project',
         'name', 
         'music', 
         'music_composer',
         'duration'
     ];
 
-   
+    protected $casts = [
+        'is_social_project' => 'boolean',
+        'is_university_project' => 'boolean',
+    ];
 
-     public function school(): BelongsTo
+    public function school(): BelongsTo
     {
         return $this->belongsTo(School::class);
     }
@@ -37,10 +42,10 @@ class Choreography extends Model
         return $this->belongsToMany(Dancer::class, 'choreography_dancers');
     }
 
-public function choreographers()
-{
-    return $this->belongsToMany(Choreographer::class, 'choreography_choreographer', 'choreography_id', 'choreographer_id');
-}
+    public function choreographers()
+    {
+        return $this->belongsToMany(Choreographer::class, 'choreography_choreographer', 'choreography_id', 'choreographer_id');
+    }
     public function choreographyCategory()
     {
         return $this->belongsTo(ChoreographyCategory::class);

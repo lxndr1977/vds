@@ -15,6 +15,9 @@ trait WithChoreographersStep
     // Estado para o formulário de adição de novo coreógrafo
     public array $choreographerState = [
         'name' => '',
+        'is_public_domain' => false,
+        'is_adaptation' => false, 
+        'is_attending' => false, 
     ]; 
 
     // Estados para edição
@@ -60,6 +63,10 @@ trait WithChoreographersStep
             'choreographerState.name.required' => 'O nome é obrigatório.',
             'choreographerState.name.string' => 'O nome deve ser um texto.',
             'choreographerState.name.max' => 'O nome não pode ter mais de 255 caracteres.',
+
+            'choreographerState.is_public_domain' => ['boolean'],
+            'choreographerState.is_adaptation' => ['boolean'],
+            'choreographerState.is_attending' => ['boolean'],
         ];
     }
     /**
@@ -78,7 +85,13 @@ trait WithChoreographersStep
 
         $this->closeChoreographerModal();
 
-        $this->success(title: 'Adicionado', icon: 'o-check-circle', description:'Coreógrafo adicionado com sucesso');
+        $this->success(
+            icon: 'o-check-circle', 
+            title: 'Coreógrafo(a) Adicionado(a)', 
+            description:'As informações do(a) coreógrafo(a) foram adicionadas com sucesso',
+            position: 'toast-top toast-center',
+            css: "bg-green-500 border-green-500 text-white text-md");
+
         $this->reset('choreographerState');
         $this->loadChoreographers();
     }
@@ -97,9 +110,12 @@ trait WithChoreographersStep
             $this->isEditingChoreographer = true;
             $this->editingChoreographerId = $choreographerId;
             
-            // Preenche o estado com os dados do coreógrafo
+            // Preenche o estado com os dados do(a) coreógrafo(a)
             $this->choreographerState = [
                 'name' => $choreographer->name,
+                'is_public_domain' => $choreographer->is_public_domain,
+                'is_adaptation' => $choreographer->is_adaptation, 
+                'is_attending' => $choreographer->is_attending, 
             ];
             
             $this->openChoreographerModal();
@@ -124,7 +140,14 @@ trait WithChoreographersStep
             $choreographer->update($this->choreographerState);
             
             $this->closeChoreographerModal();
-            $this->success(title: 'Atualizado', icon: 'o-check-circle', description:'Coreógrafo adicionado com sucesso');
+
+            $this->success(
+                icon: 'o-check-circle', 
+                title: 'Coreǵrafoa(a) Atualizado(a)', 
+                description:'As informaçoes do(a) coreógrafo(a) foram atualizadas com sucesso',
+                position: 'toast-top toast-center',
+                css: "bg-green-500 border-green-500 text-white text-md");
+
             $this->loadChoreographers();
         }
     }
@@ -142,7 +165,7 @@ trait WithChoreographersStep
     }
 
     /**
-     * Confirma e executa a remoção do coreógrafo.
+     * Confirma e executa a remoção do(a) coreógrafo(a).
      *
      * @return void
      */
@@ -168,10 +191,22 @@ trait WithChoreographersStep
         if ($choreographer) {
             try {
                 $choreographer->delete();
-                $this->success(title: 'Excluído', icon: 'o-check-circle', description:'Coreógrafo excluído com sucesso');
+                $this->success(
+                    icon: 'o-check-circle', 
+                    title: 'Coreógrafo(a) Excluído', 
+                    description:'As informações do(a) coreógrafo(a) foram excluídas com sucesso',
+                    position: 'toast-top toast-center',
+                    css: "bg-green-500 border-green-500 text-white text-md");
+
                 $this->loadChoreographers();
             } catch (\Exception $e) {
-                $this->error(title: 'Erro', icon: 'o-information-circle', description: $e->getMessage());
+                $this->error(
+                    icon: 'o-information-circle', 
+                    title: 'Erro', 
+                    description: $e->getMessage(),
+                    position: 'toast-top toast-center',
+                    css: "bg-red-500 border-red-500 text-white text-md");
+
             }
         }
     }

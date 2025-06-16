@@ -3,16 +3,18 @@
 namespace App\Livewire\Site\Traits;
 
 use App\Models\Registration;
-use Illuminate\Support\Facades\DB;
+use App\Enums\BrazilStateEnum;
 use Illuminate\Validation\Rule;
+use App\Services\ZipCodeService;
+use Illuminate\Support\Facades\DB;
 
 trait WithSchoolStep
 {
+    public $brazilStates;
+
     // Estado para os dados da escola
     public array $schoolState = [
         'name' => '',
-        'is_social_project' => false,
-        'is_university_project' => false,
         'street' => '',
         'number' => '',
         'complement' => '',
@@ -20,7 +22,11 @@ trait WithSchoolStep
         'city' => '',
         'state' => '',
         'zip_code' => '',
+        'responsible_name' => '',
+        'responsible_email' => '',
+        'responsible_phone' => '',
     ];
+
 
     /**
      * Inicializa os dados da etapa da escola.
@@ -33,14 +39,16 @@ trait WithSchoolStep
         if ($this->school->exists) {
             $this->schoolState = $this->school->toArray();
         }
+
+        $this->brazilStates = BrazilStateEnum::toArray();
     }
 
-    /**
+        /**
      * Validação para os dados da escola.
      *
      * @return array
      */
-    protected function schoolRules(): array
+   protected function schoolRules(): array
     {
         return [
             'schoolState.name' => ['required', 'min:3', 'max:255'],
@@ -48,12 +56,15 @@ trait WithSchoolStep
             'schoolState.is_university_project' => ['boolean'],
             'schoolState.street' => ['required', 'string', 'max:255'],
             'schoolState.number' => ['required', 'string', 'max:50'],
-            'schoolState.complement' => ['required', 'string', 'max:100'],
+            'schoolState.complement' => ['string', 'max:100'],
             'schoolState.district' => ['required', 'string', 'max:100'],
             'schoolState.city' => ['required', 'string', 'max:100'],
             'schoolState.state' => ['required', 'string', 'max:2'],
-            'schoolState.zip_code' => ['required', 'string', 'max:10'],
-        ];
+            'schoolState.zip_code' => ['required', 'string', 'max:9'],
+            'schoolState.responsible_name' => ['required', 'string', 'min:3'],
+            'schoolState.responsible_email' => ['required', 'email', 'max:255'],
+            'schoolState.responsible_phone' => ['required', 'max:20'],
+        ]; 
     }
 
     protected function schoolMessages(): array
@@ -74,7 +85,6 @@ trait WithSchoolStep
             'schoolState.number.string' => 'O número deve ser um texto.',
             'schoolState.number.max' => 'O número não pode ter mais de 50 caracteres.',
 
-            'schoolState.complement.required' => 'O complemento é obrigatório.',
             'schoolState.complement.string' => 'O complemento deve ser um texto.',
             'schoolState.complement.max' => 'O complemento não pode ter mais de 100 caracteres.',
 
@@ -92,10 +102,20 @@ trait WithSchoolStep
 
             'schoolState.zip_code.required' => 'O CEP é obrigatório.',
             'schoolState.zip_code.string' => 'O CEP deve ser um texto.',
-            'schoolState.zip_code.max' => 'O CEP não pode ter mais de 10 caracteres.',
+            'schoolState.zip_code.max' => 'O CEP não pode ter mais de 9 caracteres.',
+
+            'schoolState.responsible_name.required' => 'O nome do responsavel é obrigatório.',
+            'schoolState.responsible_name.min' => 'O nome do responsável deve ter no mínimo 3 caracteres.',
+            'schoolState.responsible_name.max' => 'O nome do responsável não pode ter mais de 255 caracteres.',
+
+            'schoolState.responsible_email.required' => 'O email do responsavel é obrigatório.',
+            'schoolState.responsible_email.email' => 'Informe um e-mail válido.',
+            'schoolState.responsible_email.max' => 'O email do responsável não pode ter mais de 255 caracteres.',
+
+            'schoolState.responsible_phone.string' => 'O telefone deve ser um texto.',
+            'schoolState.responsible_phone.max' => 'O telefone não pode ter mais de 20 caracteres.',
         ];
     }
-
 
     /**
      * Salva os dados da escola e a inscrição, e avança para a próxima etapa.
@@ -110,11 +130,10 @@ trait WithSchoolStep
         );
 
         DB::transaction(function () {
-            // Associa o user_id do usuário autenticado
-            $this->school->user_id = auth()->id();
-            
-            // Preenche os dados da escola a partir do estado do formulário
+          
             $this->school->fill($this->schoolState);
+            $this->school->user_id = auth()->id();
+
             $this->school->save();
 
             // Cria ou atualiza a inscrição associada à escola
@@ -124,7 +143,13 @@ trait WithSchoolStep
             );
         });
         
-        $this->success(title: 'Atualizado', icon: 'o-check-circle', description:'Dados da escola atualizados com sucesso');
+        $this->success(
+            title: 'Atualizado', 
+            icon: 'o-check-circle', 
+            description:'Dados da escola atualizados com sucesso',
+            position: 'toast-top toast-center',
+            css: "bg-green-500 border-green-500 text-white text-md");
+
         $this->nextStep();
     }
 
@@ -133,4 +158,19 @@ trait WithSchoolStep
         $this->resetErrorBag($field);
     }
 
+    public function searchZipCode()
+    {
+        try {
+            $zipCodeService = app(ZipCodeService::class);
+            $address = $zipCodeService->getAddressByZipCode($this->schoolState['zip_code']);
+            
+            if ($address) {
+                $this->schoolState = array_merge($this->schoolState, $address);
+            } else {
+                $this->addError('schoolState.zip_code', 'CEP não encontrado.');
+            }
+        } catch (\Exception $e) {
+            $this->addError('schoolState.zip_code', $e->getMessage());
+        }
+    }
 }

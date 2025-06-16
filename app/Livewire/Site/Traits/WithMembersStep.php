@@ -3,9 +3,10 @@
 namespace App\Livewire\Site\Traits;
 
 use App\Models\Member;
-use App\Models\MemberType;
-use Illuminate\Database\Eloquent\Collection;
 use Mary\Traits\Toast;
+use App\Models\MemberType;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Database\Eloquent\Collection;
 
 trait WithMembersStep
 {
@@ -17,11 +18,9 @@ trait WithMembersStep
     public bool $memberModal = false;
     public bool $confirmDeleteModal = false;
 
-    // Estado para o formulário de adição de novo membro
+    // Estado para o formulário de adição de novo integrante
     public array $memberState = [
         'name' => '',
-        'phone' => '',
-        'email' => '',
         'member_type_id' => '',
     ];
 
@@ -37,7 +36,10 @@ trait WithMembersStep
      */
     public function mountMembersStep()
     {
-        $this->memberTypes = MemberType::all();
+        $this->memberTypes = Cache::remember('member_types', 604800, function () {
+            return MemberType::all();
+            
+        });
         $this->loadMembers();
     }
 
@@ -52,7 +54,7 @@ trait WithMembersStep
     }
 
     /**
-     * Validação para um novo membro.
+     * Validação para um novo integrante.
      *
      * @return array
      */
@@ -60,8 +62,6 @@ trait WithMembersStep
     {
         return [
             'memberState.name' => ['required', 'string', 'max:255'],
-            'memberState.phone' => ['nullable', 'string', 'max:20'],
-            'memberState.email' => ['nullable', 'email', 'max:255'],
             'memberState.member_type_id' => ['required', 'exists:member_types,id'],
         ];
     }
@@ -73,19 +73,13 @@ trait WithMembersStep
             'memberState.name.string' => 'O nome deve ser um texto.',
             'memberState.name.max' => 'O nome não pode ter mais de 255 caracteres.',
 
-            'memberState.phone.string' => 'O telefone deve ser um texto.',
-            'memberState.phone.max' => 'O telefone não pode ter mais de 20 caracteres.',
-
-            'memberState.email.email' => 'Informe um e-mail válido.',
-            'memberState.email.max' => 'O e-mail não pode ter mais de 255 caracteres.',
-
-            'memberState.member_type_id.required' => 'O tipo de membro é obrigatório.',
-            'memberState.member_type_id.exists' => 'O tipo de membro selecionado é inválido.',
+            'memberState.member_type_id.required' => 'a função do integrante é obrigatório.',
+            'memberState.member_type_id.exists' => 'a função do integrante selecionado é inválido.',
         ];
     }
 
     /**
-     * Adiciona um novo membro à escola.
+     * Adiciona um novo integrante à escola.
      *
      * @return void
      */
@@ -93,7 +87,7 @@ trait WithMembersStep
     {
         $this->validate($this->memberRules(), $this->memberMessages());
 
-        // Recupera o tipo de membro selecionado
+        // Recupera o tipo de integrante selecionado
         $memberType = MemberType::find($this->memberState['member_type_id']);
 
         // Conta quantos membros já existem com esse tipo para a escola atual
@@ -108,7 +102,9 @@ trait WithMembersStep
             $this->error(
                 title: 'Atenção ao limite de membros', 
                 icon: 'o-information-circle', 
-                description:"Limite máximo de {$memberType->max_limit} membro(s) para o tipo '{$memberType->name}' atingido.");
+                description:"Limite máximo de {$memberType->max_limit} integrante(s) para o tipo '{$memberType->name}' atingido.",
+                position: 'toast-top toast-center',
+                css: "bg-red-500 border-red-500 text-white text-md");
             
             return;
         }
@@ -117,13 +113,20 @@ trait WithMembersStep
 
         $this->closeMemberModal();
         
-        $this->success(title: 'Adicionado', icon: 'o-check-circle', description:'Membro adicionado com sucesso');
-        $this->reset('memberState'); // Limpa o formulário de adição
-        $this->resetValidation();        $this->loadMembers(); // Recarrega a lista de membros
+        $this->success(
+            title: 'Integrante Adicionado', 
+            icon: 'o-check-circle', 
+            description:'As informações do integrante foram adicionadas com sucesso',
+            position: 'toast-top toast-center',
+            css: "bg-green-500 border-green-500 text-white text-md");
+
+        $this->reset('memberState'); 
+        $this->resetValidation();        
+        $this->loadMembers(); 
     }
 
     /**
-     * Abre o modal para editar um membro existente.
+     * Abre o modal para editar um integrante existente.
      *
      * @param int $memberId
      * @return void
@@ -136,11 +139,9 @@ trait WithMembersStep
             $this->isEditing = true;
             $this->editingMemberId = $memberId;
             
-            // Preenche o estado com os dados do membro
+            // Preenche o estado com os dados do integrante
             $this->memberState = [
                 'name' => $member->name,
-                'phone' => $member->phone ?? '',
-                'email' => $member->email ?? '',
                 'member_type_id' => $member->member_type_id,
             ];
             
@@ -149,7 +150,7 @@ trait WithMembersStep
     }
 
     /**
-     * Atualiza um membro existente.
+     * Atualiza um integrante existente.
      *
      * @return void
      */
@@ -160,14 +161,14 @@ trait WithMembersStep
         $member = $this->school->members()->find($this->editingMemberId);
         
         if ($member) {
-            // Recupera o tipo de membro selecionado
+            // Recupera o tipo de integrante selecionado
             $memberType = MemberType::find($this->memberState['member_type_id']);
 
             // Se o tipo foi alterado, verifica o limite
             if ($member->member_type_id != $this->memberState['member_type_id']) {
                 $currentCount = $this->school->members()
                     ->where('member_type_id', $memberType->id)
-                    ->where('id', '!=', $member->id) // Exclui o membro atual da contagem
+                    ->where('id', '!=', $member->id) // Exclui o integrante atual da contagem
                     ->count();
 
                 if ($memberType->max_limit !== null && $currentCount >= $memberType->max_limit) {
@@ -176,7 +177,9 @@ trait WithMembersStep
                     $this->error(
                         title: 'Atenção ao limite de membros', 
                         icon: 'o-information-circle', 
-                        description:"Limite máximo de {$memberType->max_limit} membro(s) para o tipo '{$memberType->name}' atingido.");
+                        description:"Limite máximo de {$memberType->max_limit} integrante(s) para o tipo '{$memberType->name}' atingido.",
+                        position: 'toast-top toast-center',
+                        css: "bg-red-500 border-red-500 text-white text-md");
 
                     return;
                 }
@@ -184,14 +187,21 @@ trait WithMembersStep
 
             $member->update($this->memberState);
             
+             $this->success(
+                title: 'Integrante Atualizado', 
+                icon: 'o-check-circle', 
+                description:'As informações do integrante foram atualizadas com sucesso',
+                position: 'toast-top toast-center',
+                css: "bg-green-500 border-green-500 text-white text-md");
+                
             $this->closeMemberModal();
-            $this->success(title: 'Atualizado', icon: 'o-check-circle', description:'Membro atualizado com sucesso');
+           
             $this->loadMembers();
         }
     }
 
     /**
-     * Prepara a exclusão de um membro (abre o modal de confirmação).
+     * Prepara a exclusão de um integrante (abre o modal de confirmação).
      *
      * @param int $memberId
      * @return void
@@ -203,7 +213,7 @@ trait WithMembersStep
     }
  
     /**
-     * Confirma e executa a remoção do membro.
+     * Confirma e executa a remoção do integrante.
      *
      * @return void
      */
@@ -217,18 +227,23 @@ trait WithMembersStep
     }
 
     /**
-     * Remove um membro.
+     * Remove um integrante.
      *
      * @param int $memberId
      * @return void
      */
     public function removeMember(int $memberId)
     {
-        // Garante que o membro pertence à escola do usuário antes de deletar
+        // Garante que o integrante pertence à escola do usuário antes de deletar
         $member = $this->school->members()->find($memberId);
         if ($member) {
             $member->delete();
-             $this->success(title: 'Excluído', icon: 'o-check-circle', description:'Membro excluído com sucesso');
+             $this->success(
+                title: 'Integrante Excluído', 
+                icon: 'o-check-circle', 
+                description:'As informações do integrante foram excluídas com sucesso',
+                position: 'toast-top toast-center',
+                css: "bg-green-500 border-green-500 text-white text-md");   
             $this->loadMembers();
         }
     }

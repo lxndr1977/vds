@@ -22,47 +22,74 @@ trait WithFinalStep
     public function finishRegistration()
     {
         if (!$this->registration) {
-            $this->dispatch('notify', message: 'Erro: Inscrição não encontrada.', type: 'error');
+            $this->error(
+                title: "Erro", 
+                icon: "o-information-circle",
+                description: 'Erro: Inscrição não encontrada.'); 
+
             return;
         }
 
         // Validação final (exemplo: garantir que há pelo menos uma coreografia)
         if ($this->choreographies->isEmpty()) {
-            $this->dispatch('notify', message: 'Você precisa cadastrar ao menos uma coreografia para finalizar.', type: 'warning');
+
+            $this->error(
+                title: "Coreografia não cadastrada", 
+                icon: "o-information-circle",
+                description: 'Você precisa cadastrar ao menos uma coreografia para finalizar.'); 
+
             $this->showConfirmationModal = false;
             $this->goToStep(4); // Volta para a etapa de coreografias
             return;
         }
 
-        try {
+       try {
             // Chama a nova função para obter os dados formatados
             $dataToSave = $this->getRegistrationDataForJson();
 
             // Salva o status e os dados JSON
             $this->registration->status_registration = 'finished';
-            $this->registration->registration_data = $dataToSave; // Atribui o array, o cast para 'array' cuidará do JSON
-            $this->registration->paid_amount =  $dataToSave['financial_summary']['total_general'];
+            $this->registration->registration_data = $dataToSave;
+            $this->registration->paid_amount = $dataToSave['financial_summary']['total_general'];
 
             $this->registration->save();
 
             // Fecha o modal
             $this->showConfirmationModal = false;
 
-            session()->flash('status', 'Inscrição finalizada com sucesso!');
-            
-            if ($this->registration->school && $this->registration->school->user && $this->registration->school->user->email) {
-                Mail::to($this->registration->school->user->email)->send(new RegistrationFinished($this->registration));
-            } else {
-                Log::warning('Email de confirmação não enviado: Usuário ou email não encontrado para a inscrição ' . $this->registration->id);
-            }
-
-            return redirect()->route('site');
+            $this->success(
+                title: "Inscrição concluída", 
+                icon: "o-information-circle",
+                description: 'A sua inscrição para o evento foi finalizada com sucesso'
+            ); 
 
         } catch (\Exception $e) {
             Log::error('Erro ao finalizar inscrição e salvar dados: ' . $e->getMessage());
             $this->showConfirmationModal = false;
-            $this->dispatch('notify', message: 'Ocorreu um erro inesperado. Tente novamente.' . $e->getMessage(), type: 'error');
+            
+            $this->error(title: 'Erro', icon: 'o-information-circle', description: $e->getMessage());
+            return redirect()->route('site'); // Early return em caso de erro
         }
+
+        // Tentativa de envio do email (fora do try-catch principal)
+        if ($this->registration->school && $this->registration->school->user && $this->registration->school->user->email) {
+            try {
+                Mail::to($this->registration->school->user->email)->send(new RegistrationFinished($this->registration));
+                Log::info('Email de confirmação enviado com sucesso para: ' . $this->registration->school->user->email);
+            } catch (\Exception $emailException) {
+                // Log do erro mas não interrompe o fluxo
+                Log::error('Falha no envio do email de confirmação: ' . $emailException->getMessage() . 
+                        ' - Inscrição ID: ' . $this->registration->id);
+                
+                // Opcional: Notificar o usuário sobre falha no email
+                // $this->warning(title: 'Aviso', description: 'Inscrição realizada, mas houve problema no envio do email de confirmação');
+            }
+        } else {
+            Log::warning('Email de confirmação não enviado: Usuário ou email não encontrado para a inscrição ' . $this->registration->id);
+        }
+
+        return redirect()->route('site');
+
     }
 
     /**

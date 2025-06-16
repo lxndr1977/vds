@@ -21,6 +21,8 @@ return new class extends Migration
             $table->foreignIdFor(ChoreographyType::class)->constrained();
             $table->foreignIdFor(ChoreographyCategory::class)->constrained();
             $table->foreignIdFor(DanceStyle::class)->constrained();
+            $table->boolean('is_social_project')->default(false);
+            $table->boolean('is_university_project')->default(false);
             $table->string('name');
             $table->string('music');
             $table->string('music_composer');

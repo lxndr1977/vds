@@ -48,24 +48,24 @@ trait WithDancersStep
      *
      * @return array
      */
-  protected function dancerRules(): array
-{
-    return [
-        'dancerState.name' => ['required', 'max:255'],
-        'dancerState.birth_date' => [
-            'required', 
-            'date_format:d/m/Y',
-            'before:today', // Opcional: garante que não seja data futura
-            'after:1900-01-01' // Opcional: data mínima realista
-        ],
-    ];
-}
+    protected function dancerRules(): array
+    {
+        return [
+            'dancerState.name' => ['required', 'max:255'],
+            'dancerState.birth_date' => [
+                'required', 
+                'date_format:d/m/Y',
+                'before:today', 
+                'after:1900-01-01' 
+            ],
+        ];
+    }
 
 protected function dancerMessages(): array
 {
     return [
-        'dancerState.name.required' => 'O nome do dançarino é obrigatório.',
-        'dancerState.name.max' => 'O nome do dançarino não pode ter mais de 255 caracteres.',
+        'dancerState.name.required' => 'O nome do(a) bailarino(a) é obrigatório.',
+        'dancerState.name.max' => 'O nome do(a) bailarino(a) não pode ter mais de 255 caracteres.',
 
         'dancerState.birth_date.required' => 'A data de nascimento é obrigatória.',
         'dancerState.birth_date.date_format' => 'A data de nascimento deve estar no formato dd/mm/aaaa.',
@@ -90,7 +90,13 @@ protected function dancerMessages(): array
 
         $this->closeDancerModal();
 
-        $this->success(title: 'Excluído', icon: 'o-check-circle', description:'Coreógrafo excluído com sucesso');
+        $this->success( 
+            icon: 'o-check-circle', 
+            title: 'Bailarino(a) Excluído(a)', 
+            description:'As informações do(a) bailarino(a) foram excluídas com sucesso',
+            position: 'toast-top toast-center',
+            css: "bg-green-500 border-green-500 text-white text-md");
+
         $this->reset('dancerState');
         $this->loadDancers();
     }
@@ -133,7 +139,13 @@ protected function dancerMessages(): array
         if ($dancer) {
             $dancer->update($this->dancerState);
             $this->closeDancerModal();
-            $this->success(title: 'Alterado', icon: 'o-check-circle', description:'Dançarino atualizado com sucesso');
+            $this->success(
+                icon: 'o-check-circle', 
+                title: 'Bailarino(a) Atualizado(a)', 
+                description:'As informações do(a) bailarino(a) foram atualizadas com sucesso',
+                position: 'toast-top toast-center',
+                css: "bg-green-500 border-green-500 text-white text-md");
+
             $this->resetDancerForm();
             $this->loadDancers();
         }
@@ -176,10 +188,21 @@ protected function dancerMessages(): array
         if ($dancer) {
             try {
                 $dancer->delete();
-                $this->success(title: 'Excluído', icon: 'o-information-circle', description:'Dançarino excluído com sucesso');
+                $this->success(
+                    icon: 'o-check-circle', 
+                    title: 'Bailarino(a) Excluído(a)', 
+                    description:'As informações do(a) bailarino(a) foram excluídas com sucesso',
+                    position: 'toast-top toast-center',
+                    css: "bg-green-500 border-green-500 text-white text-md");
+
                 $this->loadDancers();
             } catch (\Exception $e) {
-                $this->dispatch('notify', message: $e->getMessage(), type: 'error');
+                $this->error(
+                    icon: 'o-information-circle', 
+                    title: "Erro", 
+                    description: $e->getMessage(),
+                    position: 'toast-top toast-center',
+                    css: "bg-red-500 border-red-500 text-white text-md");
             }
         }
     }

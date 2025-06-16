@@ -15,7 +15,7 @@
         x-transition:leave="transition ease-in duration-300"
         x-transition:leave-start="opacity-100 transform translate-y-0"
         x-transition:leave-end="opacity-0 transform translate-y-2"
-        :class="{ 'bg-green-500': type === 'success', 'bg-red-500': type === 'error', 'bg-primary-500': type === 'info', 'bg-yellow-500': type === 'warning' }"
+        :class="{ 'bg-green-400': type === 'success', 'bg-red-500': type === 'error', 'bg-primary-500': type === 'info', 'bg-yellow-500': type === 'warning' }"
         class="fixed top-5 right-5 text-white px-4 py-2 rounded-lg shadow-lg z-50"
         style="display: none;"
     >
@@ -40,9 +40,9 @@
                     @php
                         $steps = [
                             1 => 'Escola',
-                            2 => 'Membros',
+                            2 => 'Equipe',
                             3 => 'Coreógrafos',
-                            4 => 'Dançarinos',
+                            4 => 'Bailarinos',
                             5 => 'Coreografias',
                             6 => 'Finalizar',
                         ];
@@ -50,9 +50,8 @@
                     @foreach ($steps as $step => $title)
                         <div class="flex flex-col items-center">
                             <button
-                                wire:click="goToStep({{ $step }})"
                                 @disabled($step > $this->getHighestCompletedStep())
-                                class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-sm font-medium transition-colors {{ $currentStep >= $step ? 'bg-primary-600 text-white' : 'bg-gray-200 text-gray-600' }} disabled:bg-gray-100 disabled:cursor-not-allowed hover:opacity-80 hover:cursor-pointer"
+                                class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-sm font-medium transition-colors {{ $currentStep >= $step ? 'bg-primary-600 text-white' : 'bg-gray-200 text-gray-600' }} disabled:bg-gray-100 disabled:cursor-not-allowed hover:opacity-80"
                             >
                                 {{ $step }}
                             </button>

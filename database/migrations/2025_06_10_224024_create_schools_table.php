@@ -16,8 +16,6 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(User::class)->constrained();
             $table->string('name');
-            $table->boolean('is_social_project')->default(false);
-            $table->boolean('is_university_project')->default(false);
             $table->string('street')->nullable();
             $table->string('number')->nullable();
             $table->string('complement')->nullable();
@@ -25,6 +23,9 @@ return new class extends Migration
             $table->string('city')->nullable();
             $table->string('state')->nullable();
             $table->string('zip_code')->nullable();
+            $table->string('responsible_name');
+            $table->string('responsible_email');
+            $table->string('responsible_phone');
             $table->timestamps();
         });
     }

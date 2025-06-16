@@ -25,7 +25,7 @@ class DanceStyleSeeder extends Seeder
             ['name' => 'Dança de Salão'],
             ['name' => 'Dança Gospel'],
             ['name' => 'Performance'],
-            ['name' => 'Gin Dance3'],
+            ['name' => 'Gin Dance'],
         ];
 
         foreach ($styles as $styleData) {

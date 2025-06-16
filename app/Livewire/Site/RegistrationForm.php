@@ -5,13 +5,14 @@ namespace App\Livewire\Site;
 use App\Models\School;
 use Livewire\Component;
 use App\Models\Registration;
+use App\Services\ZipCodeService;
 use Illuminate\Support\Facades\DB;
 use App\Livewire\Site\Traits\WithFinalStep;
 use App\Livewire\Site\Traits\WithSchoolStep;
 use App\Livewire\Site\Traits\WithDancersStep;
 use App\Livewire\Site\Traits\WithMembersStep;
-use App\Livewire\Site\Traits\WithChoreographersStep;
 use App\Livewire\Site\Traits\WithChoreographyStep;
+use App\Livewire\Site\Traits\WithChoreographersStep;
 
 class RegistrationForm extends Component
 {
@@ -23,13 +24,12 @@ class RegistrationForm extends Component
         WithChoreographyStep,
         WithFinalStep;
 
-    public int $currentStep = 1;
+    public int $currentStep = 4;
     public int $totalSteps = 6;
     public ?School $school = null;
     public ?Registration $registration = null;
 
     public ?string $status = null;
-   
 
     /**
      * Monta o componente, carregando ou inicializando os dados da inscrição.
@@ -83,23 +83,47 @@ class RegistrationForm extends Component
 
         // Validações específicas por etapa
         if ($this->currentStep === 2 && $this->members->isEmpty()) {
-            $this->dispatch('notify', message: 'É necessário adicionar pelo menos um membro para prosseguir.', type: 'error');
+             $this->error(
+                title: "Informações pendentes", 
+                icon: 'o-information-circle', 
+                description: 'É necessário adicionar pelo menos um integrante da equipe diretivaa para prosseguir.',
+                position: 'toast-top toast-center',
+                css: "bg-red-500 border-red-500 text-white text-md");
+
             return;
         }
 
         if ($this->currentStep === 3 && $this->choreographers->isEmpty()) {
-            $this->dispatch('notify', message: 'É necessário adicionar pelo menos um coreógrafo para prosseguir.', type: 'error');
+              $this->error(
+                title: "Informações pendentes", 
+                icon: 'o-information-circle', 
+                description: 'É necessário adicionar pelo menos um (a) coreógrafo(a) para prosseguir.',
+                position: 'toast-top toast-center',
+                css: "bg-red-500 border-red-500 text-white text-md");
+
             return;
         }
 
         if ($this->currentStep === 4 && $this->dancers->isEmpty()) {
-            $this->dispatch('notify', message: 'É necessário adicionar pelo menos um dançarino para prosseguir.', type: 'error');
+              $this->error(
+                title: "Informações pendentes", 
+                icon: 'o-information-circle', 
+                description: 'É necessário adicionar pelo menos um (a) bailarino(a) para prosseguir.',
+                position: 'toast-top toast-center',
+                css: "bg-red-500 border-red-500 text-white text-md");
+
             return;
         }
 
         if ($this->currentStep === 5) {
             if ($this->choreographies->isEmpty()) {
-                $this->dispatch('notify', message: 'É necessário adicionar pelo menos uma coreografia para prosseguir.', type: 'error');
+                $this->error(
+                    title: "Informações pendentes", 
+                    icon: 'o-information-circle', 
+                    description: 'É necessário adicionar pelo menos uma coreografia para prosseguir.',
+                    position: 'toast-top toast-center',
+                    css: "bg-red-500 border-red-500 text-white text-md");
+
                 return;
             }
             
@@ -167,7 +191,7 @@ class RegistrationForm extends Component
 
 
     /**
- * Valida se todas as coreografias têm a quantidade correta de dançarinos.
+ * Valida se todas as coreografias têm a quantidade correta de bailarino(as).
  *
  * @return bool
  */
@@ -179,8 +203,14 @@ class RegistrationForm extends Component
 
             $dancersCount = $choreography->dancers()->count();
             if ($dancersCount < $type->min_dancers || $dancersCount > $type->max_dancers) {
-                $this->dispatch('notify', message: "A coreografia '{$choreography->name}' deve ter entre {$type->min_dancers} e {$type->max_dancers} dançarinos.", type: 'error');
-                return false;
+                  $this->error(
+                    title: "Revise a quantidade de bailarino(as)", 
+                    icon: 'o-information-circle', 
+                    description: "A coreografia '{$choreography->name}' deve ter entre {$type->min_dancers} e {$type->max_dancers} bailarino(as).",
+                    position: 'toast-top toast-center',
+                    css: "bg-red-500 border-red-500 text-white text-md");
+
+                    return false;
             }
         }
 

@@ -16,8 +16,6 @@ class School extends Model
     protected $fillable = [
         'user_id',
         'name',
-        'is_social_project',
-        'is_university_project',
         'street',
         'number',
         'complement',
@@ -25,11 +23,9 @@ class School extends Model
         'city',
         'state',
         'zip_code',
-    ];
-
-    protected $casts = [
-        'is_social_project' => 'boolean',
-        'is_university_project' => 'boolean',
+        'responsible_name',
+        'responsible_email',
+        'responsible_phone',
     ];
 
     public function user(): BelongsTo

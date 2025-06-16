@@ -8,7 +8,19 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Choreographer extends Model
 {
-    protected $fillable = ['name', 'school_id'];
+    protected $fillable = [
+        'name', 
+        'school_id',
+        'is_attending', 
+        'is_public_domain',
+        'is_adaptation', 
+    ];
+
+    protected $casts = [
+        'is_attending' => 'boolean', 
+        'is_public_domain' => 'boolean',
+        'is_adaptation' => 'boolean', 
+    ];
 
     protected static function boot()
     {

@@ -2,10 +2,11 @@
 
 namespace App\Livewire\Site\Traits;
 
-use App\Models\Choreography;
-use App\Models\ChoreographyCategory;
-use App\Models\ChoreographyType;
 use App\Models\DanceStyle;
+use App\Models\Choreography;
+use App\Models\ChoreographyType;
+use App\Models\ChoreographyCategory;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Collection;
 
 trait WithChoreographyStep
@@ -32,6 +33,8 @@ trait WithChoreographyStep
         'name' => '',
         'choreography_type_id' => '',
         'choreography_category_id' => '',
+        'is_social_project' => false,
+        'is_university_project' => false,
         'dance_style_id' => '',
         'music' => '',
         'music_composer' => '',
@@ -49,9 +52,18 @@ trait WithChoreographyStep
      */
     public function mountChoreographyStep()
     {
-        $this->choreographyTypes = ChoreographyType::all();
-        $this->choreographyCategories = ChoreographyCategory::all();
-        $this->danceStyles = DanceStyle::all();
+        $this->choreographyTypes = Cache::remember('choreography_types', 604800, function () {
+            return ChoreographyType::all();
+        });
+        
+        $this->choreographyCategories = Cache::remember('choreography_categories', 604800, function () {
+            return ChoreographyCategory::all();
+        });
+        
+        $this->danceStyles = Cache::remember('dance_styles', 604800, function () {
+            return DanceStyle::all();
+        });
+        
         $this->loadChoreographies();
     }
 
@@ -79,7 +91,7 @@ trait WithChoreographyStep
             'choreographyState.dance_style_id' => ['required', 'exists:dance_styles,id'],
             'choreographyState.music' => ['required', 'string', 'max:255'],
             'choreographyState.music_composer' => ['required', 'string', 'max:255'],
-            'choreographyState.duration' => ['required', 'string', 'max:8'], // Formato HH:MM:SS
+            'choreographyState.duration' => ['required', 'string', 'max:8'], 
         ];
     }
     
@@ -96,7 +108,10 @@ trait WithChoreographyStep
 
         $this->closeChoreograpyModal();
 
-        $this->success(title: 'Adicionado', icon: 'o-check-circle', description:'Coreografia adicionada com sucesso');
+        $this->success(
+            title: 'Coreografia Adicionada', 
+            icon: 'o-check-circle', 
+            description:'As informações da coreografia foram adicionadas com sucesso');
         $this->resetChoreographyForm();
         $this->choreographyModal = false; 
         $this->loadChoreographies();
@@ -113,7 +128,13 @@ trait WithChoreographyStep
         $choreography = $this->school->choreographies()->find($choreographyId);
 
         if (!$choreography) {
-            $this->success(title: 'error', icon: 'o-information-circle', description:'Coreografia não encontrada');
+            $this->error(
+                icon: 'o-information-circle', 
+                title: 'error', 
+                description:'Coreografia não encontrada',
+                position: 'toast-top toast-center',
+                css: "bg-red-500 border-red-500 text-white text-md");
+            
             return;
         }
 
@@ -127,6 +148,8 @@ trait WithChoreographyStep
             'music' => $choreography->music,
             'music_composer' => $choreography->music_composer,
             'duration' => $choreography->duration,
+            'is_social_project' => $choreography->is_social_project,
+            'is_university_project' => $choreography->is_university_project,
         ];
         $this->choreographyModal = true;
     }
@@ -143,13 +166,25 @@ trait WithChoreographyStep
         $choreography = $this->school->choreographies()->find($this->editingChoreographyId);
 
         if (!$choreography) {
-            $this->success(title: 'error', icon: 'o-information-circle', description:'Coreografia não encontrada');
-            return;
+            $this->error(
+                title: 'error', 
+                icon: 'o-information-circle', 
+                description:'Coreografia não encontrada',
+                position: 'toast-top toast-center',
+                css: "bg-red-500 border-red-500 text-white text-md");
+            
+                return;
         }
 
         $choreography->update($this->choreographyState);
 
-        $this->success(title: 'Atualizado', icon: 'o-check-circle', description:'Coreografia atualizada com sucesso');
+        $this->success(
+            title: 'Coreografia Atualizada', 
+            icon: 'o-check-circle', 
+            description:'As informações da coreografia foram atualizadas com sucesso',
+            position: 'toast-top toast-center',
+            css: "bg-green-500 border-green-500 text-white text-md");
+
         $this->choreographyModal = false;
         $this->resetChoreographyForm();
         $this->loadChoreographies();
@@ -162,7 +197,13 @@ trait WithChoreographyStep
      */
     public function resetChoreographyForm()
     {
-        $this->reset('choreographyState', 'isEditingChoreography', 'editingChoreographyId', 'deleteChoreographyModal', 'choreographyToDelete');
+        $this->reset(
+            'choreographyState',
+            'isEditingChoreography', 
+            'editingChoreographyId', 
+            'deleteChoreographyModal', 
+            'choreographyToDelete');
+
         $this->resetValidation();
     }
 
@@ -211,17 +252,34 @@ trait WithChoreographyStep
         $choreography = $this->school->choreographies()->find($choreographyId);
 
         if (!$choreography) {
-            $this->dispatch('notify', message: 'Coreografia não encontrada.', type: 'error');
+            $this->error(
+                icon: 'o-information-circle', 
+                title: 'Erro', 
+                description: "Não foi possível localizar a coreigrafia",
+                position: 'toast-top toast-center',
+                css: "bg-error-600 border-error-500 text-white text-md");
+
             return;
         }
 
         try {
             $choreography->delete();
 
-            $this->success(title: 'Excluído', icon: 'o-check-circle', description:'Coreografia excluída com sucesso');
+            $this->success(
+                title: 'Coreografia Excluída', 
+                icon: 'o-check-circle', 
+                description:'As informações da coreografia foram excluídas com sucesso',
+                position: 'toast-top toast-center',
+                css: "bg-green-500 border-green-500 text-white text-md");
+
             $this->loadChoreographies();
         } catch (\Exception $e) {
-            $this->dispatch('notify', message: $e->getMessage(), type: 'error');
+            $this->error(
+                title: 'Erro', 
+                icon: 'o-information-circle', 
+                description: $e->getMessage(),
+                position: 'toast-top toast-center',
+                css: "bg-red-500 border-red-500 text-white text-md");
         }
     }
 
@@ -293,7 +351,13 @@ public function selectChoreographyForDancers(int $choreographyId)
             // Sincroniza os coreógrafos (membros)
             $choreography->choreographers()->sync($this->choreographersForChoreography);
 
-            $this->success(title: 'Atualizado', icon: 'o-check-circle', description:'Coreógrafos atualizados com sucesso');
+            $this->success(
+                title: 'Coreógrafos Atualizado', 
+                icon: 'o-check-circle', 
+                description:'As informações dos coreógrafos foram atualizados com sucesso',
+                position: 'toast-top toast-center',
+                css: "bg-green-500 border-green-500 text-white text-md");
+
             $this->closeManageChoreographersModal();
             $this->loadChoreographies(); // Recarrega para exibir os contadores atualizados
         }
@@ -318,12 +382,18 @@ public function selectChoreographyForDancers(int $choreographyId)
                     session()->flash("error", "O número de dançarinos deve estar entre {$type->min_dancers} e {$type->max_dancers}.");
                     return;
                 }
-            }
+            }  
             
             // Sincroniza os dançarinos
             $choreography->dancers()->sync($this->dancersForChoreography);
 
-            $this->success(title: 'Atualizado', icon: 'o-check-circle', description:'Dançarinos atualizados com sucesso');
+            $this->success(
+                title: 'Dançarinos Atualizados', 
+                icon: 'o-check-circle',
+                description:'As informações dos dançarinos foram atualizadas com sucesso',
+                position: 'toast-top toast-center',
+                css: "bg-green-500 border-green-500 text-white text-md");
+
             $this->closeManageDancersModal();
             $this->loadChoreographies(); // Recarrega para exibir os contadores atualizados
         }
@@ -404,18 +474,6 @@ public function selectChoreographyForDancers(int $choreographyId)
 
         return $dancers->sortBy('name');
     }
-
-
-    /**
-     * NOTA: Este trait assume que você tem as seguintes relações de muitos-para-muitos
-     * definidas nos seus Models:
-     * * Em App\Models\Choreography:
-     * public function dancers() { return $this->belongsToMany(Dancer::class); }
-     * public function choreographers() { return $this->belongsToMany(Member::class, 'choreography_choreographer'); }
-     * * E as tabelas pivot correspondentes:
-     * - 'choreography_dancer' (choreography_id, dancer_id)
-     * - 'choreography_choreographer' (choreography_id, member_id)
-     */
 
     public function openChoreograpyModal()
     {

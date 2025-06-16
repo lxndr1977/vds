@@ -17,6 +17,9 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(School::class)->constrained();
             $table->string('name');
+            $table->boolean('is_attending')->default(false); 
+            $table->boolean('is_public_domain')->default(false);
+            $table->boolean('is_adaptation')->default(false); 
             $table->timestamps();
         });
     }

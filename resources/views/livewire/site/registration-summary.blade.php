@@ -1,8 +1,10 @@
 {{-- /resources/views/livewire/site/registration-summary.blade.php --}}
 
-<div x-data="{ openChoreographies: [] }" class="space-y-6">
-    <h2 class="text-2xl font-bold mb-4">Sua inscrição para o Vem Dançar Sudamérica foi recebida</h2>
-    <p class="text-gray-600 mb-6">Caso ainda não tenha efetuado o pagamento, entre em contato com a gerência para confirmar a sua inscrição.</p>
+<div x-data="{ openChoreographies: [] }" class="space-y-6 mb-12">
+    <div class="p-6 mb--3 rounded-lg bg-green-50 border border-green-100 text-green-600 text-center">
+        <h2 class="text-2xl font-bold mb-4">Sua inscrição para o Vem Dançar Sudamérica foi recebida</h2>
+        <p class="text-gray-600">Caso ainda não tenha efetuado o pagamento, entre em contato com a gerência para confirmar a sua inscrição.</p>
+    </div>
 
     {{-- Stats Resumo --}}
     <div class="grid grid-cols-2 lg:grid-cols-{{ $showTotals ? '3' : '2' }} gap-4 mb-6">
