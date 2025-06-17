@@ -23,4 +23,9 @@ Route::middleware(['auth'])->get('/inscricao', function () {
     return view('site');
 })->name('site');
 
+Route::get('/test-email', function() {
+    $registration = \App\Models\Registration::with('school.user')->first();
+    return view('emails.registration.finished', compact('registration'));
+});
+
 require __DIR__.'/auth.php';

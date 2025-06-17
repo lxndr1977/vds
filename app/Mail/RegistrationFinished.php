@@ -8,21 +8,19 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Mail\Mailables\Envelope;
-use Illuminate\Mail\Mailables\Address; // <-- CORRECT USE STATEMENT
-
+use Illuminate\Mail\Mailables\Address;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class RegistrationFinished extends Mailable
 {
     use Queueable, SerializesModels;
 
-
     public Registration $registration;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($registration)
+    public function __construct(Registration $registration)
     {
         $this->registration = $registration;
     }
@@ -33,8 +31,8 @@ class RegistrationFinished extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Registration Finished',
-            from: new Address('no-reply@xx.com', 'Nome da Sua Aplicação'),
+            subject: 'Confirmação de Inscrição - Vem Dançar Sudamerica',
+            from: new Address('naoresponda@vemdancarsudamerica.com.br', 'Vem Dançar Sudamerica'),
         );
     }
 
@@ -44,7 +42,12 @@ class RegistrationFinished extends Mailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.registrations.finished', // This will be your Blade Markdown email template
+            html: 'emails.registration.finished', // Caminho correto da view
+            with: [
+                'registration' => $this->registration,
+                'school' => $this->registration->school,
+                'user' => $this->registration->school->user,
+            ],
         );
     }
 

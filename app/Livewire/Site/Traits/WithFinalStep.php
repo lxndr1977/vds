@@ -75,6 +75,14 @@ trait WithFinalStep
         if ($this->registration->school && $this->registration->school->user && $this->registration->school->user->email) {
             try {
                 Mail::to($this->registration->school->user->email)->send(new RegistrationFinished($this->registration));
+
+                //  Mail::raw('Este é um e-mail de teste enviado pelo sistema.', function ($message) {
+                //         $message->to('pereira.alexandre@gmail.com')
+                //                 ->subject('Teste de envio de e-mail 2')
+                //                 ->from('naoresponda@vemdancarsudamerica.com.br', 'Seu Nome ou Sistema');
+                //     });
+
+
                 Log::info('Email de confirmação enviado com sucesso para: ' . $this->registration->school->user->email);
             } catch (\Exception $emailException) {
                 // Log do erro mas não interrompe o fluxo
@@ -195,4 +203,14 @@ trait WithFinalStep
 
         return $data;
     }
+
+    public function teste()
+    {
+        Mail::raw('Este é um e-mail de teste enviado pelo sistema.', function ($message) {
+            $message->to('pereira.alexandre@gmail.com')
+                    ->subject('Teste de envio de e-mail')
+                    ->from('naoresponda@vemdancarsudamerica.com.br', 'Seu Nome ou Sistema');
+        });
+    }
+
 }
