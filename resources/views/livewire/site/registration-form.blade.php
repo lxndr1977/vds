@@ -22,7 +22,7 @@
         <span x-text="message"></span>
     </div>
 
-    <h1 class="font-bold text-2xl">TESTE</h1>
+    <h1 class="font-bold text-2xl">TESTE UMBLER</h1>
     <x-mary-toast />  
     @if ($status === 'cancelled')
         <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4" role="alert">
