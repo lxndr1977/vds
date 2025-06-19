@@ -71,33 +71,18 @@ class ZipCodeService
      */
     private function fetchFromApi(string $cep): ?array
     {
-        try {
-            $response = Http::timeout(self::API_TIMEOUT)
-                ->retry(self::RETRY_ATTEMPTS, self::RETRY_DELAY)
-                ->get("https://viacep.com.br/ws/{$cep}/json/");
-            
-            $response->throw();
-            $data = $response->json();
+      $response = Http::timeout(self::API_TIMEOUT)
+            ->retry(self::RETRY_ATTEMPTS, self::RETRY_DELAY)
+            ->get("https://viacep.com.br/ws/{$cep}/json/");
+      
+      $response->throw();
+      $data = $response->json();
 
-            // ViaCEP retorna {"erro": true} quando o CEP não existe
-            if (isset($data['erro']) && $data['erro'] === true) {
-                Log::info("CEP não encontrado na base do ViaCEP: {$cep}");
-                return null;
-            }
+      if (isset($data['erro']) && $data['erro'] === true) {
+            return null;
+      }
 
-            Log::info("CEP consultado com sucesso: {$cep}");
-            return $this->formatResponse($data, $cep);
-
-        } catch (\Illuminate\Http\Client\RequestException $e) {
-            // Erro HTTP (4xx, 5xx)
-            throw new \Exception('Erro ao consultar o CEP. Verifique a conexão ou tente novamente mais tarde.', 0, $e);
-        } catch (\Illuminate\Http\Client\ConnectionException $e) {
-            // Erro de conexão
-            throw new \Exception('Erro de conexão ao consultar CEP. Verifique sua conexão com a internet.', 0, $e);
-        } catch (\Exception $e) {
-            // Outros erros
-            throw new \Exception('Erro inesperado ao consultar CEP: ' . $e->getMessage(), 0, $e);
-        }
+      return $this->formatResponse($data, $cep);
     }
 
     /**
