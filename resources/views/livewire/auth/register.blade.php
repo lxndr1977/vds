@@ -36,65 +36,70 @@ new #[Layout('components.layouts.auth')] class extends Component {
 }; ?>
 
 <div class="flex flex-col gap-6">
-    <x-auth-header :title="__('Create an account')" :description="__('Enter your details below to create your account')" />
+    <x-mary-header 
+        title="{{__('Create an account')}}" 
+        subtitle="{{__('Enter your details below to create your account')}}"   
+        class="mb-0" />
 
-    <!-- Session Status -->
-    <x-auth-session-status class="text-center" :status="session('status')" />
+    <div class="-mt-12">
 
-    <form wire:submit="register" class="flex flex-col gap-6">
-        <!-- Name -->
-        <x-mary-input
-            wire:model="name"
-            :label="__('Name')"
-            type="text"
-            required
-            autofocus
-            autocomplete="name"
-            :placeholder="__('Full name')"
-        />
+        <!-- Session Status -->
+        <x-auth-session-status class="text-center" :status="session('status')" />
 
-        <!-- Email Address -->
-        <x-mary-input
-            wire:model="email"
-            :label="__('Email address')"
-            type="email"
-            required
-            autocomplete="email"
-            placeholder="email@example.com"
-        />
+        <form wire:submit="register" class="flex flex-col gap-3">
+            <!-- Name -->
+            <x-mary-input
+                wire:model="name"
+                :label="__('Name')"
+                type="text"
+                required
+                autofocus
+                autocomplete="name"
+                :placeholder="__('Full name')"
+            />
 
-        <!-- Password -->
-        <x-mary-input
-            wire:model="password"
-            :label="__('Password')"
-            type="password"
-            required
-            autocomplete="new-password"
-            :placeholder="__('Password')"
-            viewable
-        />
- 
-        <!-- Confirm Password -->
-        <x-mary-input
-            wire:model="password_confirmation"
-            :label="__('Confirm password')"
-            type="password"
-            required
-            autocomplete="new-password"
-            :placeholder="__('Confirm password')"
-            viewable
-        />
+            <!-- Email Address -->
+            <x-mary-input
+                wire:model="email"
+                :label="__('Email address')"
+                type="email"
+                required
+                autocomplete="email"
+                placeholder="email@example.com"
+            />
 
-        <div class="flex items-center justify-end">
-            <x-mary-button type="submit" class="btn-primary w-full">
-                {{ __('Create account') }}
-            </x-mary-button>
-        </div>
-    </form>
+            <!-- Password -->
+            <x-mary-input
+                wire:model="password"
+                :label="__('Password')"
+                type="password"
+                required
+                autocomplete="new-password"
+                :placeholder="__('Password')"
+                viewable
+            />
+    
+            <!-- Confirm Password -->
+            <x-mary-input
+                wire:model="password_confirmation"
+                :label="__('Confirm password')"
+                type="password"
+                required
+                autocomplete="new-password"
+                :placeholder="__('Confirm password')"
+                viewable
+            />
 
-    <div class="flex flex-col space-x-1 rtl:space-x-reverse text-center text-sm text-zinc-600 dark:text-zinc-400">
-        {{ __('Already have an account?') }}
-        <x-mary-button link="{{route('login')}}" class="btn-primary btn-soft w-full" wire:navigate>{{ __('Log in') }}</x-mary-button>
+            <div class="flex items-center justify-end mt-2">
+                <x-mary-button type="submit" class="btn-primary w-full">
+                    {{ __('Create account') }}
+                </x-mary-button>
+            </div>
+        </form>
     </div>
 
+    <div class="flex flex-col space-x-1 rtl:space-x-reverse text-center text-sm text-zinc-600">
+        {{ __('Already have an account?') }}
+        <x-mary-button link="{{route('login')}}" class="btn-primary btn-soft w-full mt-2" wire:navigate>{{ __('Log in') }}</x-mary-button>
+    </div>
 </div>

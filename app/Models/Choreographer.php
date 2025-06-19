@@ -37,4 +37,23 @@ class Choreographer extends Model
     {
         return $this->belongsToMany(Choreography::class, 'choreography_choreographer', 'choreographer_id', 'choreography_id');
     }
+
+   public function getChoreographerTypesAttribute()
+   {
+      $types = [];
+      
+      if ($this->is_public_domain) {
+         $types[] = 'Domínio Público';
+      }
+      
+      if ($this->is_adaptation) {
+         $types[] = 'Responsável por Adaptação';
+      }
+      
+      if ($this->is_attending) {
+         $types[] = 'Participará Presencialmente';
+      }
+      
+      return implode(', ', $types);
+   }
 }

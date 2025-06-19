@@ -3,8 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
-Route::middleware(['auth'])->get('/', function () {
-    return view('site');
+Route::get('/', function () {
+    return view('welcome');
 })->name('home');
 
 Route::view('dashboard', 'dashboard')
@@ -23,9 +23,9 @@ Route::middleware(['auth'])->get('/inscricao', function () {
     return view('site');
 })->name('site');
 
-Route::get('/test-email', function() {
-    $registration = \App\Models\Registration::with('school.user')->first();
-    return view('emails.registration.finished', compact('registration'));
-});
+
+Route::get('/teste', function () {
+    return view('teste');
+})->name('teste');
 
 require __DIR__.'/auth.php';

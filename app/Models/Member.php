@@ -32,4 +32,6 @@ class Member extends Model
     {
         return $this->hasMany(Member::class);
     }
+
+
 }

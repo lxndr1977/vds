@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Dancer extends Model
 {
     protected $fillable = ['name', 'birth_date', 'school_id'];
+
 
   
     protected static function boot()
@@ -67,5 +69,13 @@ class Dancer extends Model
         return $this->birth_date_br;
     }
 
+   public function getAgeAttribute()
+   {
+      if (!$this->birth_date) {
+         return null;
+      }
+      
+      return Carbon::createFromFormat('d/m/Y', $this->birth_date)->age . ' anos';
+   }
     
 }

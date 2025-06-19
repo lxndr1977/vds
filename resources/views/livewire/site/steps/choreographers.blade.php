@@ -1,206 +1,87 @@
 {{-- Etapa 3: Coreógrafos(as) --}}
-<div >
-    <div class="flex flex-col md:flex-row  items-start md:items-center justify-start md:justify-between mb-8">
-        <div class="mb-6">
-            <h2 class="text-xl md:text-2xl font-medium mb-1">Etapa 3: Coreógrafos(as)</h2>
-            <p class="text-zinc-700">Cadastre todos os Coreógrafos(as) do Grupo/Escola/Cia</p>
-        </div>
+<div>
+   <div class="flex flex-col md:flex-row  items-start md:items-center justify-start md:justify-between mb-8">
+      <div class="mb-6">
+         <h2 class="text-xl md:text-2xl font-medium mb-1">Etapa 3: Coreógrafos(as)</h2>
+         <p class="text-zinc-700">Cadastre todos os Coreógrafos(as) do Grupo/Escola/Cia</p>
+      </div>
 
-        <div class="text-left md:text-right mt-4 mb-8">
-            <x-mary-button icon="o-plus" @click="$wire.choreographerModal = true" class="btn-primary" >
-                Adicionar Coreógrafo(a)
-            </x-mary-button>
-        </div> 
-    </div>
+      <div class="text-left md:text-right mt-4 mb-8">
+         <x-mary-button icon="o-plus" @click="$wire.choreographerModal = true" class="btn-primary">
+            Adicionar Coreógrafo(a)
+         </x-mary-button>
+      </div>
+   </div>
 
-    {{-- Lista de coreógrafos cadastrados responsiva --}}
-    <div class="flex items-center gap-2  mb-4">
-        <h3 class="text-lg font-semibold">Coreógrafos(as) Cadastrados</h3>
+   {{-- Lista de coreógrafos cadastrados responsiva --}}
+   <div class="flex items-center gap-2  mb-4">
+      <h3 class="text-lg font-semibold">Coreógrafos(as) Cadastrados</h3>
 
-        @if($choreographers->count() > 0)
-            <x-mary-badge value="{{ $dancers->count() }}" class="badge-soft badge-sm indicator-item"/>
-        @endif
-    </div>
+      @if ($choreographers->count() > 0)
+         <x-mary-badge value="{{ $choreographers->count() }}" class="badge-soft badge-sm indicator-item" />
+      @endif
+   </div>
 
-    @if($choreographers->count() > 0)
-        <div class="space-y-3">
-            @foreach($choreographers as $choreographer)
-                <div class="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
-                    <div class="flex items-center justify-between">
-                        {{-- Informações do Coreógrafo --}}
-                        <div class="space-y-1">
-                            <div class="flex-1 min-w-0">
-                                <p class="font-medium text-gray-900 line-clamp-1">{{ $choreographer->name }}</p>
-                            </div>
-                            <div class="flex flex-col md:flex-row gap-2">
-                                @if($choreographer->is_public_domain)
-                                    <x-mary-badge value="Domínio público" class="badge-sm badge-soft" />
-                                @endif
-                                 @if($choreographer->is_adaptation)
-                                    <x-mary-badge value="Responsável por adaptação" class="badge-sm badge-soft" />
-                                @endif
-                                 @if($choreographer->is_attending)
-                                    <x-mary-badge value="Participará presencialmente" class="badge-sm badge-soft" />
-                                @endif
-                            </div>
-                        </div>
-                        
-                        {{-- Botões de Ação --}}
-                        <div class="flex gap-2 ml-4">
-                            <x-mary-button 
-                                icon="o-pencil" 
-                                wire:click="editChoreographer({{ $choreographer->id }})" 
-                                spinner 
-                                class="btn-square btn-xs md:btn-sm btn-ghost"
-                                tooltip="Editar"
-                                title="Editar coreógrafo(a)"
-                            />
-                            <x-mary-button 
-                                icon="o-trash" 
-                                wire:click="prepareDeleteChoreographer({{ $choreographer->id }})" 
-                                spinner 
-                                class="btn-square btn-xs md:btn-sm btn-ghost" 
-                                tooltip="Excluir"
-                                title="Remover coreógrafo(a)"
-                            />
-                        </div>
-                    </div>
-                </div>
-            @endforeach
-        </div>
-    @else
-        <div class="bg-gray-50 border border-gray-200 rounded-lg p-8 text-center">
-            <div class="text-gray-400 mb-2">
-                <svg class="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                </svg>
+   @if ($choreographers->count() > 0)
+      <div class="space-y-3">
+         @foreach ($choreographers as $choreographer)
+            <div class="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+               <div class="flex items-center justify-between">
+                  {{-- Informações do Coreógrafo --}}
+                  <div class="space-y-1">
+                     <div class="flex-1 min-w-0">
+                        <p class="font-medium text-gray-900 line-clamp-1">{{ $choreographer->name }}</p>
+                     </div>
+                     <div class="flex flex-col md:flex-row gap-2">
+                        @if ($choreographer->is_public_domain)
+                           <x-mary-badge value="Domínio público" class="badge-sm badge-soft font-bold" />
+                        @endif
+                        @if ($choreographer->is_adaptation)
+                           <x-mary-badge value="Responsável por adaptação" class="badge-sm badge-soft font-bold" />
+                        @endif
+                        @if ($choreographer->is_attending)
+                           <x-mary-badge value="Participará presencialmente" class="badge-sm badge-soft font-bold" />
+                        @endif
+                     </div>
+                  </div>
+
+                  {{-- Botões de Ação --}}
+                  <div class="flex gap-2 ml-4">
+                     <x-mary-button
+                        icon="o-pencil"
+                        wire:click="editChoreographer({{ $choreographer->id }})"
+                        spinner
+                        class="btn-square btn-xs md:btn-sm btn-ghost"
+                        tooltip="Editar"
+                        title="Editar coreógrafo(a)" />
+                     <x-mary-button
+                        icon="o-trash"
+                        wire:click="prepareDeleteChoreographer({{ $choreographer->id }})"
+                        spinner
+                        class="btn-square btn-xs md:btn-sm btn-ghost"
+                        tooltip="Excluir"
+                        title="Remover coreógrafo(a)" />
+                  </div>
+               </div>
             </div>
-            <p class="text-gray-500">Nenhum coreógrafo(a) cadastrado ainda</p>
-            <p class="text-sm text-gray-400 mt-1 mb-6">Clique em "Adicionar Coreógrafo(a)" para começar</p>
-            <x-mary-button icon="o-plus" @click="$wire.choreographerModal = true" class="btn-primary" >
-                Adicionar Coreógrafo(a)
-            </x-mary-button>
-        </div>
-    @endif
+         @endforeach
+      </div>
+   @else
+      <div class="bg-gray-50 border border-gray-200 rounded-lg p-8 text-center">
+         <div class="text-gray-400 mb-2">
+            <svg class="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+                  d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+               </path>
+            </svg>
+         </div>
+         <p class="text-gray-500">Nenhum coreógrafo(a) cadastrado ainda</p>
+         <p class="text-sm text-gray-400 mt-1 mb-6">Clique em "Adicionar Coreógrafo(a)" para começar</p>
+         <x-mary-button icon="o-plus" @click="$wire.choreographerModal = true" class="btn-primary">
+            Adicionar Coreógrafo(a)
+         </x-mary-button>
+      </div>
+   @endif
 
-
-{{-- Modal para Adicionar/Editar Coreógrafo --}}
-<x-mary-modal
-    wire:model="choreographerModal" 
-    :title="$isEditingChoreographer ? 'Editar coreógrafo(a)' : 'Cadastrar coreógrafo(a)'" 
-    class="backdrop-blur"
-    @close="$wire.closeChoreographerModal()"
->
-        <div class="grid grid-cols-1 gap-4">
-            <div 
-                x-data 
-                @input="$wire.clearError('choreographerState.name')"
-            >                        
-                <x-mary-input 
-                    label="Nome do(a) Coreógrafo(a)" 
-                    wire:model.lazy="choreographerState.name" 
-                    id="choreographer_name"
-                    placeholder="Nome" 
-                    error-class="font-bold text-red-600" 
-                />
-            </div>
-
-           <div x-data="{
-                    public_domain: @entangle('choreographerState.is_public_domain').live,
-                    attending: @entangle('choreographerState.is_attending').live,
-                    adaptation: @entangle('choreographerState.is_adaptation').live
-                }"
-                class="space-y-3"
-            >
-                <div @input="$wire.clearError('choreographerState.is_public_domain')">
-                    <x-mary-toggle 
-                        label="É de domínio público?" 
-                        x-model="public_domain"
-                        @change="if (public_domain) attending = false"
-                        id="is_public_domain" 
-                    />
-                </div>
-
-                <div @input="$wire.clearError('choreographerState.is_adaptation')">
-                    <x-mary-toggle 
-                        label="É responsável por adaptação?" 
-                        x-model="adaptation"
-                        id="is_adaptation" 
-                    />
-                </div>
-
-                <div @input="$wire.clearError('choreographerState.is_attending')">
-                    <x-mary-toggle 
-                        label="Participará presencialmente do evento?" 
-                        x-model="attending"
-                        @change="if (attending) public_domain = false"
-                        id="is_attending" 
-                    />
-                </div>
-            </div>
-        </div>
-    <x-slot:actions>
-        <x-mary-button 
-            icon="o-x-mark" 
-            @click="$wire.closeChoreographerModal()"
-        >
-            Cancelar
-        </x-mary-button>
-
-        @if($isEditingChoreographer)
-            <x-mary-button 
-                icon="o-check" 
-                wire:click="updateChoreographer" 
-                class="btn-primary" 
-                spinner="updateChoreographer"
-            >
-                Atualizar
-            </x-mary-button>
-        @else
-            <x-mary-button 
-                icon="o-check" 
-                wire:click="addChoreographer" 
-                class="btn-primary" 
-                spinner="addChoreographer"
-            >
-                Adicionar
-            </x-mary-button>
-        @endif
-    </x-slot:actions>
-</x-mary-modal>
-
-{{-- Modal de Confirmação de Exclusão --}}
-<x-mary-modal  wire:model="confirmDeleteChoreographerModal" title="Confirmar exclusão" class="backdrop-blur">
-    <div class="py-4">
-        <div class="flex items-center gap-3 mb-4">
-            <div class="flex-shrink-0">
-                <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.994-.833-2.464 0L3.349 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
-                </svg>
-            </div>
-            <div>
-                <p class="text-gray-900 font-medium">Tem certeza que deseja remover este(a) coreógrafo(a)?</p>
-                <p class="text-gray-600 text-sm mt-1">Esta ação não pode ser desfeita.</p>
-            </div>
-        </div>
-    </div>
-
-    <x-slot:actions>
-        <x-mary-button 
-            icon="o-x-mark" 
-            @click="$wire.confirmDeleteChoreographerModal = false" 
-        >
-            Cancelar
-        </x-mary-button>
-
-        <x-mary-button 
-            icon="o-trash" 
-            wire:click="confirmRemoveChoreographer"  
-            class="btn-error" 
-            spinner="confirmRemoveChoreographer"
-        >
-            Remover
-        </x-mary-button>
-    </x-slot:actions>
-</x-mary-modal>
-</div>  
+   @include('livewire.site.steps.modals.choreographer.add-or-edit')
+   @include('livewire.site.steps.modals.choreographer.delete')

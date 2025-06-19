@@ -111,7 +111,10 @@ trait WithChoreographyStep
         $this->success(
             title: 'Coreografia Adicionada', 
             icon: 'o-check-circle', 
-            description:'As informações da coreografia foram adicionadas com sucesso');
+            description:'As informações da coreografia foram adicionadas com sucesso',
+            position: 'toast-top toast-right',
+            css: "bg-green-100 border-green-100 text-green-900 text-md");
+
         $this->resetChoreographyForm();
         $this->choreographyModal = false; 
         $this->loadChoreographies();
@@ -132,8 +135,8 @@ trait WithChoreographyStep
                 icon: 'o-information-circle', 
                 title: 'error', 
                 description:'Coreografia não encontrada',
-                position: 'toast-top toast-center',
-                css: "bg-red-500 border-red-500 text-white text-md");
+                position: 'toast-top toast-right',
+                css: "bg-red-100 border-red-100 text-red-900 text-md");
             
             return;
         }
@@ -170,8 +173,8 @@ trait WithChoreographyStep
                 title: 'error', 
                 icon: 'o-information-circle', 
                 description:'Coreografia não encontrada',
-                position: 'toast-top toast-center',
-                css: "bg-red-500 border-red-500 text-white text-md");
+                position: 'toast-top toast-right',
+                css: "bg-red-100 border-red-100 text-red-900 text-md");
             
                 return;
         }
@@ -182,8 +185,8 @@ trait WithChoreographyStep
             title: 'Coreografia Atualizada', 
             icon: 'o-check-circle', 
             description:'As informações da coreografia foram atualizadas com sucesso',
-            position: 'toast-top toast-center',
-            css: "bg-green-500 border-green-500 text-white text-md");
+            position: 'toast-top toast-right',
+            css: "bg-green-100 border-green-100 text-green-900 text-md");
 
         $this->choreographyModal = false;
         $this->resetChoreographyForm();
@@ -256,7 +259,7 @@ trait WithChoreographyStep
                 icon: 'o-information-circle', 
                 title: 'Erro', 
                 description: "Não foi possível localizar a coreigrafia",
-                position: 'toast-top toast-center',
+                position: 'toast-top toast-right',
                 css: "bg-error-600 border-error-500 text-white text-md");
 
             return;
@@ -269,7 +272,7 @@ trait WithChoreographyStep
                 title: 'Coreografia Excluída', 
                 icon: 'o-check-circle', 
                 description:'As informações da coreografia foram excluídas com sucesso',
-                position: 'toast-top toast-center',
+                position: 'toast-top toast-right',
                 css: "bg-green-500 border-green-500 text-white text-md");
 
             $this->loadChoreographies();
@@ -278,8 +281,8 @@ trait WithChoreographyStep
                 title: 'Erro', 
                 icon: 'o-information-circle', 
                 description: $e->getMessage(),
-                position: 'toast-top toast-center',
-                css: "bg-red-500 border-red-500 text-white text-md");
+                position: 'toast-top toast-right',
+                css: "bg-red-500 1order-red-500 1ext-white red-900-md");
         }
     }
 
@@ -299,7 +302,7 @@ public function selectChoreographyForChoreographers(int $choreographyId)
     $choreography = $this->choreographies->find($choreographyId);
     
     if ($choreography) {
-        // Carrega os IDs dos coreógrafos já associados
+        // Carrega os IDs dos(as) coreógrafos(as) já associados
         $this->choreographersForChoreography = $choreography->choreographers->pluck('id')->map(fn($id) => (string)$id)->toArray();
     }
     
@@ -311,7 +314,7 @@ public function selectChoreographyForChoreographers(int $choreographyId)
 }
 
 /**
- * Seleciona uma coreografia e abre o modal de gerenciar dançarinos.
+ * Seleciona uma coreografia e abre o modal de gerenciar bailarino(as).
  *
  * @param int $choreographyId
  * @return void
@@ -326,14 +329,14 @@ public function selectChoreographyForDancers(int $choreographyId)
     $choreography = $this->choreographies->find($choreographyId);
     
     if ($choreography) {
-        // Carrega os IDs dos dançarinos já associados
+        // Carrega os IDs dos(as) bailarino(as) já associados
         $this->dancersForChoreography = $choreography->dancers->pluck('id')->map(fn($id) => (string)$id)->toArray();
     }
     
     // Força uma atualização antes de abrir o modal
     $this->dispatch('$refresh');
     
-    // Abre o modal de gerenciar dançarinos
+    // Abre o modal de gerenciar bailarino(as)
     $this->manageDancersModal = true;
 }
 
@@ -352,10 +355,10 @@ public function selectChoreographyForDancers(int $choreographyId)
             $choreography->choreographers()->sync($this->choreographersForChoreography);
 
             $this->success(
-                title: 'Coreógrafos Atualizado', 
+                title: 'Coreógrafo(a) Atualizado(a)', 
                 icon: 'o-check-circle', 
-                description:'As informações dos coreógrafos foram atualizados com sucesso',
-                position: 'toast-top toast-center',
+                description:'As informações dos(as) coreógrafos(as) foram atualizados com sucesso',
+                position: 'toast-top toast-right',
                 css: "bg-green-500 border-green-500 text-white text-md");
 
             $this->closeManageChoreographersModal();
@@ -364,7 +367,7 @@ public function selectChoreographyForDancers(int $choreographyId)
     }
 
     /**
-     * Atualiza apenas os dançarinos de uma coreografia.
+     * Atualiza apenas os bailarino(as) de uma coreografia.
      *
      * @return void
      */
@@ -374,25 +377,25 @@ public function selectChoreographyForDancers(int $choreographyId)
 
         $choreography = $this->choreographies->find($this->selectedChoreographyId);
         if ($choreography) {
-            // Verifica quantidade de dançarinos permitidos
+            // Verifica quantidade de bailarino(as) permitidos
             $type = $this->choreographyTypes->firstWhere('id', $choreography->choreography_type_id);
             if ($type) {
                 $count = count($this->dancersForChoreography);
                 if ($count < $type->min_dancers || $count > $type->max_dancers) {
-                    session()->flash("error", "O número de dançarinos deve estar entre {$type->min_dancers} e {$type->max_dancers}.");
+                    session()->flash("error", "O número de bailarino(as) deve estar entre {$type->min_dancers} e {$type->max_dancers}.");
                     return;
                 }
             }  
             
-            // Sincroniza os dançarinos
+            // Sincroniza os bailarino(as)
             $choreography->dancers()->sync($this->dancersForChoreography);
 
             $this->success(
-                title: 'Dançarinos Atualizados', 
+                title: 'Bailarinos(as) Atualizados(as)', 
                 icon: 'o-check-circle',
-                description:'As informações dos dançarinos foram atualizadas com sucesso',
-                position: 'toast-top toast-center',
-                css: "bg-green-500 border-green-500 text-white text-md");
+                description:'As informações dos(as) bailarino(as) foram atualizadas com sucesso',
+                position: 'toast-top toast-right',
+                css: "bg-green-100 border-green-100 text-green-900 text-md");
 
             $this->closeManageDancersModal();
             $this->loadChoreographies(); // Recarrega para exibir os contadores atualizados
@@ -409,7 +412,7 @@ public function selectChoreographyForDancers(int $choreographyId)
     }
 
     /**
-     * Limpa a seleção da coreografia e fecha o modal de dançarinos.
+     * Limpa a seleção da coreografia e fecha o modal de bailarino(as).
      */
     public function closeManageDancersModal()
     {
@@ -460,7 +463,7 @@ public function selectChoreographyForDancers(int $choreographyId)
 
 
     /**
-     * Retorna os dançarinos filtrados pela pesquisa.
+     * Retorna os bailarino(as) filtrados pela pesquisa.
      */ 
     public function getFilteredDancersProperty()
     {

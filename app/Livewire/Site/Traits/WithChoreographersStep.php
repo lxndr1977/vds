@@ -88,9 +88,9 @@ trait WithChoreographersStep
         $this->success(
             icon: 'o-check-circle', 
             title: 'Coreógrafo(a) Adicionado(a)', 
-            description:'As informações do(a) coreógrafo(a) foram adicionadas com sucesso',
-            position: 'toast-top toast-center',
-            css: "bg-green-500 border-green-500 text-white text-md");
+            description:'O(a) coreógrafo(a) foi adicionado(a) com sucesso',
+            position: 'toast-top toast-right',
+            css: "bg-green-100 border-green-100 text-green-900 text-md");
 
         $this->reset('choreographerState');
         $this->loadChoreographers();
@@ -144,9 +144,9 @@ trait WithChoreographersStep
             $this->success(
                 icon: 'o-check-circle', 
                 title: 'Coreǵrafoa(a) Atualizado(a)', 
-                description:'As informaçoes do(a) coreógrafo(a) foram atualizadas com sucesso',
-                position: 'toast-top toast-center',
-                css: "bg-green-500 border-green-500 text-white text-md");
+                description:'Os dados do(a) coreógrafo(a) foram atualizados com sucesso',
+                position: 'toast-top toast-right',
+                css: "bg-green-100 border-green-100 text-green-900 text-md");
 
             $this->loadChoreographers();
         }
@@ -194,9 +194,9 @@ trait WithChoreographersStep
                 $this->success(
                     icon: 'o-check-circle', 
                     title: 'Coreógrafo(a) Excluído', 
-                    description:'As informações do(a) coreógrafo(a) foram excluídas com sucesso',
-                    position: 'toast-top toast-center',
-                    css: "bg-green-500 border-green-500 text-white text-md");
+                    description:'O(a) coreógrafo(a) foi excluído com sucesso',
+                    position: 'toast-top toast-right',
+                    css: "bg-green-100 border-green-100 text-green-900 text-md");
 
                 $this->loadChoreographers();
             } catch (\Exception $e) {
@@ -204,8 +204,8 @@ trait WithChoreographersStep
                     icon: 'o-information-circle', 
                     title: 'Erro', 
                     description: $e->getMessage(),
-                    position: 'toast-top toast-center',
-                    css: "bg-red-500 border-red-500 text-white text-md");
+                    position: 'toast-top toast-right',
+                    css: "bg-red-100 border-red-100 text-red-900 text-md");
 
             }
         }

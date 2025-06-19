@@ -69,4 +69,13 @@ class School extends Model
     {
         return $this->hasOne(Registration::class);
     }
+
+       public function getMembersCountByType()
+   {
+      return $this->members()
+         ->join('member_types', 'members.member_type_id', '=', 'member_types.id')
+         ->groupBy('member_types.id', 'member_types.name')
+         ->selectRaw('member_types.name, COUNT(*) as total')
+         ->pluck('total', 'name');
+   }
 }

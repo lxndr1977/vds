@@ -73,8 +73,8 @@ trait WithMembersStep
             'memberState.name.string' => 'O nome deve ser um texto.',
             'memberState.name.max' => 'O nome não pode ter mais de 255 caracteres.',
 
-            'memberState.member_type_id.required' => 'a função do integrante é obrigatório.',
-            'memberState.member_type_id.exists' => 'a função do integrante selecionado é inválido.',
+            'memberState.member_type_id.required' => 'A função do integrante é obrigatório.',
+            'memberState.member_type_id.exists' => 'A função do integrante selecionado é inválido.',
         ];
     }
 
@@ -103,8 +103,8 @@ trait WithMembersStep
                 title: 'Atenção ao limite de membros', 
                 icon: 'o-information-circle', 
                 description:"Limite máximo de {$memberType->max_limit} integrante(s) para o tipo '{$memberType->name}' atingido.",
-                position: 'toast-top toast-center',
-                css: "bg-red-500 border-red-500 text-white text-md");
+                position: 'toast-top toast-right',
+                css: "bg-red-100 border-red-100 text-red-900 text-md");
             
             return;
         }
@@ -117,8 +117,8 @@ trait WithMembersStep
             title: 'Integrante Adicionado', 
             icon: 'o-check-circle', 
             description:'As informações do integrante foram adicionadas com sucesso',
-            position: 'toast-top toast-center',
-            css: "bg-green-500 border-green-500 text-white text-md");
+            position: 'toast-top toast-right',
+            css: "bg-green-100 border-green-100 text-green-900 text-md");
 
         $this->reset('memberState'); 
         $this->resetValidation();        
@@ -178,8 +178,8 @@ trait WithMembersStep
                         title: 'Atenção ao limite de membros', 
                         icon: 'o-information-circle', 
                         description:"Limite máximo de {$memberType->max_limit} integrante(s) para o tipo '{$memberType->name}' atingido.",
-                        position: 'toast-top toast-center',
-                        css: "bg-red-500 border-red-500 text-white text-md");
+                        position: 'toast-top toast-right',
+                        css: "bg-red-100 border-red-100 text-red-900 text-md");
 
                     return;
                 }
@@ -191,8 +191,8 @@ trait WithMembersStep
                 title: 'Integrante Atualizado', 
                 icon: 'o-check-circle', 
                 description:'As informações do integrante foram atualizadas com sucesso',
-                position: 'toast-top toast-center',
-                css: "bg-green-500 border-green-500 text-white text-md");
+                position: 'toast-top toast-right',
+                css: "bg-green-100 border-green-100 text-green-800 text-md");
                 
             $this->closeMemberModal();
            
@@ -242,8 +242,8 @@ trait WithMembersStep
                 title: 'Integrante Excluído', 
                 icon: 'o-check-circle', 
                 description:'As informações do integrante foram excluídas com sucesso',
-                position: 'toast-top toast-center',
-                css: "bg-green-500 border-green-500 text-white text-md");   
+                position: 'toast-top toast-right',
+                css: "bg-green-100 border-green-100 text-green-800 text-md");   
             $this->loadMembers();
         }
     }

@@ -92,10 +92,10 @@ protected function dancerMessages(): array
 
         $this->success( 
             icon: 'o-check-circle', 
-            title: 'Bailarino(a) Excluído(a)', 
-            description:'As informações do(a) bailarino(a) foram excluídas com sucesso',
-            position: 'toast-top toast-center',
-            css: "bg-green-500 border-green-500 text-white text-md");
+            title: 'Bailarino(a) Adicionado(a)', 
+            description:'As informações do(a) bailarino(a) foram adicionadas com sucesso',
+            position: 'toast-top toast-right',
+            css: "bg-green-100 border-green-100 text-green-900 text-md");
 
         $this->reset('dancerState');
         $this->loadDancers();
@@ -143,8 +143,8 @@ protected function dancerMessages(): array
                 icon: 'o-check-circle', 
                 title: 'Bailarino(a) Atualizado(a)', 
                 description:'As informações do(a) bailarino(a) foram atualizadas com sucesso',
-                position: 'toast-top toast-center',
-                css: "bg-green-500 border-green-500 text-white text-md");
+                position: 'toast-top toast-right',
+                css: "bg-green-100 border-green-100 text-green-900 text-md");
 
             $this->resetDancerForm();
             $this->loadDancers();
@@ -192,8 +192,8 @@ protected function dancerMessages(): array
                     icon: 'o-check-circle', 
                     title: 'Bailarino(a) Excluído(a)', 
                     description:'As informações do(a) bailarino(a) foram excluídas com sucesso',
-                    position: 'toast-top toast-center',
-                    css: "bg-green-500 border-green-500 text-white text-md");
+                    position: 'toast-top toast-right',
+                    css: "bg-green-100 border-green-100 text-green-900 text-md");
 
                 $this->loadDancers();
             } catch (\Exception $e) {
@@ -201,8 +201,8 @@ protected function dancerMessages(): array
                     icon: 'o-information-circle', 
                     title: "Erro", 
                     description: $e->getMessage(),
-                    position: 'toast-top toast-center',
-                    css: "bg-red-500 border-red-500 text-white text-md");
+                    position: 'toast-top toast-right',
+                    css: "bg-red-100 border-red-100 text-red-900 text-md");
             }
         }
     }

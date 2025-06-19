@@ -35,6 +35,20 @@
     --color-primary-900: #550926;
     --color-primary-950: #3d061b;
 
+
+    --color-secondary-50:  #f1f2f8;
+    --color-secondary-100: #e2e4f1;
+    --color-secondary-200: #c5c9e3;
+    --color-secondary-300: #a8add5;
+    --color-secondary-400: #8b91c7;
+    --color-secondary-500: #6e75b9;
+    --color-secondary-600: #313674; 
+    --color-secondary-700: #272b5b;
+    --color-secondary-800: #1d2143;
+    --color-secondary-900: #13162a;
+    --color-secondary-950: #0a0c17;
+
+
     --color-accent: var(--color-neutral-800);
     --color-accent-content: var(--color-neutral-800);
     --color-accent-foreground: var(--color-white);
@@ -97,7 +111,8 @@ select:focus[data-flux-control] {
 
   --color-primary: #b21653;
   --color-primary-content: #fff;
-}
+
+ }
 
 /* maryUI */
 @source "../../vendor/robsontenorio/mary/src/View/Components/**/*.php";

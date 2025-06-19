@@ -122,6 +122,16 @@ trait WithSchoolStep
      *
      * @return void
      */
+    /**
+     * Salva os dados da escola e a inscrição, e avança para a próxima etapa.
+     *
+     * @return void
+     */
+    /**
+     * Salva os dados da escola e a inscrição, e avança para a próxima etapa.
+     *
+     * @return void
+     */
     public function saveSchool()
     {
         $this->validate(
@@ -129,12 +139,19 @@ trait WithSchoolStep
             $this->schoolMessages()
         );
 
-        DB::transaction(function () {
-          
+        $wasSaved = false;
+
+        DB::transaction(function () use (&$wasSaved) {
+            
+            // Verifica se há mudanças antes de salvar
             $this->school->fill($this->schoolState);
             $this->school->user_id = auth()->id();
 
-            $this->school->save();
+            // Salva se for novo registro OU se houver mudanças
+            if (!$this->school->exists || $this->school->isDirty()) {
+                $this->school->save();
+                $wasSaved = true;
+            }
 
             // Cria ou atualiza a inscrição associada à escola
             $this->registration = Registration::firstOrCreate(
@@ -143,12 +160,14 @@ trait WithSchoolStep
             );
         });
         
-        $this->success(
-            title: 'Atualizado', 
-            icon: 'o-check-circle', 
-            description:'Dados da escola atualizados com sucesso',
-            position: 'toast-top toast-center',
-            css: "bg-green-500 border-green-500 text-white text-md");
+        if ($wasSaved) {
+            $this->success(
+                title: 'Atualizado', 
+                icon: 'o-check-circle', 
+                description:'Dados da escola atualizados com sucesso',
+                position: 'toast-top toast-right',
+                css: "bg-green-100 border-green-100 text-green-900 text-md");
+        }
 
         $this->nextStep();
     }
