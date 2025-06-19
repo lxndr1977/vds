@@ -6,10 +6,23 @@ use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
 use Livewire\Volt\Component;
 
+use Mary\Traits\Toast;
+
+
 new class extends Component {
+
+    use Toast;
+
     public string $current_password = '';
     public string $password = '';
     public string $password_confirmation = '';
+
+    public bool $showUserPasswordModal = false;
+
+    public function getListeners()
+    {
+        return ['openUserPasswordModal' => 'openUserPasswordModal'];
+    }
 
     /**
      * Update the password for the currently authenticated user.
@@ -34,45 +47,79 @@ new class extends Component {
         $this->reset('current_password', 'password', 'password_confirmation');
 
         $this->dispatch('password-updated');
-    }
+
+        $this->closeUserPasswordModal();
+        
+        $this->success(
+            title: 'Senha Atualizada', 
+            icon: 'o-check-circle', 
+            description:'A senha usuário foi redefinida com sucesso',
+            position: 'toast-top toast-right',
+            css: "bg-green-100 border-green-100 text-green-900 text-md");   
+      }
+
+      public function openUserPasswordModal()
+      {
+         $this->showUserPasswordModal = true;
+      }
+
+      public function closeUserPasswordModal()
+      {
+         $this->showUserPasswordModal = false;
+      }
 }; ?>
 
-<section class="w-full">
-    @include('partials.settings-heading')
+<div>
+   <x-mary-modal 
+      title="Alterar Senha" 
+      class="backdrop-blur"
+      wire:model="showUserPasswordModal" 
+      @close="$wire.closeUserPasswordModal()"
+   >
 
-    <x-settings.layout :heading="__('Update password')" :subheading="__('Ensure your account is using a long, random password to stay secure')">
-        <form wire:submit="updatePassword" class="mt-6 space-y-6">
-            <flux:input
-                wire:model="current_password"
-                :label="__('Current password')"
-                type="password"
-                required
-                autocomplete="current-password"
-            />
-            <flux:input
-                wire:model="password"
-                :label="__('New password')"
-                type="password"
-                required
-                autocomplete="new-password"
-            />
-            <flux:input
-                wire:model="password_confirmation"
-                :label="__('Confirm Password')"
-                type="password"
-                required
-                autocomplete="new-password"
-            />
+   <form wire:submit="updatePassword" class="mt-6 space-y-6">
+      <x-mary-input
+            wire:model="current_password"
+            :label="__('Current password')"
+            type="password"
+            required
+            autocomplete="current-password"
+      />
+      <x-mary-input
+            wire:model="password"
+            :label="__('New password')"
+            type="password"
+            required
+            autocomplete="new-password"
+      />
+      <x-mary-input
+            wire:model="password_confirmation"
+            :label="__('Confirm Password')"
+            type="password"
+            required
+            autocomplete="new-password"
+      />
 
-            <div class="flex items-center gap-4">
-                <div class="flex items-center justify-end">
-                    <flux:button variant="primary" type="submit" class="w-full">{{ __('Save') }}</flux:button>
-                </div>
+      <x-slot:actions>
+         <x-mary-button 
+               icon="o-x-mark" 
+               @click="$wire.closeUserPasswordModal()"
+         >
+               Cancelar
+         </x-mary-button>
 
-                <x-action-message class="me-3" on="password-updated">
-                    {{ __('Saved.') }}
-                </x-action-message>
-            </div>
-        </form>
-    </x-settings.layout>
-</section>
+         <x-mary-button
+            icon="o-check"
+            wire:click="updatePassword"
+            class="btn-primary"
+            spinner="updatePassword">
+            Atualizar
+         </x-mary-button>
+
+      </x-slot:actions>
+
+   </form>
+
+   </x-mary-modal>
+
+</div>

@@ -1,4 +1,4 @@
-<div class="sidebar w-full md:w-80 xl:w-94 bg-secondary-600 text-white flex-shrink-0 h-auto lg:h-screen md:flex md:flex-col md:justify-between">
+<div class="sidebar w-full md:w-80 xl:w-94 bg-secondary-600  flex-shrink-0 h-auto lg:h-screen md:flex md:flex-col md:justify-between">
     <div class="p-6">
         <div class="hidden md:block mb-6">
             <div class="md:h-10 xl:h-16">
@@ -6,9 +6,9 @@
             </div>
         </div> 
 
-        <h1 class="text-sm font-bold mb-4 hidden md:block mb-6 xl:mb-8">Inscrição VDS 2025</h1>
+        <h1 class="text-white text-sm font-bold mb-4 hidden md:block mb-6 xl:mb-8">Inscrição VDS 2025</h1>
         
-        <div class="flex flex-row justify-around md:flex-col space-y-1 xl:space-y-8">
+        <div class="flex flex-row justify-around md:flex-col space-y-1 xl:space-y-8 text-white">
             @foreach($this->steps as $stepNumber => $stepLabel)
                 <div class="flex items-center space-x-3 {{ $currentStep == $stepNumber ? 'bg-secondary-700' : '' }} hover:bg-secondary-700 p-2 rounded-lg hover:cursor-pointer" data-step="{{ $stepNumber }}" wire:click="goToStep({{ $stepNumber }})">
                     <div class="w-8 h-8 {{ $currentStep >= $stepNumber ? 'bg-primary-600' : 'bg-secondary-500' }} rounded-full flex items-center justify-center text-sm font-semibold border-2 border-transparent">{{ $stepNumber }}</div>
@@ -19,15 +19,33 @@
     </div>
     
     <div class="p-6 hidden md:block mt-auto">
-        <div class="bg-secondary-700 rounded-lg px-4 py-2">
-            <div class="flex items-center space-x-3">
-                <div class="w-8 h-8 bg-secondary-600 rounded-full flex items-center justify-center">
-                    <x-mary-icon name="o-user" />
-                </div>
-                <div>
-                    <p class="font-semibold text-sm line-clamp-1">{{ $userName }}</p>
-                </div>
+        <div class="bg-secondary-700 rounded-lg px-2 py-2 flex items-center justify-between">
+            <div class="flex items-center">
+               <x-mary-dropdown>
+                  <x-slot:trigger>
+                     <x-mary-button icon="o-user" class="btn-circle btn-sm mr-2 bt-" />
+                  </x-slot:trigger>
+               
+                  <x-mary-menu-item title="Editar Perfil" @click="$dispatch('openUserModalProfile')" />
+                  <x-mary-menu-item title="Alterar Senha" @click="$dispatch('openUserPasswordModal')" />
+               </x-mary-dropdown>
+
+               <p class="font-semibold text-sm line-clamp-1 text-white">{{ $userName }}</p>           
+            </div>   
+
+            <div>
+               <form method="POST" action="{{ route('logout') }}" class="w-full">
+                  @csrf
+                  <x-mary-button 
+                     icon="o-arrow-left-start-on-rectangle" 
+                     type="submit" 
+                     class="btn-ghost btn-square text-white hover:text-primary-600" 
+                     tooltip="Sair"
+                  />
+               </form>
             </div>
         </div>
     </div>
+    
 </div>
+

@@ -21,6 +21,9 @@ class RegistrationForm extends Component
       WithDancersStep,
       WithChoreographyStep,
       WithFinalStep;
+      
+
+   public bool $showUserPasswordModal = false;
 
    public string $userName = '';
 
@@ -34,6 +37,12 @@ class RegistrationForm extends Component
    public bool $isFinished = false;
 
    public bool $showReopenRegistrationModal = false;
+
+   public function getListeners()
+   {
+      return ['userNameUpdated' => 'userNameUpdated'];
+   }
+   
 
    /**
     * Monta o componente, carregando ou inicializando os dados da inscrição.
@@ -145,7 +154,6 @@ class RegistrationForm extends Component
          }
       }
 
-
       $this->currentStep++;
       $this->dispatch('stepChanged');
    }
@@ -253,7 +261,6 @@ class RegistrationForm extends Component
       ];
    }
 
-
    public function reopenRegistration() 
    {
       $registration = Registration::findOrFail($this->registration->id);
@@ -267,12 +274,27 @@ class RegistrationForm extends Component
    }
 
    public function showReopenRegistrationModal()
-    {
+   {
       return $this->showReopenRegistrationModal = true;
-    }
+   }
 
-    public function closeReopenRegistrationModal()
-    {
+   public function closeReopenRegistrationModal()
+   {
       return $this->showReopenRegistrationModal = false;
-    }
+   }
+
+   public function openUserPasswordModal()
+   {
+      $this->showUserPasswordModal = true;
+   }
+
+   public function closeUserPasswordModal()
+   {
+      $this->showUserPasswordModal = false;
+   }
+
+   public function userNameUpdated()
+   {
+        $this->userName = auth()->user()->name;
+   }
 }

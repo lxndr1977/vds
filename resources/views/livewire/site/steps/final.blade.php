@@ -1,11 +1,14 @@
 {{-- Etapa 5: Revisão e Finalização --}}
 <div x-data="{ openChoreographies: [] }" class="space-y-6">
    @if ($isFinished)
-      <h2 class="text-2xl font-bold mb-4">Sua inscrição no evento está confirmada!</h2>
+      <div class="bg-green-50 border border-green-100 text-green-600 rounded-lg shadow-md p-6 text-center mb-6">
+         <x-mary-icon name="o-check-circle" class="w-12 h-12 mb-6" />
+         <h2 class="text-2xl font-bold mb-4">Sua inscrição no Vem Dançar Sudamérica 2025 está confirmada!</h2>
+         <p>Atualizada em {{ $registration->updated_at_brazilian }}</p>
+      </div>
    @else
       <h2 class="text-2xl font-bold mb-4">Etapa 5: Revisão e Finalização</h2>
-      <p class="text-gray-600 mb-6">Confira todos os dados da sua inscrição antes de finalizar. Após a finalização, não
-         será possível editar as informações.</p>
+      <p class="text-gray-600 mb-6">Confira todos os dados da sua inscrição antes de finalizar.</p>
    @endif
    {{-- Stats Resumo --}}
    <div class="grid grid-cols-2 lg:grid-cols-{{ $showTotals ? '3' : '2' }} gap-4 mb-6">
@@ -300,38 +303,31 @@
       
    {{-- Modal de Confirmação --}}
    <x-mary-modal wire:model="showConfirmationModal" title="Confirmar Finalização da Inscrição"
-      subtitle="Esta ação não pode ser desfeita">
+      subtitle="">
       <div class="space-y-4">
-         <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-            <div class="flex items-start">
-               <div class="flex-shrink-0">
-                  <x-mary-icon name="o-exclamation-triangle" class="h-5 w-5 text-yellow-400" />
-               </div>
-               <div class="ml-3">
-                  <h3 class="text-sm font-medium text-yellow-800">
-                     Atenção!
-                  </h3>
-                  <div class="mt-2 text-sm text-yellow-700">
-                     <p>Após finalizar a inscrição, não será mais possível editar os dados cadastrados.</p>
-                  </div>
-               </div>
-            </div>
-         </div>
-
+         <p class="text-zinc-900 text-sm">
+            Deseja realmente finalizar a inscrição? 
+         </p>
+         
          <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
             <h4 class="font-semibold text-blue-800 mb-2">Resumo da Inscrição:</h4>
             <ul class="text-sm text-blue-700 space-y-1">
-               <li><strong>Escola:</strong> {{ $school->name }}</li>
+               @foreach($choreography->school->getMembersCountByType() as $typeName => $count)
+                  <li><strong>{{ $typeName }}es:</strong> {{ $count }} </li>
+               @endforeach
+
+               <li><strong> Coreógrafos:</strong> {{ $choreography->choreographers->count() }}</li>
+
+               <li><strong> Bailarinos:</strong> {{ $choreography->dancers->count() }}</li>
                <li><strong>Coreografias:</strong> {{ $choreographies->count() }}</li>
+
                @if ($showTotals)
                   <li><strong>Valor Total:</strong> R$ {{ number_format($totalGeral, 2, ',', '.') }}</li>
                @endif
             </ul>
          </div>
 
-         <p class="text-gray-600 text-sm">
-            Deseja realmente finalizar a inscrição? Um e-mail de confirmação será enviado para o endereço cadastrado.
-         </p>
+       
       </div>
 
       <x-slot:actions>

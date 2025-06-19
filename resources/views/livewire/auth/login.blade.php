@@ -40,7 +40,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
         RateLimiter::clear($this->throttleKey());
         Session::regenerate();
 
-        $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
+        $this->redirectIntended(default: route('site', absolute: false), navigate: true);
     }
 
     /**
@@ -73,10 +73,11 @@ new #[Layout('components.layouts.auth')] class extends Component {
     }
 }; ?>
 
-<div class="flex flex-col gap-6">
+
+<div class="flex flex-col gap-6 w-full">
     <x-mary-header 
-        title="{{__('Create an account')}}" 
-        subtitle="{{__('Enter your details below to create your account')}}"   
+        title="{{__('Log in to your account')}}" 
+        subtitle="{{__('Enter your email and password below to log in')}}"   
         class="mb-0" />
 
     <!-- Session Status -->
