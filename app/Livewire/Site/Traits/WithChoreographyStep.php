@@ -52,17 +52,17 @@ trait WithChoreographyStep
      */
     public function mountChoreographyStep()
     {
-        $this->choreographyTypes = Cache::remember('choreography_types', 604800, function () {
-            return ChoreographyType::all();
-        });
-        
-        $this->choreographyCategories = Cache::remember('choreography_categories', 604800, function () {
-            return ChoreographyCategory::all();
-        });
-        
-        $this->danceStyles = Cache::remember('dance_styles', 604800, function () {
-            return DanceStyle::all();
-        });
+      $this->choreographyTypes = Cache::remember('choreography_types', 604800, function () {
+         return ChoreographyType::orderBy('name')->get();
+      });
+
+      $this->choreographyCategories = Cache::remember('choreography_categories', 604800, function () {
+         return ChoreographyCategory::orderBy('name')->get();
+      });
+
+      $this->danceStyles = Cache::remember('dance_styles', 604800, function () {
+         return DanceStyle::orderBy('name')->get();
+      });
         
         $this->loadChoreographies();
     }

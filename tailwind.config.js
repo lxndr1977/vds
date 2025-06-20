@@ -3,6 +3,9 @@ module.exports = {
     './resources/**/*.blade.php',
     './resources/**/*.js',
     './resources/**/*.vue',
+    './vendor/filament/**/*.blade.php',  // <- Importante para Filament
+    './resource/filament/**/*.blade.php',  // <- Importante para Filament
+    './app/Livewire/**/*.php',            // <- Importante para Livewire
   ],
   theme: {
     extend: {},
@@ -12,7 +15,7 @@ module.exports = {
     themes: [
       {
         meuTema: {
-          "primary": "##ffad22",
+          "primary": "#ffad22",
           "secondary": "#red",
           "accent": "#10b981",
           "neutral": "red",

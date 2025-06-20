@@ -316,9 +316,9 @@
                   <li><strong>{{ $typeName }}es:</strong> {{ $count }} </li>
                @endforeach
 
-               <li><strong> Coreógrafos:</strong> {{ $choreography->choreographers->count() }}</li>
+               <li><strong> Coreógrafos:</strong> {{ $school->choreographers->count() }}</li>
 
-               <li><strong> Bailarinos:</strong> {{ $choreography->dancers->count() }}</li>
+               <li><strong> Bailarinos:</strong> {{ $school->dancers->count() }}</li>
                <li><strong>Coreografias:</strong> {{ $choreographies->count() }}</li>
 
                @if ($showTotals)

@@ -89,6 +89,7 @@ trait WithFinalStep
                 Log::error('Falha no envio do email de confirmação: ' . $emailException->getMessage() . 
                         ' - Inscrição ID: ' . $this->registration->id);
                 
+                        dd($emailException->getMessage());
                 // Opcional: Notificar o usuário sobre falha no email
                 // $this->warning(title: 'Aviso', description: 'Inscrição realizada, mas houve problema no envio do email de confirmação');
             }

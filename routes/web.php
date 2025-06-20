@@ -24,4 +24,8 @@ Route::middleware(['auth'])->get('/inscricao', function () {
 })->name('site');
 
 
+Route::get('/teste', function () {
+    return view('teste');
+});
+
 require __DIR__.'/auth.php';
