@@ -64,9 +64,9 @@ trait WithFinalStep
             ); 
 
         } catch (\Exception $e) {
-            Log::error('Erro ao finalizar inscrição e salvar dados: ' . $e->getMessage());
+            // Log::error('Erro ao finalizar inscrição e salvar dados: ' . $e->getMessage());
             $this->showConfirmationModal = false;
-            
+            dd($e->getMessage());
             $this->error(title: 'Erro', icon: 'o-information-circle', description: $e->getMessage());
             return redirect()->route('site'); // Early return em caso de erro
         }
