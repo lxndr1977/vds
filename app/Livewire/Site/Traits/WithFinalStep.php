@@ -64,14 +64,38 @@ trait WithFinalStep
             ); 
 
         } catch (\Exception $e) {
-            // Log::error('Erro ao finalizar inscrição e salvar dados: ' . $e->getMessage());
+            Log::error('Erro ao finalizar inscrição e salvar dados: ' . $e->getMessage());
             $this->showConfirmationModal = false;
-            dd($e->getMessage());
+            
             $this->error(title: 'Erro', icon: 'o-information-circle', description: $e->getMessage());
             return redirect()->route('site'); // Early return em caso de erro
         }
 
-        
+        // Tentativa de envio do email (fora do try-catch principal)
+        if ($this->registration->school && $this->registration->school->user && $this->registration->school->user->email) {
+            // try {
+                Mail::to($this->registration->school->user->email)->send(new RegistrationFinished($this->registration));
+
+                //  Mail::raw('Este é um e-mail de teste enviado pelo sistema.', function ($message) {
+                //         $message->to('pereira.alexandre@gmail.com')
+                //                 ->subject('Teste de envio de e-mail 2')
+                //                 ->from('naoresponda@vemdancarsudamerica.com.br', 'Seu Nome ou Sistema');
+                //     });
+
+
+               //  Log::info('Email de confirmação enviado com sucesso para: ' . $this->registration->school->user->email);
+            // } catch (\Exception $emailException) {
+                // Log do erro mas não interrompe o fluxo
+               //  Log::error('Falha no envio do email de confirmação: ' . $emailException->getMessage() . 
+               //          ' - Inscrição ID: ' . $this->registration->id);
+                
+                        // dd($emailException->getMessage());
+                // Opcional: Notificar o usuário sobre falha no email
+                // $this->warning(title: 'Aviso', description: 'Inscrição realizada, mas houve problema no envio do email de confirmação');
+            }
+      //   } 
+
+return $this->redirectRoute('site');
 
     }
 
