@@ -73,7 +73,7 @@ trait WithFinalStep
 
         // Tentativa de envio do email (fora do try-catch principal)
         if ($this->registration->school && $this->registration->school->user && $this->registration->school->user->email) {
-            try {
+            // try {
                 Mail::to($this->registration->school->user->email)->send(new RegistrationFinished($this->registration));
 
                 //  Mail::raw('Este é um e-mail de teste enviado pelo sistema.', function ($message) {
@@ -83,19 +83,17 @@ trait WithFinalStep
                 //     });
 
 
-                Log::info('Email de confirmação enviado com sucesso para: ' . $this->registration->school->user->email);
-            } catch (\Exception $emailException) {
+               //  Log::info('Email de confirmação enviado com sucesso para: ' . $this->registration->school->user->email);
+            // } catch (\Exception $emailException) {
                 // Log do erro mas não interrompe o fluxo
-                Log::error('Falha no envio do email de confirmação: ' . $emailException->getMessage() . 
-                        ' - Inscrição ID: ' . $this->registration->id);
+               //  Log::error('Falha no envio do email de confirmação: ' . $emailException->getMessage() . 
+               //          ' - Inscrição ID: ' . $this->registration->id);
                 
-                        dd($emailException->getMessage());
+                        // dd($emailException->getMessage());
                 // Opcional: Notificar o usuário sobre falha no email
                 // $this->warning(title: 'Aviso', description: 'Inscrição realizada, mas houve problema no envio do email de confirmação');
             }
-        } else {
-            Log::warning('Email de confirmação não enviado: Usuário ou email não encontrado para a inscrição ' . $this->registration->id);
-        }
+      //   } 
 
         return redirect()->route('site');
 
