@@ -95,7 +95,7 @@ trait WithFinalStep
             }
       //   } 
 
-      //   return redirect()->route('site');
+return $this->redirectRoute('site');
 
     }
 
