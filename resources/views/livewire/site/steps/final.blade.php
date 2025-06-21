@@ -11,7 +11,7 @@
       <p class="text-gray-600 mb-6">Confira todos os dados da sua inscrição antes de finalizar.</p>
    @endif
    {{-- Stats Resumo --}}
-   <div class="grid grid-cols-2 lg:grid-cols-{{ $showTotals ? '3' : '2' }} gap-4 mb-6">
+   <div class="grid grid-cols-1 lg:grid-cols-{{ $showTotals ? '3' : '2' }} gap-4 mb-6">
       <x-mary-stat
          title="Particpantes"
          :value="$members->count() + $dancers->count() + $choreographers->count()"

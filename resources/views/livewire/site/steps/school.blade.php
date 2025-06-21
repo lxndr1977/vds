@@ -74,7 +74,8 @@
 
             <div
                x-data
-               @input="$wire.clearError('schoolState.number')">
+               @input="$wire.clearError('schoolState.number')"
+               class="col-span-4 md:col-span-1">
                <x-mary-input
                   label="Número"
                   wire:model.defer="schoolState.number"
@@ -85,7 +86,8 @@
 
             <div
                x-data
-               @input="$wire.clearError('schoolState.complement')">
+               @input="$wire.clearError('schoolState.complement')"
+               class="col-span-4 md:col-span-1">
                <x-mary-input
                   label="Complemento"
                   wire:model.defer="schoolState.complement"
@@ -97,7 +99,7 @@
             <div
                x-data
                @input="$wire.clearError('schoolState.district')"
-               class="col-span-2">
+               class="col-span-4 md:col-span-2">
                <x-mary-input
                   label="Bairro"
                   wire:model.defer="schoolState.district"
@@ -109,7 +111,7 @@
             <div
                x-data
                @input="$wire.clearError('schoolState.city')"
-               class="col-span-2">
+               class="col-span-4 md:col-span-2">
                <x-mary-input
                   label="Cidade"
                   wire:model.defer="schoolState.city"
@@ -121,7 +123,7 @@
             <div
                x-data
                @input="$wire.clearError('schoolState.state')"
-               class="col-span-2">
+               class="col-span-4 md:col-span-2">
                <x-mary-select
                   id="state"
                   label="Estado"
@@ -133,7 +135,7 @@
          </div>
 
          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div class="md:col-span-2"
+            <div class="col-span-2"
                x-data
                @input="$wire.clearError('schoolState.responsible_name')">
                <x-mary-input
@@ -146,7 +148,8 @@
 
             <div
                x-data
-               @input="$wire.clearError('schoolState.responsible_email')">
+               @input="$wire.clearError('schoolState.responsible_email')"
+               class="col-span-2 md:col-span-1">
                <x-mary-input
                   label="Email do Responsável"
                   wire:model.lazy="schoolState.responsible_email"
@@ -182,7 +185,8 @@
                            }
                      })
                   "
-               @input="$wire.clearError('schoolState.responsible_phone')">
+               @input="$wire.clearError('schoolState.responsible_phone')"
+               class="col-span-2 md:col-span-1">
                <x-mary-input
                   label="Whatsapp do Responsável"
                   wire:model.defer="schoolState.responsible_phone"

@@ -16,7 +16,7 @@ module.exports = {
       {
         meuTema: {
           "primary": "#ffad22",
-          "secondary": "#red",
+          "secondary": "#313674",
           "accent": "#10b981",
           "neutral": "red",
           "base-100": "#ffffff",

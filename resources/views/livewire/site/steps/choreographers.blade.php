@@ -1,12 +1,12 @@
 {{-- Etapa 3: Coreógrafos(as) --}}
 <div>
-   <div class="flex flex-col md:flex-row  items-start md:items-center justify-start md:justify-between mb-8">
+   <div class="grid grid-cols-1 md:grid-cols-2 mb-2 md:mb-8">
       <div class="mb-6">
          <h2 class="text-xl md:text-2xl font-medium mb-1">Etapa 3: Coreógrafos(as)</h2>
          <p class="text-zinc-700">Cadastre todos os Coreógrafos(as) do Grupo/Escola/Cia</p>
       </div>
 
-      <div class="text-left md:text-right mt-4 mb-8">
+      <div class="text-left md:text-right mb-6">
          <x-mary-button icon="o-plus" @click="$wire.choreographerModal = true" class="btn-primary">
             Adicionar Coreógrafo(a)
          </x-mary-button>

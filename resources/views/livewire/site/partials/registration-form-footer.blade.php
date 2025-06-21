@@ -35,7 +35,7 @@
                   form="form-step-1" 
                   spinner="saveSchool"
                >
-                     Salvar e continuar
+                     Salvar <span class="hidden md:inline-block">e continuar</span>
                </x-mary-button>
             @endif
 
@@ -56,7 +56,7 @@
                   class="btn btn-primary"
                   icon="o-check"
                >
-                  Finalizar Inscrição
+                  Finalizar <span class="hidden md:inline-block">Inscrição</span>
                   <x-mary-loading wire:loading wire:target="finishRegistration" class="text-white" />
                </x-mary-button>
             @endif
@@ -67,7 +67,7 @@
                   icon="o-pencil"
                   @click="$wire.showReopenRegistrationModal = true"
                >
-                  Editar Inscrição
+                  Editar <span class="hidden md:inline-block">Inscrição</span>
                   <x-mary-loading wire:loading wire:target="reopenRegistration" class="text-white" />
                </x-mary-button>
             @endif

@@ -81,7 +81,7 @@ trait WithFinalStep
                 //                 ->subject('Teste de envio de e-mail 2')
                 //                 ->from('naoresponda@vemdancarsudamerica.com.br', 'Seu Nome ou Sistema');
                 //     });
-
+ 
 
                //  Log::info('Email de confirmação enviado com sucesso para: ' . $this->registration->school->user->email);
             // } catch (\Exception $emailException) {

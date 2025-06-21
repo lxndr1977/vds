@@ -1,7 +1,7 @@
-<div class="grid grid-cols-1 md:grid-cols-2 mb-8">
+<div class="grid grid-cols-1 md:grid-cols-2 mb-2 md:mb-8">
    <div class="mb-6 col-span-2 md:col-span-1">
       <h2 class="text-xl md:text-2xl font-medium mb-1">Etapa 6: Coreografias</h2>
-      <p class="text-sm">Cadastre todos os coreógrafos que participarão do evento.</p>
+      <p class="text-zinc-700">Cadastre todos os coreógrafos que participarão do evento.</p>
    </div>
    <div class="mb-6 col-span-2 md:col-span-1 text-start md:text-end">
       <x-mary-button icon="o-plus" wire:click="resetChoreographyForm" @click="$wire.choreographyModal = true"

@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ChoreographyDancers extends Model
+class ChoreographyDancer extends Model
 {
     //
 }
