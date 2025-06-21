@@ -182,7 +182,7 @@
             </div>
             
             <div class="cta-container">
-                <a href="https://vemdancarsudamerica.com.br" class="cta-button">
+                <a href="https://inscricoes.vemdancarsudamerica.com.br" class="cta-button">
                     Acessar Painel
                 </a>
             </div>
