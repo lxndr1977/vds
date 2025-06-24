@@ -16,7 +16,14 @@ class ChoreographyTypeSeeder extends Seeder
     {
         $types = [
             [
-                'name' => 'Solo',
+                'name' => 'Solo Masculino',
+                'description' => 'Apresentação individual',
+                'min_dancers' => 1,
+                'max_dancers' => 1,
+                'fee' => 50.00,
+            ], 
+            [
+                'name' => 'Solo Feminino',
                 'description' => 'Apresentação individual',
                 'min_dancers' => 1,
                 'max_dancers' => 1,
