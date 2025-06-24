@@ -1,6 +1,7 @@
 <?php
 
 use Livewire\Volt\Volt;
+use App\Models\Registration;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
@@ -34,6 +35,23 @@ Route::get('/test-mail', function () {
     } catch (Exception $e) {
         return 'Erro: ' . $e->getMessage();
     }
+});
+
+// routes/web.php
+Route::get('/test-view/{registration}', function (Registration $registration) {
+    $record = $registration->load([
+        'school',
+        'school.members.memberType',
+        'school.dancers',
+        'school.choreographers',
+        'school.choreographies.dancers',
+        'school.choreographies.choreographers',
+        'school.choreographies.choreographyType',
+        'school.choreographies.choreographyCategory',
+        'school.choreographies.danceStyle',
+    ]);
+    
+    return view('filament.resources.registration-resource.pages.view-registration-details', compact('record'));
 });
 
 require __DIR__.'/auth.php';
