@@ -2,11 +2,12 @@
 
 namespace App\Filament\Resources\RegistrationResource\Pages;
 
-use App\Filament\Resources\RegistrationResource;
+use Filament\Actions;
 use App\Models\Registration;
 use Filament\Resources\Pages\Page;
-use Filament\Actions;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Contracts\Support\Htmlable;
+use App\Filament\Resources\RegistrationResource;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class ViewRegistrationDetails extends Page
@@ -44,7 +45,7 @@ class ViewRegistrationDetails extends Page
         
         // Verifica se a escola existe
         if (!$this->school) {
-            \Log::warning('Escola não encontrada para o registro: ' . $this->record->id);
+            Log::warning('Escola não encontrada para o registro: ' . $this->record->id);
             $this->school = null;
             $this->members = collect();
             $this->choreographers = collect();
@@ -59,7 +60,7 @@ class ViewRegistrationDetails extends Page
         $this->dancers = $this->school->dancers ?? collect();
         $this->choreographies = $this->school->choreographies ?? collect();
         
-        \Log::info('Dados carregados - Membros: ' . $this->members->count() . 
+        Log::info('Dados carregados - Membros: ' . $this->members->count() . 
                   ', Coreógrafos: ' . $this->choreographers->count() . 
                   ', Dançarinos: ' . $this->dancers->count() . 
                   ', Coreografias: ' . $this->choreographies->count());
