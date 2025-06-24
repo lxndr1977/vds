@@ -98,7 +98,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
 
             <!-- Password -->
             <div class="relative">
-                <x-mary-input
+                <x-mary-password
                     wire:model="password"
                     :label="__('Password')"
                     type="password"

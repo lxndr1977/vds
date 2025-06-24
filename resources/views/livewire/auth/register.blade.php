@@ -69,18 +69,17 @@ new #[Layout('components.layouts.auth')] class extends Component {
             />
 
             <!-- Password -->
-            <x-mary-input
+            <x-mary-password
                 wire:model="password"
                 :label="__('Password')"
                 type="password"
                 required
                 autocomplete="new-password"
                 :placeholder="__('Password')"
-                viewable
             />
     
             <!-- Confirm Password -->
-            <x-mary-input
+            <x-mary-password
                 wire:model="password_confirmation"
                 :label="__('Confirm password')"
                 type="password"
