@@ -46,7 +46,7 @@
     </x-filament::section>
 
     {{-- Dados da Escola --}}
-    <x-filament::section>
+    <x-filament::section> 
         <x-slot name="heading">
             Grupo/Escola/Cia
         </x-slot>
