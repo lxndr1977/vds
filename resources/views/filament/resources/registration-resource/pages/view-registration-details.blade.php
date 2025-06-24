@@ -6,6 +6,7 @@
     @if ($record->is_finished)
         <x-filament::section>
             <div class="bg-green-50 border border-green-200 text-green-700 rounded-lg p-6 text-center">
+                <x-heroicon-o-check-circle class="w-12 h-12 mx-auto mb-4 text-green-600" />
                 <h2 class="text-2xl font-bold mb-2">Inscrição no Vem Dançar Sudamérica 2025 Confirmada!</h2>
                 <p class="text-sm">Atualizada em {{ $record->updated_at->format('d/m/Y H:i') }}</p>
             </div>
@@ -20,7 +21,7 @@
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center">
-                
+                <x-heroicon-o-users class="w-8 h-8 mx-auto mb-2 text-blue-600" />
                 <div class="text-2xl font-bold text-blue-900">
                     {{ $record->school->members->count() + $record->school->dancers->count() + $record->school->choreographers->count() }}
                 </div>
@@ -28,6 +29,7 @@
             </div>
 
             <div class="bg-purple-50 border border-purple-200 rounded-lg p-4 text-center">
+                <x-heroicon-o-musical-note class="w-8 h-8 mx-auto mb-2 text-purple-600" />
                 <div class="text-2xl font-bold text-purple-900">
                     {{ $record->school->choreographies->count() }}
                 </div>
@@ -35,6 +37,7 @@
             </div>
 
            <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 text-center">
+                <x-heroicon-o-building-office class="w-8 h-8 mx-auto mb-2 text-gray-600" />
                 <div class="text-sm text-gray-700 font-medium">Status</div>
                 <div class="text-lg font-bold">
                     {{ $record->status_registration->getLabel() }}
@@ -282,6 +285,7 @@
                 </div>
             @empty
                 <div class="text-center py-8">
+                    <x-heroicon-o-musical-note class="w-12 h-12 mx-auto text-gray-400 mb-4" />
                     <p class="text-gray-500 italic">Nenhuma coreografia cadastrada.</p>
                 </div>
             @endforelse
