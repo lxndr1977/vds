@@ -61,7 +61,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
             <!-- Email Address -->
             <x-mary-input
                 wire:model="email"
-                :label="__('Email address')"
+                :label="__('Email address')"   
                 type="email"
                 required
                 autocomplete="email"
