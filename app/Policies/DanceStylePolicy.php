@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\Dancer;
+use App\Models\DanceStyle;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
-class DancerPolicy
+class DanceStylePolicy
 {
     /**
      * Determine whether the user can view any models.
@@ -19,7 +19,7 @@ class DancerPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Dancer $dancer): bool
+    public function view(User $user, DanceStyle $danceStyle): bool
     {
         return $user->isSuperAdmin();
     }
@@ -35,7 +35,7 @@ class DancerPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Dancer $dancer): bool
+    public function update(User $user, DanceStyle $danceStyle): bool
     {
         return $user->isSuperAdmin();
     }
@@ -43,7 +43,7 @@ class DancerPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Dancer $dancer): bool
+    public function delete(User $user, DanceStyle $danceStyle): bool
     {
         return $user->isSuperAdmin();
     }
@@ -51,7 +51,7 @@ class DancerPolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Dancer $dancer): bool
+    public function restore(User $user, DanceStyle $danceStyle): bool
     {
         return $user->isSuperAdmin();
     }
@@ -59,7 +59,7 @@ class DancerPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Dancer $dancer): bool
+    public function forceDelete(User $user, DanceStyle $danceStyle): bool
     {
         return $user->isSuperAdmin();
     }

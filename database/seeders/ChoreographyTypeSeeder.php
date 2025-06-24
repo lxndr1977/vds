@@ -37,17 +37,17 @@ class ChoreographyTypeSeeder extends Seeder
                 'fee' => 35.00,
             ],
             [
-                'name' => 'Grupo (4-8)',
-                'description' => 'Grupo pequeno de 4 a 8 dançarinos',
+                'name' => 'Grupo (4-7)',
+                'description' => 'De 4 a 7 bailarinos(as)',
                 'min_dancers' => 4,
-                'max_dancers' => 8,
+                'max_dancers' => 7,
                 'fee' => 30.00,
             ],
             [
-                'name' => 'Grupo Grande (9+)',
-                'min_dancers' => 9,
+                'name' => 'Conjunto',
+                'min_dancers' => 8,
                 'max_dancers' => 100,
-                'description' => 'Grupo grande com 9 ou mais dançarinos',
+                'description' => 'Acima de 7 bailarinos(as)',
                 'fee' => 25.00,
             ],
         ];

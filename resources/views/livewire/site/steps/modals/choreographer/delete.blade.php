@@ -9,7 +9,7 @@
                 </svg>
             </div>
             <div>
-                <p class="text-gray-900 font-medium">Tem certeza que deseja remover este(a) coreógrafo(a)?</p>
+                <p class="text-gray-900 font-medium">Tem certeza que deseja remover este(a) Coreógrafo(a)?</p>
                 <p class="text-gray-600 text-sm mt-1">Esta ação não pode ser desfeita.</p>
             </div>
         </div>

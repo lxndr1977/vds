@@ -28,6 +28,7 @@ class User extends Authenticatable implements FilamentUser
         'name',
         'email',
         'password',
+        'role'
     ];
 
     /**
@@ -73,6 +74,21 @@ class User extends Authenticatable implements FilamentUser
     public function school(): HasOne
     {
         return $this->hasOne(School::class);
+    }
+
+    public function isSuperAdmin(): bool
+    {
+        return $this->role === UserRoleEnum::SuperAdmin->value;
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === UserRoleEnum::Admin->value;
+    }
+
+    public function isUser(): bool
+    {
+        return $this->role === UserRoleEnum::User->value;
     }
 
     public function canAccessPanel(Panel $panel): bool

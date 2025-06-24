@@ -2,7 +2,7 @@
 {{-- Modal para Adicionar/Editar Coreógrafo --}}
 <x-mary-modal
     wire:model="choreographerModal" 
-    :title="$isEditingChoreographer ? 'Editar coreógrafo(a)' : 'Cadastrar coreógrafo(a)'" 
+    :title="$isEditingChoreographer ? 'Editar Coreógrafo(a)' : 'Cadastrar Coreógrafo(a)'" 
     class="backdrop-blur"
     @close="$wire.closeChoreographerModal()"
 >

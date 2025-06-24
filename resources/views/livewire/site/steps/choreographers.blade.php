@@ -75,7 +75,7 @@
                </path>
             </svg>
          </div>
-         <p class="text-gray-500">Nenhum coreógrafo(a) cadastrado ainda</p>
+         <p class="text-gray-500">Nenhum Coreógrafo(a) cadastrado ainda</p>
          <p class="text-sm text-gray-400 mt-1 mb-6">Clique em "Adicionar Coreógrafo(a)" para começar</p>
          <x-mary-button icon="o-plus" @click="$wire.choreographerModal = true" class="btn-primary">
             Adicionar Coreógrafo(a)
