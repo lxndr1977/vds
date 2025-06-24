@@ -37,9 +37,12 @@ return [
     /**
      * Components settings
      */
+      'default_theme' => 'light', // força o tema claro
+    'theme_toggle' => false,    // remove o toggle de tema
     'components' => [
         'spotlight' => [
             'class' => 'App\Support\Spotlight',
         ]
-    ]
+        ],
+          
 ];
