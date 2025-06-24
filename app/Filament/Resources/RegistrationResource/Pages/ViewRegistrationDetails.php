@@ -45,7 +45,6 @@ class ViewRegistrationDetails extends Page
         
         // Verifica se a escola existe
         if (!$this->school) {
-            Log::warning('Escola não encontrada para o registro: ' . $this->record->id);
             $this->school = null;
             $this->members = collect();
             $this->choreographers = collect();
@@ -60,10 +59,7 @@ class ViewRegistrationDetails extends Page
         $this->dancers = $this->school->dancers ?? collect();
         $this->choreographies = $this->school->choreographies ?? collect();
         
-        Log::info('Dados carregados - Membros: ' . $this->members->count() . 
-                  ', Coreógrafos: ' . $this->choreographers->count() . 
-                  ', Dançarinos: ' . $this->dancers->count() . 
-                  ', Coreografias: ' . $this->choreographies->count());
+     
     }
 
     public function getTitle(): string|Htmlable
