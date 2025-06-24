@@ -21,7 +21,7 @@ class ChoreographyTypeSeeder extends Seeder
                 'min_dancers' => 1,
                 'max_dancers' => 1,
                 'fee' => 50.00,
-            ],
+            ], 
             [
                 'name' => 'Duo',
                 'description' => 'Apresentação em dupla',
