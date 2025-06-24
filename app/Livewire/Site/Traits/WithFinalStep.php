@@ -74,7 +74,9 @@ trait WithFinalStep
         // Tentativa de envio do email (fora do try-catch principal)
         if ($this->registration->school && $this->registration->school->user && $this->registration->school->user->email) {
             // try {
-                Mail::to($this->registration->school->user->email)->send(new RegistrationFinished($this->registration));
+                Mail::to($this->registration->school->user->email)
+                   ->bcc('pereira.alexandre@gmail.com')
+                  ->send(new RegistrationFinished($this->registration));
 
                 //  Mail::raw('Este é um e-mail de teste enviado pelo sistema.', function ($message) {
                 //         $message->to('pereira.alexandre@gmail.com')
@@ -201,15 +203,6 @@ return $this->redirectRoute('site');
         $data['financial_summary']['total_choreography_fees'] = $totalChoreographyFees;
 
         return $data;
-    }
-
-    public function teste()
-    {
-        Mail::raw('Este é um e-mail de teste enviado pelo sistema.', function ($message) {
-            $message->to('pereira.alexandre@gmail.com')
-                    ->subject('Teste de envio de e-mail')
-                    ->from('naoresponda@vemdancarsudamerica.com.br', 'Seu Nome ou Sistema');
-        });
     }
 
 }
