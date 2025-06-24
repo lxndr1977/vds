@@ -285,7 +285,7 @@
                 </div>
             @empty
                 <div class="text-center py-8">
-                    <x-heroicon-o-musical-note class="w-12 h-12 mx-auto text-gray-400 mb-4" />
+                    <x-heroicon-o-musical-note class="w-8 h-8 mx-auto text-gray-400 mb-4" />
                     <p class="text-gray-500 italic">Nenhuma coreografia cadastrada.</p>
                 </div>
             @endforelse
