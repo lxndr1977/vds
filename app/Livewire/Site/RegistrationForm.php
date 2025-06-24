@@ -70,7 +70,7 @@ class RegistrationForm extends Component
             ])->where('school_id', $this->school->id)->first();
          }
 
-         $this->status = $this->registration?->status_registration;
+         $this->status = $this->registration?->status_registration->value;
       }
 
       // Inicializa os dados de cada etapa

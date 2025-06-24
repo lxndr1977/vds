@@ -25,6 +25,7 @@ class RegistrationResource extends Resource
             ->schema([
                 Forms\Components\Select::make('school_id')
                     ->relationship('school', 'name')
+                    ->disabled()
                     ->required(),
                 Forms\Components\TextInput::make('status_registration')
                     ->required(),

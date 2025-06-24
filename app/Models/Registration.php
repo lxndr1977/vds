@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\RegistrationStatusEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -23,7 +24,8 @@ class Registration extends Model
     ];
 
     protected $casts = [
-        'registration_data' => 'array', // Adicione esta linha para o cast automático
+        'registration_data' => 'array', 
+        'status_registration' => RegistrationStatusEnum::class,
     ];
 
     
