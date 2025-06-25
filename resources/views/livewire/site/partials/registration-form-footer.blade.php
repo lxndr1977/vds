@@ -81,7 +81,10 @@
                   label="Efetuar pagamento"  
                   icon="o-check" 
                   class="btn-primary" 
-               />
+               >
+                  Pagar <span class="hidden md:inline-block">Efetuar Pagamento</span>
+               </x-mary-button>
+
             @endif
         </div>
     </div>
