@@ -78,7 +78,6 @@
                   link="{{ $this->getLinkPayment() }}" 
                   external 
                   target="_blank" 
-                  label="Efetuar pagamento"  
                   icon="o-check" 
                   class="btn-primary" 
                >
