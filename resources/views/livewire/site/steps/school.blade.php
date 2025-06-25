@@ -1,4 +1,19 @@
 <div>
+   {{-- Modal Explicativo --}}
+   <x-mary-modal wire:model="showExplanationModal" title="Bem-vindo ao Formulário de Inscrição" separator>
+      <div class="p-4 text-gray-700 space-y-4">
+         <p><strong>Bem-vindo ao formulário de inscrição do Vem Dançar Sudamérica 2025!</strong></p>
+         <p>Este é o primeiro passo para cadastrar seu Grupo, Escola ou Companhia.</p>
+         <p>Em cada etapa, preencha as informações correspondentes à sua inscrição.</p>
+         <p>Os dados são <strong> armazenados automaticamente</strong> ao final de cada etapa, e você pode voltar ou avançar a qualquer momento utilizando os botões no rodapé da página para revisar, alterar ou adicionar informações.</p>
+      </div>
+
+      <x-slot:actions>
+         <x-mary-button label="Entendi" wire:click="closeExplanationModal" class="btn-primary" />
+      </x-slot:actions>
+   </x-mary-modal>
+
+
    <div class="mb-6">
       <h2 class="text-xl md:text-2xl font-medium mb-1">Etapa 1: Dados da Grupo/Escola/Cia</h2>
       <p class="text-zinc-700">Preencha as informações de contato do seu Grupo, Escola ou Cia</p>
@@ -203,4 +218,4 @@
          </div>
       </form>
    </div>
-</div>   
+</div>

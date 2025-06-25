@@ -40,7 +40,11 @@ class RegistrationForm extends Component
 
    public function getListeners()
    {
-      return ['userNameUpdated' => 'userNameUpdated'];
+      return 
+         [
+            'userNameUpdated' => 'userNameUpdated',
+            'reopenRegistrationModal' => 'showReopenRegistrationModal',
+      ];
    }
    
 
@@ -184,7 +188,8 @@ class RegistrationForm extends Component
    public function goToStep(int $step)
    {
       if ($this->isFinished) {
-          return;
+            $this->showReopenRegistrationModal = true;
+            return;
       }
 
       // Garante que o usuário só possa navegar para etapas já concluídas ou a atual

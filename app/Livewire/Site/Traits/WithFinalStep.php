@@ -14,6 +14,7 @@ trait WithFinalStep
 
     public $showTotals = false;
 
+   
     /**
      * Finaliza a inscrição, mudando seu status e salvando os dados.
      *
@@ -204,5 +205,16 @@ return $this->redirectRoute('site');
 
         return $data;
     }
+
+   public function getLinkPayment(): string
+   {
+      if (!$this->school || !$this->school->name) {
+         return 'https://wa.me/5551993120404'; // fallback
+      }
+
+      return 'https://wa.me/5551993120404?text=' . urlencode(
+         'Olá! Quero efetuar o pagamento da inscrição da(o) *' . $this->school->name . '* no Vem Dançar Sudamérica 2025.'
+      );
+   }
 
 }

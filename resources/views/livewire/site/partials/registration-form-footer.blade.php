@@ -3,11 +3,23 @@
         <div>
             @if ($currentStep > 1  && !$isFinished)
             <x-mary-button 
+               class="btn-primary"
                icon="o-chevron-left" 
                wire:click="previousStep"
                spinner="previousStep">
                   Voltar
             </x-mary-button>
+            @endif
+
+             @if ($currentStep == 6 && $isFinished)
+               <x-mary-button 
+                  class="btn btn-primary"
+                  icon="o-pencil"
+                  @click="$wire.showReopenRegistrationModal = true"
+               >
+                  Editar <span class="hidden md:inline-block">Inscrição</span>
+                  <x-mary-loading wire:loading wire:target="reopenRegistration" class="text-white" />
+               </x-mary-button>                
             @endif
         </div> 
         
@@ -62,14 +74,14 @@
             @endif
 
             @if ($currentStep == 6 && $isFinished)
-               <x-mary-button 
-                  class="btn btn-primary"
-                  icon="o-pencil"
-                  @click="$wire.showReopenRegistrationModal = true"
-               >
-                  Editar <span class="hidden md:inline-block">Inscrição</span>
-                  <x-mary-loading wire:loading wire:target="reopenRegistration" class="text-white" />
-               </x-mary-button>
+                <x-mary-button 
+                  link="{{ $this->getLinkPayment() }}" 
+                  external 
+                  target="_blank" 
+                  label="Efetuar pagamento"  
+                  icon="o-check" 
+                  class="btn-primary" 
+               />
             @endif
         </div>
     </div>

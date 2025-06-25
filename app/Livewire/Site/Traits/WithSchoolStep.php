@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\DB;
 trait WithSchoolStep
 {
     public $brazilStates;
+    
+    // Propriedade para controlar a exibição do modal
+    public $showExplanationModal = false;
 
     // Estado para os dados da escola
     public array $schoolState = [
@@ -41,6 +44,37 @@ trait WithSchoolStep
         }
 
         $this->brazilStates = BrazilStateEnum::toArray();
+        
+        // Verifica se deve mostrar o modal explicativo
+        $this->checkShowExplanationModal();
+    }
+
+    /**
+     * Verifica se deve mostrar o modal explicativo baseado no cookie
+     *
+     * @return void
+     */
+    private function checkShowExplanationModal()
+    {
+        // Verifica se o cookie existe e se ainda é válido
+        $lastShown = request()->cookie('school_step_modal_shown');
+        
+        if (!$lastShown || now()->diffInDays($lastShown) >= 2) {
+            $this->showExplanationModal = true;
+        }
+    }
+
+    /**
+     * Fecha o modal e define o cookie
+     *
+     * @return void
+     */
+    public function closeExplanationModal()
+    {
+        $this->showExplanationModal = false;
+        
+        // Define o cookie para 2 dias
+        cookie()->queue('school_step_modal_shown', now()->toDateString(), 60 * 24 * 2);
     }
 
         /**

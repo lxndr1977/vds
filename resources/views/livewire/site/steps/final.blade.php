@@ -1,11 +1,33 @@
 {{-- Etapa 5: Revisão e Finalização --}}
 <div x-data="{ openChoreographies: [] }" class="space-y-6">
    @if ($isFinished)
-      <div class="bg-green-50 border border-green-100 text-green-600 rounded-lg shadow-md p-6 text-center mb-6">
+     <div class="bg-green-50 border border-green-100 text-green-900 rounded-lg shadow-md p-6 text-center mb-6">
+      <div class="max-w-3xl  mx-auto">
          <x-mary-icon name="o-check-circle" class="w-12 h-12 mb-6" />
-         <h2 class="text-2xl font-bold mb-4">Sua inscrição no Vem Dançar Sudamérica 2025 está confirmada!</h2>
-         <p>Atualizada em {{ $registration->updated_at_brazilian }}</p>
+         <h2 class="text-xl font-bold mb-4">Sua inscrição no Vem Dançar Sudamérica 2025 foi recebida com sucesso!</h2>
+         <p class="mb-2">Atualizada em {{ $registration->updated_at_brazilian }}</p>
+         <p class="mb-2">Se você identificar algum erro ou precisar corrigir alguma informação, basta clicar no botão "Editar Inscrição" e navegar entre as etapas para fazer as atualizações necessárias.</p>
+         <p class="mb-2">Lembre-se de que, após finalizar sua inscrição, é necessário entrar em contato com a gerência do evento para efetuar o pagamento das taxas de inscrição.</p>
       </div>
+      <div class="flex flex-col lg:flex-row justify-center gap-4 mt-6">
+         <x-mary-button                   
+            @click="$wire.showReopenRegistrationModal = true"
+            label="Editar Inscrição"  
+            icon="o-pencil" 
+            class="btn-primary" />
+
+        <x-mary-button 
+            link="{{ $this->getLinkPayment() }}" 
+            external 
+            target="_blank" 
+            label="Efetuar pagamento"  
+            icon="o-check" 
+            class="btn-primary" 
+         />
+
+      </div>
+   </div>
+
    @else
       <h2 class="text-2xl font-bold mb-4">Etapa 5: Revisão e Finalização</h2>
       <p class="text-gray-600 mb-6">Confira todos os dados da sua inscrição antes de finalizar.</p>
@@ -390,7 +412,7 @@
     <x-slot:actions>
         <x-mary-button 
             icon="o-x-mark" 
-            @click="$wire.reopenRegistrationModal = false" 
+            @click="$wire.showReopenRegistrationModal = false" 
         >
             Cancelar
         </x-mary-button>
