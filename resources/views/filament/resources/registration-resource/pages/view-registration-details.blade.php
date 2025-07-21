@@ -160,7 +160,7 @@
                                 <span class="font-medium">{{ $dancer->name }}</span>
                             </div>
                             <div>
-                                <span class="text-sm text-gray-500">{{ $dancer->age }} anos</span>
+                                <span class="text-sm text-gray-500">{{ $dancer->birth_date }} </span>
                             </div>
                         </div>
                     @empty
@@ -258,7 +258,7 @@
                                             @foreach($choreography->dancers as $dancer)
                                                 <div class="text-sm">
                                                     <span class="text-gray-900">{{ $dancer->name }}</span>
-                                                    <span class="text-gray-500">- {{ $dancer->age }} anos</span>
+                                                    <span class="text-gray-500">- {{ $dancer->birth_date }} </span>
                                                 </div>
                                             @endforeach
                                         </div>

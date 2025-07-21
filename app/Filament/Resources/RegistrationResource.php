@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\RegistrationResource\Pages;
 use App\Filament\Resources\RegistrationResource\RelationManagers;
+use Filament\Forms\Components\Section;
 
 class RegistrationResource extends Resource
 {
@@ -32,16 +33,19 @@ class RegistrationResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('school_id')
+               Section::make('Informações da Inscrição')
+               ->schema([
+
+                  Forms\Components\Select::make('school_id')
                      ->label('Nome do Grupo/Escola/Cia')
                      ->relationship('school', 'name')
                      ->disabled()
                      ->required(),
-                Forms\Components\Select::make('status_registration')
-                  ->label('Status')
-                  ->options(RegistrationStatusEnum::class)
-                    ->required(),
-               
+                  Forms\Components\Select::make('status_registration')
+                     ->label('Status')
+                     ->options(RegistrationStatusEnum::class)
+                     ->required(),
+               ])
             ]);
     }
 
@@ -59,11 +63,11 @@ class RegistrationResource extends Resource
                 Tables\Columns\TextColumn::make('created_at')
                      ->label('Criada em')->label('Criada em')
                     ->dateTime()
-                    ->dateTime('d/m/Y H:i')
+                    ->dateTime('d/m/Y')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('updated_at')
                      ->label('Atualizada em')
-                    ->dateTime('d/m/Y H:i')
+                    ->dateTime('d/m/Y')
                     ->sortable(),
             ])
             ->filters([

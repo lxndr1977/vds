@@ -52,6 +52,12 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-            ]);
+            ])
+            ->colors([
+               'primary' => '#b21653',
+            ])
+            ->brandLogo(asset('logo-vds-2025-colorido.jpg'))
+            ->brandLogoHeight('2.5rem')
+            ->favicon(asset('apple-touch-icon.png'));
     }
 }
