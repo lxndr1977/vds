@@ -58,6 +58,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->brandLogo(asset('logo-vds-2025-colorido.jpg'))
             ->brandLogoHeight('2.5rem')
-            ->favicon(asset('apple-touch-icon.png'));
+            ->favicon(asset('apple-touch-icon.png'))
+            ->darkMode(false);
     }
 }
