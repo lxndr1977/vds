@@ -156,6 +156,9 @@ class RegistrationForm extends Component
          if (!$this->validateChoreographyParticipants()) {
             return; // Impede de avançar se a validação falhar
          }
+
+         $this->openLastStepModal();
+         return; 
       }
 
       $this->currentStep++;

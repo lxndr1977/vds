@@ -1,6 +1,37 @@
 <div class="grid grid-cols-1 md:grid-cols-2 mb-2 md:mb-8">
+
+   {{-- Modal Explicativo --}}
+   <x-mary-modal wire:model="showLastStepModal" title="Deseja prosseguir?" class="backdrop-blur">
+      <div class="py-4">
+         <div class="flex items-center gap-3 mb-4">
+               <div>
+                  <p class="text-gray-900 font-medium"></p>
+                  <p class="text-gray-600 text-sm mt-1">Se você já cadastrou todas as coreografias, clique em "Avançar". Caso queira adicionar mais coreografias, clique em "Continuar editando".</p>
+               </div>
+         </div>
+      </div>
+
+      <x-slot:actions>
+         <x-mary-button 
+               icon="o-pencil" 
+               @click="$wire.showLastStepModal = false" 
+         >
+               Continuar editando  
+         </x-mary-button>
+
+         <x-mary-button 
+               icon="o-check" 
+               wire:click="confirmNextStep"  
+               class="btn-primary" 
+               spinner="confirmNextStep"
+         >
+               Avançar
+         </x-mary-button>
+      </x-slot:actions>
+   </x-mary-modal>
+
    <div class="mb-6 col-span-2 md:col-span-1">
-      <h2 class="text-xl md:text-2xl font-medium mb-1">Etapa 6: Coreografias</h2>
+      <h2 class="text-xl md:text-2xl font-medium mb-1">Etapa 5: Coreografias</h2>
       <p class="text-zinc-700">Cadastre todos os coreógrafos que participarão do evento.</p>
    </div>
    <div class="mb-6 col-span-2 md:col-span-1 text-start md:text-end">

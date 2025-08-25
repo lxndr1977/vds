@@ -29,7 +29,7 @@
    </div>
 
    @else
-      <h2 class="text-2xl font-bold mb-4">Etapa 5: Revisão e Finalização</h2>
+      <h2 class="text-xl md:text-2xl font-medium mb-1">Etapa 6: Revisão e Finalização</h2>
       <p class="text-gray-600 mb-6">Confira todos os dados da sua inscrição antes de finalizar.</p>
    @endif
    {{-- Stats Resumo --}}
