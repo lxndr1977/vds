@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Contracts\Support\Htmlable;
 use App\Filament\Resources\RegistrationResource;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\Response;
 
 class ViewRegistrationDetails extends Page
 {
@@ -58,8 +59,6 @@ class ViewRegistrationDetails extends Page
         $this->choreographers = $this->school->choreographers ?? collect();
         $this->dancers = $this->school->dancers ?? collect();
         $this->choreographies = $this->school->choreographies ?? collect();
-        
-     
     }
 
     public function getTitle(): string|Htmlable
@@ -71,6 +70,13 @@ class ViewRegistrationDetails extends Page
     protected function getHeaderActions(): array
     {
         return [
+            Actions\Action::make('print')
+                ->label('Imprimir')
+                ->icon('heroicon-o-printer')
+                ->action('openPrintView')
+                ->openUrlInNewTab()
+                ->visible(fn() => $this->record && $this->record->exists && $this->choreographies->count() > 0),
+                
             Actions\Action::make('back')
                 ->label('Voltar')
                 ->icon('heroicon-o-arrow-left')
@@ -82,6 +88,13 @@ class ViewRegistrationDetails extends Page
                 ->url(static::getResource()::getUrl('edit', ['record' => $this->record]))
                 ->visible(fn() => $this->record && $this->record->exists),
         ];
+    }
+
+    public function openPrintView()
+    {
+        $url = route('registration.print', ['record' => $this->record->id]);
+        
+        $this->js("window.open('$url', '_blank')");
     }
 
     public function getBreadcrumbs(): array

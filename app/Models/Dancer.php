@@ -10,8 +10,6 @@ class Dancer extends Model
 {
     protected $fillable = ['name', 'birth_date', 'school_id'];
 
-
-  
     protected static function boot()
     {
         parent::boot();

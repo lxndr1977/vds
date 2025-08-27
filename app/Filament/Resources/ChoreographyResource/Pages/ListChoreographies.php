@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Filament\Resources\RegistrationResource\Pages;
+namespace App\Filament\Resources\ChoreographyResource\Pages;
 
-use App\Filament\Resources\RegistrationResource;
+use App\Filament\Resources\ChoreographyResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
-class ListRegistrations extends ListRecords
+class ListChoreographies extends ListRecords
 {
-   protected static string $resource = RegistrationResource::class;
+   protected static string $resource = ChoreographyResource::class;
 
    protected function getHeaderActions(): array
    {

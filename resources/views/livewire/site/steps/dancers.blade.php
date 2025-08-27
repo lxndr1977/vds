@@ -26,7 +26,7 @@
         @endif
     </div>
     
-    @if($dancers->count() > 0)
+    @if($dancers->count() > 0) 
         <div class="space-y-3">
             @foreach($dancers as $dancer)
                 <div class="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
@@ -84,4 +84,5 @@
 </div>
 
 @include('livewire.site.steps.modals.dancer.add-or-edit')
+
 @include('livewire.site.steps.modals.dancer.delete')

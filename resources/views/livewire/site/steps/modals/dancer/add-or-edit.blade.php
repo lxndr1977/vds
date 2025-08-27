@@ -103,8 +103,8 @@
     </div>
 
     <x-slot:actions>
-        <x-mary-button @click="$wire.dancerModal = false">
-            Cancelar
+        <x-mary-button wire:click="closeDancerModal">
+            Cancelar 
         </x-mary-button>
 
         <x-mary-button 

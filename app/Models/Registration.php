@@ -9,33 +9,33 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Registration extends Model
 {
-    use HasFactory;
+   use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-    
-    protected $fillable = [
-        'school_id',
-        'status_registration',
-        'registration_data', // Adicione esta linha
-    ];
+   /**
+    * The attributes that are mass assignable.
+    *
+    * @var array<int, string>
+    */
 
-    protected $casts = [
-        'registration_data' => 'array', 
-        'status_registration' => RegistrationStatusEnum::class,
-    ];
+   protected $fillable = [
+      'school_id',
+      'status_registration',
+      'registration_data', // Adicione esta linha
+   ];
 
-    
-    /**
-     * Get the school that owns the registration.
-     */
-    public function school(): BelongsTo
-    {
-        return $this->belongsTo(School::class);
-    }
+   protected $casts = [
+      'registration_data' => 'array',
+      'status_registration' => RegistrationStatusEnum::class,
+   ];
+
+
+   /**
+    * Get the school that owns the registration.
+    */
+   public function school(): BelongsTo
+   {
+      return $this->belongsTo(School::class);
+   }
 
    public function choreographies()
    {
@@ -61,9 +61,32 @@ class Registration extends Model
       );
    }
 
+   public function choreographers()
+   {
+      return $this->hasManyThrough(
+         Choreographer::class,
+         School::class,
+         'id',         // chave primária da school na tabela School
+         'school_id',  // chave estrangeira na tabela Member
+         'school_id',  // chave estrangeira na tabela Registration
+         'id'          // chave primária da school
+      );
+   }
+
+   public function dancers()
+   {
+      return $this->hasManyThrough(
+         Dancer::class,
+         School::class,
+         'id',         // chave primária da school na tabela School
+         'school_id',  // chave estrangeira na tabela Member
+         'school_id',  // chave estrangeira na tabela Registration
+         'id'          // chave primária da school
+      );
+   }
+
    public function getUpdatedAtBrazilianAttribute()
    {
       return $this->updated_at->format('d/m/Y H:i');
    }
-
 }
