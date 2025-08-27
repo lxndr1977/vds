@@ -9,6 +9,7 @@ use Filament\Forms\Form;
 use App\Models\MemberType;
 use Filament\Tables\Table;
 use Filament\Forms\FormsComponent;
+use Filament\Notifications\Notification;
 use App\Services\MemberValidationService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -132,7 +133,20 @@ class MembersRelationManager extends RelationManager
                      ->label('Tipo de Membro'),
                ]),
 
-            Tables\Actions\DeleteAction::make(),
+            Tables\Actions\DeleteAction::make()
+               ->using(function ($record, $livewire) {
+                  try {
+                     $record->delete();
+                  } catch (\Exception $e) {
+                     Notification::make()
+                        ->title('Erro ao excluir')
+                        ->body($e->getMessage())
+                        ->danger()
+                        ->send();
+
+                     return false;
+                  }
+               }),
          ])
          ->bulkActions([
             Tables\Actions\BulkActionGroup::make([

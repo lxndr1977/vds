@@ -56,13 +56,14 @@ class DancersRelationManager extends RelationManager
             //
          ])
          ->headerActions([
-            Tables\Actions\CreateAction::make()
-               ->using(function (array $data) {
-                  $data['school_id'] = $this->getOwnerRecord()->school_id;
-                  return Dancer::create($data);
-               }),
+            // Tables\Actions\CreateAction::make()
+            //    ->using(function (array $data) {
+            //       $data['school_id'] = $this->getOwnerRecord()->school_id;
+            //       return Dancer::create($data);
+            //    }),
 
             Tables\Actions\AttachAction::make()
+               ->color('primary')
                ->recordSelectOptionsQuery(
                   fn(Builder $query) =>
                   $query->where('school_id', $this->getOwnerRecord()->school_id)

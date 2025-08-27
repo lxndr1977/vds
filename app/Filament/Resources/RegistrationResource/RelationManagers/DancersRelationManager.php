@@ -2,14 +2,15 @@
 
 namespace App\Filament\Resources\RegistrationResource\RelationManagers;
 
-use App\Models\Dancer;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
+use App\Models\Dancer;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
+use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Resources\RelationManagers\RelationManager;
 
 class DancersRelationManager extends RelationManager
 {
@@ -61,7 +62,21 @@ class DancersRelationManager extends RelationManager
 
                   return $record;
                }),
-            Tables\Actions\DeleteAction::make(),
+               
+            Tables\Actions\DeleteAction::make()
+               ->using(function ($record, $livewire) {
+                  try {
+                     $record->delete();
+                  } catch (\Exception $e) {
+                     Notification::make()
+                        ->title('Erro ao excluir')
+                        ->body($e->getMessage())
+                        ->danger()
+                        ->send();
+
+                     return false;
+                  }
+               }),
          ])
          ->bulkActions([
             Tables\Actions\BulkActionGroup::make([
