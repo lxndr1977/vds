@@ -81,6 +81,6 @@ class ChoreographiesRelationManager extends RelationManager
                Tables\Actions\DeleteBulkAction::make(),
             ]),
          ])
-         ->defaultSort('name', 'asc');
+         ->defaultSort('created_at', 'asc');
    }
 }
