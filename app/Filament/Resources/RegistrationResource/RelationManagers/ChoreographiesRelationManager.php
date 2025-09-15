@@ -56,18 +56,12 @@ class ChoreographiesRelationManager extends RelationManager
             Tables\Columns\TextColumn::make('created_at')
                ->label('Criado em')
                ->dateTime('d/m/Y H:i')
-               ->sortable()
-               ->toggleable(isToggledHiddenByDefault: true)
-               ->icon('heroicon-o-calendar')
-               ->tooltip('Data de criação do registro'),
+               ->sortable(),
 
             Tables\Columns\TextColumn::make('updated_at')
                ->label('Atualizado em')
                ->dateTime('d/m/Y H:i')
-               ->sortable()
-               ->toggleable(isToggledHiddenByDefault: true)
-               ->icon('heroicon-o-pencil')
-               ->tooltip('Data da última atualização'),
+               ->sortable(),
          ])
          ->filters([
             //
