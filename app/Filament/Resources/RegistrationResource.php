@@ -18,6 +18,7 @@ use App\Filament\Resources\RegistrationResource\RelationManagers\ChoreographiesR
 use App\Filament\Resources\RegistrationResource\RelationManagers\DancersRelationManager;
 use App\Filament\Resources\RegistrationResource\RelationManagers\MembersRelationManager;
 use Filament\Forms\Components\Section;
+use Filament\Tables\Filters\SelectFilter;
 
 class RegistrationResource extends Resource
 {
@@ -81,6 +82,9 @@ class RegistrationResource extends Resource
          ])
          ->filters([
             //
+            SelectFilter::make('status_registration')
+               ->label('Status')
+               ->options(RegistrationStatusEnum::class)
          ])
          ->actions([
             Tables\Actions\EditAction::make(),
