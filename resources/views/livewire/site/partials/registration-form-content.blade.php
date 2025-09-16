@@ -2,15 +2,15 @@
    <div class="flex-1 overflow-y-auto">
       <div class="p-6 md:p-8">
          <div class="max-w-4xl xl:max-w-6xl mx-auto pb-24 lg:pb-0">
-            @if ($currentStep == 1)
+            @if ($currentStep == 1 && $registrationsOpenToPublic)
                @include('livewire.site.steps.school')
-            @elseif ($currentStep == 2)
+            @elseif ($currentStep == 2 && $registrationsOpenToPublic)
                @include('livewire.site.steps.members')
-            @elseif ($currentStep == 3)
+            @elseif ($currentStep == 3 && $registrationsOpenToPublic)
                @include('livewire.site.steps.choreographers')
-            @elseif ($currentStep == 4)
+            @elseif ($currentStep == 4 && $registrationsOpenToPublic)
                @include('livewire.site.steps.dancers')
-            @elseif ($currentStep == 5)
+            @elseif ($currentStep == 5 && $registrationsOpenToPublic)
                @include('livewire.site.steps.choreography')
             @elseif ($currentStep == 6)
                @include('livewire.site.steps.final')

@@ -10,18 +10,21 @@
                <div class="flex flex-col gap-6">
                   <div class="rounded-xl border bg-white text-stone-800 shadow-xs">
                      <div class="px-10 py-8 text-center">
-                        <h1 class="text-xl font-bold text-primary-600">Inscrições Abertas 2025</h1>
+                        {{-- <h1 class="text-xl font-bold text-primary-600">Inscrições Abertas 2025</h1> --}}
+                        <h1 class="text-xl font-bold text-primary-600">Vem Dançar Sudaméria</h1>
+                        {{-- <p class="mb-6 text-gray-600">Bem-vindo(a) ao Vem Dançar Sudamérica!</p> --}}
                         <p class="mb-6 text-gray-600">Bem-vindo(a) ao Vem Dançar Sudamérica!</p>
 
                         <div class="flex flex-col gap-4">
 
-                           <p class="text-sm text-gray-700">Se você já iniciou a inscrição e deseja continuar de onde parou, faça login.</p>
+                           <p class="text-sm text-gray-700">Faça login para visualizar a sua inscrição.</p>
+                           {{-- <p class="text-sm text-gray-700">Se você já iniciou a inscrição e deseja continuar de onde parou, faça login.</p> --}}
 
                            <x-mary-button link="{{ route('login') }}" class="btn-primary">
                               Fazer login
                            </x-mary-button>
 
-                           <div class="flex items-center my-4">
+                           {{-- <div class="flex items-center my-4">
                               <div class="flex-1 border-t border-gray-300"></div>
                               <span class="px-4 text-gray-500 text-sm">ou</span>
                               <div class="flex-1 border-t border-gray-300"></div>
@@ -31,7 +34,7 @@
 
                            <x-mary-button link="{{ route('login') }}" class="btn-primary">
                               Criar conta
-                           </x-mary-button>
+                           </x-mary-button> --}}
                         </div>
                      </div>
                   </div>

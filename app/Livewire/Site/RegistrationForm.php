@@ -25,6 +25,8 @@ class RegistrationForm extends Component
 
    public bool $showUserPasswordModal = false;
 
+   public $registrationsOpenToPublic = false;
+
    public string $userName = '';
 
    public int $currentStep = 1;

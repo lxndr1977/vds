@@ -29,8 +29,12 @@
    </div>
 
    @else
-      <h2 class="text-xl md:text-2xl font-medium mb-1">Etapa 6: Revisão e Finalização</h2>
-      <p class="text-gray-600 mb-6">Confira todos os dados da sua inscrição antes de finalizar.</p>
+      @if ($registrationsOpenToPublic)
+         <h2 class="text-xl md:text-2xl font-medium mb-1">Etapa 6: Revisão e Finalização</h2>
+         <p class="text-gray-600 mb-6">Confira todos os dados da sua inscrição antes de finalizar.</p>
+      @else
+         <h2 class="text-xl md:text-2xl font-medium mb-6">Inscrição</h2>
+      @endif
    @endif
    {{-- Stats Resumo --}}
    <div class="grid grid-cols-1 lg:grid-cols-{{ $showTotals ? '3' : '2' }} gap-4 mb-6">
