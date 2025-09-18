@@ -8,17 +8,22 @@ use Filament\Forms\Form;
 use Filament\Tables\Table;
 use App\Models\Registration;
 use Filament\Resources\Resource;
+use Filament\Forms\Components\Grid;
 use App\Enums\RegistrationStatusEnum;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Fieldset;
+use Filament\Forms\Components\TextInput;
+use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\RegistrationResource\Pages;
 use App\Filament\Resources\RegistrationResource\RelationManagers;
-use App\Filament\Resources\RegistrationResource\RelationManagers\ChoreographersRelationManager;
-use App\Filament\Resources\RegistrationResource\RelationManagers\ChoreographiesRelationManager;
+use App\Filament\Resources\RegistrationResource\RelationManagers\SchoolRelationManager;
+use App\Filament\Resources\RegistrationResource\RelationManagers\CompanyRelationManager;
 use App\Filament\Resources\RegistrationResource\RelationManagers\DancersRelationManager;
 use App\Filament\Resources\RegistrationResource\RelationManagers\MembersRelationManager;
-use Filament\Forms\Components\Section;
-use Filament\Tables\Filters\SelectFilter;
+use App\Filament\Resources\RegistrationResource\RelationManagers\ChoreographersRelationManager;
+use App\Filament\Resources\RegistrationResource\RelationManagers\ChoreographiesRelationManager;
 
 class RegistrationResource extends Resource
 {
@@ -40,14 +45,64 @@ class RegistrationResource extends Resource
          ->schema([
             Section::make('Informações da Inscrição')
                ->schema([
-                  Forms\Components\Select::make('school_id')
-                     ->label('Nome do Grupo/Escola/Cia')
-                     ->relationship('school', 'name')
-                     ->disabled()
-                     ->required(),
+                  Fieldset::make('Informações de contato do Grupo/Escola/Cia')
+                     ->relationship('school')
+                     ->schema([
+                        Grid::make(3)->schema([
+                           TextInput::make('name')
+                              ->label('Nome do Grupo/Escola/Cia')
+                              ->required()
+                              ->columnSpanFull(),
+
+                           TextInput::make('street')
+                              ->label('Rua')
+                              ->columnSpan(2),
+
+                           TextInput::make('number')
+                              ->label('Número')
+                              ->maxLength(10),
+
+                           TextInput::make('complement')
+                              ->label('Complemento')
+                              ->columnSpan(1),
+
+                           TextInput::make('district')
+                              ->label('Bairro')
+                              ->columnSpan(1),
+
+                           TextInput::make('city')
+                              ->label('Cidade')
+                              ->columnSpan(1),
+
+                           TextInput::make('state')
+                              ->label('Estado')
+                              ->maxLength(2)
+                              ->columnSpan(1),
+
+                           TextInput::make('zip_code')
+                              ->label('CEP')
+                              ->mask('99999-999')
+                              ->maxLength(9)
+                              ->columnSpan(1),
+
+                           TextInput::make('responsible_name')
+                              ->label('Responsável')
+                              ->columnSpanFull(),
+
+                           TextInput::make('responsible_email')
+                              ->label('E-mail do Responsável')
+                              ->email()
+                              ->columnSpan(2),
+
+                           TextInput::make('responsible_phone')
+                              ->label('Telefone do Responsável')
+                              ->tel()
+                              ->columnSpan(1),
+                        ]),
+                     ]),
 
                   Forms\Components\Select::make('status_registration')
-                     ->label('Status')
+                     ->label('Status da Inscrição')
                      ->options(RegistrationStatusEnum::class)
                      ->required(),
                ])
@@ -104,6 +159,7 @@ class RegistrationResource extends Resource
    public static function getRelations(): array
    {
       return [
+         SchoolRelationManager::class,
          MembersRelationManager::class,
          ChoreographersRelationManager::class,
          DancersRelationManager::class,
