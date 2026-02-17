@@ -1,0 +1,21 @@
+{
+    "agents": [
+        "claude_code",
+        "gemini",
+        "opencode",
+        "junie"
+    ],
+    "guidelines": true,
+    "herd_mcp": false,
+    "mcp": true,
+    "packages": [
+        "filament/filament"
+    ],
+    "sail": true,
+    "skills": [
+        "fluxui-development",
+        "livewire-development",
+        "volt-development",
+        "tailwindcss-development"
+    ]
+}

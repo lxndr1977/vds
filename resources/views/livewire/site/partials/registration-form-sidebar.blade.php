@@ -13,17 +13,18 @@
 
       <div class="flex flex-row justify-around md:flex-col space-y-1 xl:space-y-8 text-white">
 
-         @if ($registrationsOpenToPublic)
-            @foreach ($this->steps as $stepNumber => $stepLabel)
-               <div
-                  class="flex items-center space-x-0 md:space-x-3 {{ $currentStep == $stepNumber ? 'md:bg-secondary-700' : '' }} hover:bg-secondary-700 p-0 md:p-2 rounded-lg hover:cursor-pointer "
-                  data-step="{{ $stepNumber }}" wire:click="goToStep({{ $stepNumber }})">
-                  <div
-                     class="w-8 h-8 {{ $currentStep >= $stepNumber ? 'bg-primary-600' : 'bg-secondary-500' }} rounded-full flex items-center justify-center text-sm font-semibold border-2 border-transparent {{ $isFinished && $stepNumber < $totalSteps ? 'opacity-50' : 'opacity-100' }}">
-                     {{ $stepNumber }}</div>
-                  <span class="font-medium hidden md:inline text-sm xl:text-base">{{ $stepLabel }}</span>
-               </div>
-            @endforeach
+         @if ($registrationsOpenToPublic && $canEditAfterSubmission)
+         @foreach ($this->steps as $stepNumber => $stepLabel)
+         <div
+            class="flex items-center space-x-0 md:space-x-3 {{ $currentStep == $stepNumber ? 'md:bg-secondary-700' : '' }} hover:bg-secondary-700 p-0 md:p-2 rounded-lg hover:cursor-pointer "
+            data-step="{{ $stepNumber }}" wire:click="goToStep({{ $stepNumber }})">
+            <div
+               class="w-8 h-8 {{ $currentStep >= $stepNumber ? 'bg-primary-600' : 'bg-secondary-500' }} rounded-full flex items-center justify-center text-sm font-semibold border-2 border-transparent {{ $isFinished && $stepNumber < $totalSteps ? 'opacity-50' : 'opacity-100' }}">
+               {{ $stepNumber }}
+            </div>
+            <span class="font-medium hidden md:inline text-sm xl:text-base">{{ $stepLabel }}</span>
+         </div>
+         @endforeach
          @endif
       </div>
    </div>
