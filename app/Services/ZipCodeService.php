@@ -2,30 +2,35 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class ZipCodeService
 {
     private const CACHE_TTL = 3600; // 1 hora
+
     private const API_TIMEOUT = 10; // 10 segundos
+
     private const RETRY_ATTEMPTS = 2;
+
     private const RETRY_DELAY = 1000; // 1 segundo
-    
+
     /**
      * Busca um endereço pelo CEP na API do ViaCEP.
      *
-     * @param string $zipCode O CEP a ser consultado.
+     * @param  string  $zipCode  O CEP a ser consultado.
      * @return array|null Retorna um array com os dados do endereço ou null se o CEP não for encontrado.
+     *
      * @throws \Exception Se houver um erro de conexão ou outro erro inesperado.
      */
     public function getAddressByZipCode(string $zipCode): ?array
     {
         $cep = $this->sanitizeZipCode($zipCode);
-        
-        if (!$this->isValidZipCode($cep)) {
+
+        if (! $this->isValidZipCode($cep)) {
             Log::info("CEP inválido fornecido: {$zipCode}");
+
             return null;
         }
 
@@ -35,16 +40,13 @@ class ZipCodeService
                 return $this->fetchFromApi($cep);
             });
         } catch (\Exception $e) {
-            Log::error("Erro ao buscar CEP {$cep}: " . $e->getMessage());
+            Log::error("Erro ao buscar CEP {$cep}: ".$e->getMessage());
             throw $e;
         }
     }
 
     /**
      * Remove todos os caracteres não numéricos do CEP.
-     *
-     * @param string $zipCode
-     * @return string
      */
     private function sanitizeZipCode(string $zipCode): string
     {
@@ -53,9 +55,6 @@ class ZipCodeService
 
     /**
      * Valida se o CEP possui exatamente 8 dígitos.
-     *
-     * @param string $cep
-     * @return bool
      */
     private function isValidZipCode(string $cep): bool
     {
@@ -65,32 +64,26 @@ class ZipCodeService
     /**
      * Faz a requisição para a API do ViaCEP.
      *
-     * @param string $cep
-     * @return array|null
      * @throws \Exception
      */
     private function fetchFromApi(string $cep): ?array
     {
-      $response = Http::timeout(self::API_TIMEOUT)
+        $response = Http::timeout(self::API_TIMEOUT)
             ->retry(self::RETRY_ATTEMPTS, self::RETRY_DELAY)
             ->get("https://viacep.com.br/ws/{$cep}/json/");
-      
-      $response->throw();
-      $data = $response->json();
 
-      if (isset($data['erro']) && $data['erro'] === true) {
+        $response->throw();
+        $data = $response->json();
+
+        if (isset($data['erro']) && $data['erro'] === true) {
             return null;
-      }
+        }
 
-      return $this->formatResponse($data, $cep);
+        return $this->formatResponse($data, $cep);
     }
 
     /**
      * Formata a resposta da API para o padrão esperado pela aplicação.
-     *
-     * @param array $data
-     * @param string $cep
-     * @return array
      */
     private function formatResponse(array $data, string $cep): array
     {
@@ -105,26 +98,20 @@ class ZipCodeService
 
     /**
      * Formata o CEP no padrão 00000-000.
-     *
-     * @param string $cep
-     * @return string
      */
     private function formatZipCode(string $cep): string
     {
-        return substr($cep, 0, 5) . '-' . substr($cep, 5);
+        return substr($cep, 0, 5).'-'.substr($cep, 5);
     }
 
     /**
      * Limpa o cache de um CEP específico.
-     *
-     * @param string $zipCode
-     * @return bool
      */
     public function clearCache(string $zipCode): bool
     {
         $cep = $this->sanitizeZipCode($zipCode);
-        
-        if (!$this->isValidZipCode($cep)) {
+
+        if (! $this->isValidZipCode($cep)) {
             return false;
         }
 
@@ -133,8 +120,6 @@ class ZipCodeService
 
     /**
      * Limpa todo o cache de CEPs.
-     *
-     * @return void
      */
     public function clearAllCache(): void
     {
@@ -144,15 +129,12 @@ class ZipCodeService
 
     /**
      * Verifica se um CEP está em cache.
-     *
-     * @param string $zipCode
-     * @return bool
      */
     public function isCached(string $zipCode): bool
     {
         $cep = $this->sanitizeZipCode($zipCode);
-        
-        if (!$this->isValidZipCode($cep)) {
+
+        if (! $this->isValidZipCode($cep)) {
             return false;
         }
 

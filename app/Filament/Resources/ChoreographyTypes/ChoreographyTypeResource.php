@@ -5,7 +5,6 @@ namespace App\Filament\Resources\ChoreographyTypes;
 use App\Filament\Resources\ChoreographyTypes\Pages\ManageChoreographyTypes;
 use App\Models\ChoreographyType;
 use BackedEnum;
-use Faker\Core\Color;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
@@ -34,7 +33,6 @@ class ChoreographyTypeResource extends Resource
 
     protected static bool $hasTitleCaseModelLabel = false;
 
-
     public static function form(Schema $schema): Schema
     {
         return $schema
@@ -51,7 +49,7 @@ class ChoreographyTypeResource extends Resource
                     ->minValue(1)
                     ->live()
                     ->rules([
-                        fn(Get $get): \Closure => function (string $attribute, $value, \Closure $fail) use ($get) {
+                        fn (Get $get): \Closure => function (string $attribute, $value, \Closure $fail) use ($get) {
                             $maxDancers = $get('max_dancers');
                             if ($maxDancers && $value > $maxDancers) {
                                 $fail('O mínimo de dançarinos deve ser menor ou igual ao máximo de dançarinos.');
@@ -65,14 +63,15 @@ class ChoreographyTypeResource extends Resource
                     ->minValue(1)
                     ->live()
                     ->rules([
-                        fn(Get $get): \Closure => function (string $attribute, $value, \Closure $fail) use ($get) {
+                        fn (Get $get): \Closure => function (string $attribute, $value, \Closure $fail) use ($get) {
                             $minDancers = $get('min_dancers');
                             if ($minDancers && $value < $minDancers) {
                                 $fail('O máximo de dançarinos deve ser maior ou igual ao mínimo de dançarinos.');
                             }
                         },
                     ]),
-            ]);    }
+            ]);
+    }
 
     public static function table(Table $table): Table
     {
@@ -112,12 +111,12 @@ class ChoreographyTypeResource extends Resource
                 ActionGroup::make([
                     EditAction::make()
                         ->color('gray'),
-                    DeleteAction::make()
+                    DeleteAction::make(),
                 ])
                     ->label('Ações')
                     ->button()
                     ->color('gray')
-                    ->size(Size::Small)
+                    ->size(Size::Small),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

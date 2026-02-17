@@ -2,12 +2,9 @@
 
 namespace App\Models;
 
-use App\Models\User;
-use App\Models\School;
-use App\Models\MemberType;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Member extends Model
 {
@@ -32,6 +29,4 @@ class Member extends Model
     {
         return $this->hasMany(Member::class);
     }
-
-
 }

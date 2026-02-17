@@ -3,9 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\ChoreographyFee;
-use Illuminate\Database\Seeder;
 use App\Models\ChoreographyType;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
 
 class ChoreographyTypeSeeder extends Seeder
 {
@@ -21,14 +20,14 @@ class ChoreographyTypeSeeder extends Seeder
                 'min_dancers' => 1,
                 'max_dancers' => 1,
                 'fee' => 50.00,
-            ], 
+            ],
             [
                 'name' => 'Solo Feminino',
                 'description' => 'Apresentação individual',
                 'min_dancers' => 1,
                 'max_dancers' => 1,
                 'fee' => 50.00,
-            ], 
+            ],
             [
                 'name' => 'Duo',
                 'description' => 'Apresentação em dupla',

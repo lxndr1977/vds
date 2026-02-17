@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\ChoreographyType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -12,7 +11,7 @@ class ChoreographyFee extends Model
 
     protected $casts = [
         'valid_until' => 'date',
-        'amount' => 'decimal:2'
+        'amount' => 'decimal:2',
     ];
 
     public function choreographyType(): BelongsTo

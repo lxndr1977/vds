@@ -8,17 +8,17 @@ use Filament\Resources\Pages\ListRecords;
 
 class ListRegistrations extends ListRecords
 {
-   protected static string $resource = RegistrationResource::class;
+    protected static string $resource = RegistrationResource::class;
 
-   protected function getHeaderActions(): array
-   {
-      return [
-         Actions\CreateAction::make(),
-      ];
-   }
+    protected function getHeaderActions(): array
+    {
+        return [
+            Actions\CreateAction::make(),
+        ];
+    }
 
-   public function hasCombinedRelationManagerTabsWithContent(): bool
-   {
-      return true;
-   }
+    public function hasCombinedRelationManagerTabsWithContent(): bool
+    {
+        return true;
+    }
 }

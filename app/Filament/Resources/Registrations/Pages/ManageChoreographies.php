@@ -3,14 +3,11 @@
 namespace App\Filament\Resources\Registrations\Pages;
 
 use App\Filament\Resources\Registrations\RegistrationResource;
-use Filament\Actions;
 use Filament\Forms;
-use Filament\Schemas\Schema;
 use Filament\Resources\Pages\ManageRelatedRecords;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ManageChoreographies extends ManageRelatedRecords
 {

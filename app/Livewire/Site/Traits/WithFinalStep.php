@@ -4,9 +4,9 @@ namespace App\Livewire\Site\Traits;
 
 use App\Mail\RegistrationFinished;
 // Certifique-se de que ChoreographyExtraFee está disponível e no namespace correto
+use App\Models\ChoreographyExtraFee;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use App\Models\ChoreographyExtraFee; 
 
 trait WithFinalStep
 {
@@ -14,7 +14,6 @@ trait WithFinalStep
 
     public $showTotals = false;
 
-   
     /**
      * Finaliza a inscrição, mudando seu status e salvando os dados.
      *
@@ -22,11 +21,11 @@ trait WithFinalStep
      */
     public function finishRegistration()
     {
-        if (!$this->registration) {
+        if (! $this->registration) {
             $this->error(
-                title: "Erro", 
-                icon: "o-information-circle",
-                description: 'Erro: Inscrição não encontrada.'); 
+                title: 'Erro',
+                icon: 'o-information-circle',
+                description: 'Erro: Inscrição não encontrada.');
 
             return;
         }
@@ -35,16 +34,17 @@ trait WithFinalStep
         if ($this->choreographies->isEmpty()) {
 
             $this->error(
-                title: "Coreografia não cadastrada", 
-                icon: "o-information-circle",
-                description: 'Você precisa cadastrar ao menos uma coreografia para finalizar.'); 
+                title: 'Coreografia não cadastrada',
+                icon: 'o-information-circle',
+                description: 'Você precisa cadastrar ao menos uma coreografia para finalizar.');
 
             $this->showConfirmationModal = false;
             $this->goToStep(4); // Volta para a etapa de coreografias
+
             return;
         }
 
-       try {
+        try {
             // Chama a nova função para obter os dados formatados
             $dataToSave = $this->getRegistrationDataForJson();
 
@@ -59,53 +59,51 @@ trait WithFinalStep
             $this->showConfirmationModal = false;
 
             $this->success(
-                title: "Inscrição concluída", 
-                icon: "o-information-circle",
+                title: 'Inscrição concluída',
+                icon: 'o-information-circle',
                 description: 'A sua inscrição para o evento foi finalizada com sucesso'
-            ); 
+            );
 
         } catch (\Exception $e) {
-            Log::error('Erro ao finalizar inscrição e salvar dados: ' . $e->getMessage());
+            Log::error('Erro ao finalizar inscrição e salvar dados: '.$e->getMessage());
             $this->showConfirmationModal = false;
-            
+
             $this->error(title: 'Erro', icon: 'o-information-circle', description: $e->getMessage());
+
             return redirect()->route('site'); // Early return em caso de erro
         }
 
         // Tentativa de envio do email (fora do try-catch principal)
         if ($this->registration->school && $this->registration->school->user && $this->registration->school->user->email) {
             // try {
-                Mail::to($this->registration->school->user->email)
-                   ->bcc('pereira.alexandre@gmail.com')
-                  ->send(new RegistrationFinished($this->registration));
+            Mail::to($this->registration->school->user->email)
+                ->bcc('pereira.alexandre@gmail.com')
+                ->send(new RegistrationFinished($this->registration));
 
-                //  Mail::raw('Este é um e-mail de teste enviado pelo sistema.', function ($message) {
-                //         $message->to('pereira.alexandre@gmail.com')
-                //                 ->subject('Teste de envio de e-mail 2')
-                //                 ->from('naoresponda@vemdancarsudamerica.com.br', 'Seu Nome ou Sistema');
-                //     });
- 
+            //  Mail::raw('Este é um e-mail de teste enviado pelo sistema.', function ($message) {
+            //         $message->to('pereira.alexandre@gmail.com')
+            //                 ->subject('Teste de envio de e-mail 2')
+            //                 ->from('naoresponda@vemdancarsudamerica.com.br', 'Seu Nome ou Sistema');
+            //     });
 
-               //  Log::info('Email de confirmação enviado com sucesso para: ' . $this->registration->school->user->email);
+            //  Log::info('Email de confirmação enviado com sucesso para: ' . $this->registration->school->user->email);
             // } catch (\Exception $emailException) {
-                // Log do erro mas não interrompe o fluxo
-               //  Log::error('Falha no envio do email de confirmação: ' . $emailException->getMessage() . 
-               //          ' - Inscrição ID: ' . $this->registration->id);
-                
-                        // dd($emailException->getMessage());
-                // Opcional: Notificar o usuário sobre falha no email
-                // $this->warning(title: 'Aviso', description: 'Inscrição realizada, mas houve problema no envio do email de confirmação');
-            }
-      //   } 
+            // Log do erro mas não interrompe o fluxo
+            //  Log::error('Falha no envio do email de confirmação: ' . $emailException->getMessage() .
+            //          ' - Inscrição ID: ' . $this->registration->id);
 
-return $this->redirectRoute('site');
+            // dd($emailException->getMessage());
+            // Opcional: Notificar o usuário sobre falha no email
+            // $this->warning(title: 'Aviso', description: 'Inscrição realizada, mas houve problema no envio do email de confirmação');
+        }
+        //   }
+
+        return $this->redirectRoute('site');
 
     }
 
     /**
      * Coleta e estrutura todos os dados da inscrição para serem salvos como JSON.
-     *
-     * @return array
      */
     protected function getRegistrationDataForJson(): array
     {
@@ -149,8 +147,8 @@ return $this->redirectRoute('site');
                     'min_dancers' => optional($choreography->choreographyType)->min_dancers,
                     'max_dancers' => optional($choreography->choreographyType)->max_dancers,
                     'fee_per_participant' => optional(optional($choreography->choreographyType)->getCurrentFee())->amount ?? 0,
-                    'choreographers' => $choreography->choreographers->map(fn($c) => ['id' => $c->id, 'name' => $c->name])->toArray(),
-                    'dancers' => $choreography->dancers->map(fn($d) => ['id' => $d->id, 'name' => $d->name])->toArray(),
+                    'choreographers' => $choreography->choreographers->map(fn ($c) => ['id' => $c->id, 'name' => $c->name])->toArray(),
+                    'dancers' => $choreography->dancers->map(fn ($d) => ['id' => $d->id, 'name' => $d->name])->toArray(),
                 ];
             })->toArray(),
             'financial_summary' => [
@@ -161,7 +159,7 @@ return $this->redirectRoute('site');
                 'total_member_fees' => 0,
                 'total_choreography_fees' => 0,
                 'total_extra_fees' => 0,
-            ]
+            ],
         ];
 
         // Cálculo das taxas
@@ -206,15 +204,14 @@ return $this->redirectRoute('site');
         return $data;
     }
 
-   public function getLinkPayment(): string
-   {
-      if (!$this->school || !$this->school->name) {
-         return 'https://wa.me/5551993120404'; // fallback
-      }
+    public function getLinkPayment(): string
+    {
+        if (! $this->school || ! $this->school->name) {
+            return 'https://wa.me/5551993120404'; // fallback
+        }
 
-      return 'https://wa.me/5551993120404?text=' . urlencode(
-         'Olá! Quero efetuar o pagamento da inscrição da(o) *' . $this->school->name . '* no Vem Dançar Sudamérica 2025.'
-      );
-   }
-
+        return 'https://wa.me/5551993120404?text='.urlencode(
+            'Olá! Quero efetuar o pagamento da inscrição da(o) *'.$this->school->name.'* no Vem Dançar Sudamérica 2025.'
+        );
+    }
 }

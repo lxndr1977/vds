@@ -25,6 +25,8 @@ class SystemConfiguration extends Model
         'secondary_color',
         'text_color',
         'allow_edit_after_submit',
+        'notification_sender_email',
+        'notification_cc_email',
     ];
 
     /**

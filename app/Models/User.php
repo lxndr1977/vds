@@ -4,15 +4,15 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
-use Filament\Panel;
 use App\Enums\UserRoleEnum;
-use Illuminate\Support\Str;
-use Illuminate\Notifications\Notifiable;
 use Filament\Models\Contracts\FilamentUser;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable implements FilamentUser
 {
@@ -28,7 +28,7 @@ class User extends Authenticatable implements FilamentUser
         'name',
         'email',
         'password',
-        'role'
+        'role',
     ];
 
     /**
@@ -93,10 +93,10 @@ class User extends Authenticatable implements FilamentUser
 
     public function canAccessPanel(Panel $panel): bool
     {
-      //   return str_ends_with($this->email, '@yourdomain.com') && $this->hasVerifiedEmail();
-      return in_array($this->role, [
+        //   return str_ends_with($this->email, '@yourdomain.com') && $this->hasVerifiedEmail();
+        return in_array($this->role, [
             UserRoleEnum::Admin->value,
             UserRoleEnum::SuperAdmin->value,
-      ]);
-   }
+        ]);
+    }
 }

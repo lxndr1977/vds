@@ -5,11 +5,10 @@ namespace App\Mail;
 use App\Models\Registration;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Mail\Mailables\Address;
-use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
+use Illuminate\Queue\SerializesModels;
 
 class RegistrationFinished extends Mailable
 {

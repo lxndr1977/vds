@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ChoreographyExtraFee extends Model
 {
-protected $fillable = [
+    protected $fillable = [
         'description',
         'value',
         'active',
@@ -38,7 +38,7 @@ protected $fillable = [
         foreach ($activeFees as $fee) {
             $feeTotal = $fee->value * $choreographyCount;
             $totalFees += $feeTotal;
-            
+
             $feeDetails[] = [
                 'description' => $fee->description,
                 'value_per_choreography' => $fee->value,

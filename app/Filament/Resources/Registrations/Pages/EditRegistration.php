@@ -8,17 +8,17 @@ use Filament\Resources\Pages\EditRecord;
 
 class EditRegistration extends EditRecord
 {
-   protected static string $resource = RegistrationResource::class;
+    protected static string $resource = RegistrationResource::class;
 
-   protected function getHeaderActions(): array
-   {
-      return [
-         Actions\DeleteAction::make(),
-      ];
-   }
+    protected function getHeaderActions(): array
+    {
+        return [
+            Actions\DeleteAction::make(),
+        ];
+    }
 
-   public function hasCombinedRelationManagerTabsWithContent(): bool
-   {
-      return true;
-   }
+    public function hasCombinedRelationManagerTabsWithContent(): bool
+    {
+        return true;
+    }
 }

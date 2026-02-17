@@ -2,28 +2,29 @@
 
 namespace App\Filament\Resources\Registrations\Pages;
 
-use Filament\Actions;
-use App\Models\Registration;
-use Filament\Resources\Pages\Page;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Contracts\Support\Htmlable;
 use App\Filament\Resources\Registrations\RegistrationResource;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Http\Response;
+use App\Models\Registration;
+use Filament\Actions;
+use Filament\Resources\Pages\Page;
+use Illuminate\Contracts\Support\Htmlable;
 
 class ViewRegistrationDetails extends Page
 {
     protected static string $resource = RegistrationResource::class;
-    
+
     public Registration $record;
+
     public $school;
+
     public $members;
+
     public $choreographers;
+
     public $dancers;
+
     public $choreographies;
+
     public $showTotals = true;
-
-
 
     public function getView(): string
     {
@@ -36,30 +37,31 @@ class ViewRegistrationDetails extends Page
         $this->record = $record->load([
             'school.choreographies',
             'school.choreographies.dancers',
-            'school.choreographies.choreographers', 
+            'school.choreographies.choreographers',
             'school.choreographies.choreographyType',
             'school.choreographies.choreographyCategory',
             'school.choreographies.danceStyle',
             'school.members.memberType',
         ]);
-        
+
         $this->loadData();
     }
 
     protected function loadData(): void
     {
         $this->school = $this->record->school;
-        
+
         // Verifica se a escola existe
-        if (!$this->school) {
+        if (! $this->school) {
             $this->school = null;
             $this->members = collect();
             $this->choreographers = collect();
             $this->dancers = collect();
             $this->choreographies = collect();
+
             return;
         }
-        
+
         // Carrega os dados da escola relacionados com verificações
         $this->members = $this->school->members ?? collect();
         $this->choreographers = $this->school->choreographers ?? collect();
@@ -70,6 +72,7 @@ class ViewRegistrationDetails extends Page
     public function getTitle(): string|Htmlable
     {
         $schoolName = $this->school ? $this->school->name : 'Escola não encontrada';
+
         return "Detalhes da Inscrição - {$schoolName}";
     }
 
@@ -81,25 +84,25 @@ class ViewRegistrationDetails extends Page
                 ->icon('heroicon-o-printer')
                 ->action('openPrintView')
                 ->openUrlInNewTab()
-                ->visible(fn() => $this->record && $this->record->exists && $this->choreographies->count() > 0),
-                
+                ->visible(fn () => $this->record && $this->record->exists && $this->choreographies->count() > 0),
+
             Actions\Action::make('back')
                 ->label('Voltar')
                 ->icon('heroicon-o-arrow-left')
                 ->url(static::getResource()::getUrl('index')),
-                
+
             Actions\Action::make('edit')
                 ->label('Editar')
                 ->icon('heroicon-o-pencil')
                 ->url(static::getResource()::getUrl('edit', ['record' => $this->record]))
-                ->visible(fn() => $this->record && $this->record->exists),
+                ->visible(fn () => $this->record && $this->record->exists),
         ];
     }
 
     public function openPrintView()
     {
         $url = route('registration.print', ['record' => $this->record->id]);
-        
+
         $this->js("window.open('$url', '_blank')");
     }
 

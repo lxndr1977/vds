@@ -1,7 +1,7 @@
 <?php
+
 namespace App\Services;
 
-use App\Models\Member;
 use App\Models\MemberType;
 use App\Models\School;
 
@@ -18,10 +18,10 @@ class MemberValidationService
         $memberType = MemberType::find($memberTypeId);
         $school = School::find($schoolId);
 
-        if (!$memberType || !$school) {
+        if (! $memberType || ! $school) {
             return [
                 'valid' => false,
-                'message' => 'Tipo de membro ou escola não encontrados.'
+                'message' => 'Tipo de membro ou escola não encontrados.',
             ];
         }
 
@@ -32,7 +32,7 @@ class MemberValidationService
 
         $currentCount = $school->members()
             ->where('member_type_id', $memberTypeId)
-            ->when($excludeMemberId, fn($query) => $query->where('id', '!=', $excludeMemberId))
+            ->when($excludeMemberId, fn ($query) => $query->where('id', '!=', $excludeMemberId))
             ->count();
 
         if ($currentCount >= $memberType->max_limit) {
@@ -40,7 +40,7 @@ class MemberValidationService
                 'valid' => false,
                 'message' => "Limite máximo de {$memberType->max_limit} integrante(s) para o tipo '{$memberType->name}' atingido.",
                 'current_count' => $currentCount,
-                'max_limit' => $memberType->max_limit
+                'max_limit' => $memberType->max_limit,
             ];
         }
 
@@ -48,7 +48,7 @@ class MemberValidationService
             'valid' => true,
             'current_count' => $currentCount,
             'max_limit' => $memberType->max_limit,
-            'remaining' => $memberType->max_limit - $currentCount
+            'remaining' => $memberType->max_limit - $currentCount,
         ];
     }
 
@@ -58,10 +58,10 @@ class MemberValidationService
     public static function memberTypeLimitRule(int $schoolId, ?int $excludeMemberId = null): \Closure
     {
         return function (string $attribute, mixed $value, \Closure $fail) use ($schoolId, $excludeMemberId) {
-            $service = new self();
+            $service = new self;
             $validation = $service->validateMemberTypeLimit($schoolId, $value, $excludeMemberId);
-            
-            if (!$validation['valid']) {
+
+            if (! $validation['valid']) {
                 $fail($validation['message']);
             }
         };

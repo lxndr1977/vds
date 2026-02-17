@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Enums\UserRoleEnum;
+// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -19,22 +19,22 @@ class DatabaseSeeder extends Seeder
             'name' => 'Test User',
             'email' => 'ale@ale.com',
             'password' => Hash::make('alessandra'),
-            'role' => UserRoleEnum::User
+            'role' => UserRoleEnum::User,
         ]);
 
-         User::factory()->create([
+        User::factory()->create([
             'name' => 'Alexandre',
             'email' => 'pereira.alexandre@gmail.com',
             'password' => Hash::make('09111977'),
-            'role' => UserRoleEnum::SuperAdmin
+            'role' => UserRoleEnum::SuperAdmin,
         ]);
 
-       $this->call([
+        $this->call([
             ChoreographyTypeSeeder::class,
             MemberTypeSeeder::class,
             DanceStyleSeeder::class,
             ChoreographyCategorySeeder::class,
-            ChoreographyExtraFeeSeeder::class,        
+            ChoreographyExtraFeeSeeder::class,
         ]);
     }
 }

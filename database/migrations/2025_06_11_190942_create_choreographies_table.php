@@ -1,12 +1,12 @@
 <?php
 
-use App\Models\School;
-use App\Models\DanceStyle;
-use App\Models\ChoreographyType;
 use App\Models\ChoreographyCategory;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
+use App\Models\ChoreographyType;
+use App\Models\DanceStyle;
+use App\Models\School;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
@@ -26,7 +26,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('music');
             $table->string('music_composer');
-            $table->string('duration', 8); 
+            $table->string('duration', 8);
             $table->timestamps();
         });
     }

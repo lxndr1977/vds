@@ -2,9 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\ChoreographyExtraFee;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
 
 class ChoreographySeeder extends Seeder
 {
@@ -16,19 +15,19 @@ class ChoreographySeeder extends Seeder
         ChoreographyExtraFee::create([
             'description' => 'Taxa de inscrição por coreografia',
             'value' => 25.00,
-            'active' => true
+            'active' => true,
         ]);
 
         ChoreographyExtraFee::create([
             'description' => 'Taxa de julgamento por coreografia',
             'value' => 15.00,
-            'active' => true
+            'active' => true,
         ]);
 
         ChoreographyExtraFee::create([
             'description' => 'Taxa de certificado por coreografia',
             'value' => 10.00,
-            'active' => true
-        ]);    
+            'active' => true,
+        ]);
     }
 }

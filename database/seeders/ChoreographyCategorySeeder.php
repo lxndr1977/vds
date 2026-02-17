@@ -2,9 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\ChoreographyCategory;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
 
 class ChoreographyCategorySeeder extends Seeder
 {
@@ -29,6 +28,6 @@ class ChoreographyCategorySeeder extends Seeder
             ChoreographyCategory::create([
                 'name' => $categoryData['name'],
             ]);
-        }     
+        }
     }
 }

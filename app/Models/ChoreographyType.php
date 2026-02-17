@@ -19,8 +19,6 @@ class ChoreographyType extends Model
         return $this->hasMany(ChoreographyFee::class);
     }
 
-    
-
     public function getCurrentFee(): ?ChoreographyFee
     {
         return $this->fees()

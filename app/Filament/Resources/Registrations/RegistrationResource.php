@@ -2,31 +2,31 @@
 
 namespace App\Filament\Resources\Registrations;
 
-use Filament\Forms;
-use Filament\Tables\Table;
-use App\Models\Registration;
-use Filament\Actions\Action;
-use Filament\Schemas\Schema;
-use Filament\Actions\EditAction;
-use Filament\Resources\Resource;
 use App\Enums\RegistrationStatusEnum;
-use Filament\Actions\BulkActionGroup;
-use Filament\Schemas\Components\Grid;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Forms\Components\TextInput;
-use Filament\Schemas\Components\Section;
-use Filament\Schemas\Components\Fieldset;
-use Filament\Tables\Filters\SelectFilter;
+use App\Filament\Resources\Registrations\Pages\CreateRegistration;
 use App\Filament\Resources\Registrations\Pages\EditRegistration;
 use App\Filament\Resources\Registrations\Pages\ListRegistrations;
-use App\Filament\Resources\Registrations\Pages\CreateRegistration;
 use App\Filament\Resources\Registrations\Pages\ManageChoreographies;
 use App\Filament\Resources\Registrations\Pages\ViewRegistrationDetails;
-use App\Filament\Resources\Registrations\RelationManagers\DancersRelationManager;
-use App\Filament\Resources\Registrations\RelationManagers\MembersRelationManager;
 use App\Filament\Resources\Registrations\RelationManagers\ChoreographersRelationManager;
 use App\Filament\Resources\Registrations\RelationManagers\ChoreographiesRelationManager;
+use App\Filament\Resources\Registrations\RelationManagers\DancersRelationManager;
+use App\Filament\Resources\Registrations\RelationManagers\MembersRelationManager;
+use App\Models\Registration;
+use Filament\Actions\Action;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms;
+use Filament\Forms\Components\TextInput;
+use Filament\Resources\Resource;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Table;
 
 class RegistrationResource extends Resource
 {
@@ -149,7 +149,7 @@ class RegistrationResource extends Resource
                 Action::make('view_details')
                     ->label('Ver Detalhes')
                     ->icon('heroicon-o-eye')
-                    ->url(fn(Registration $record): string => RegistrationResource::getUrl('view', ['record' => $record]))
+                    ->url(fn (Registration $record): string => RegistrationResource::getUrl('view', ['record' => $record]))
                     ->openUrlInNewTab(false),
             ])
             ->bulkActions([

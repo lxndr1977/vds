@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Support\Carbon;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 class Dancer extends Model
 {
@@ -41,7 +41,7 @@ class Dancer extends Model
     //     return Attribute::make(
     //         // Accessor - para exibir (dd/mm/yyyy)
     //         get: fn ($value) => $value ? \Carbon\Carbon::parse($value)->format('d/m/Y') : null,
-            
+
     //         // Mutator - para salvar (yyyy-mm-dd)
     //         set: fn ($value) => $value ? \Carbon\Carbon::createFromFormat('d/m/Y', $value)->format('m/d/Y') : null,
     //     );
@@ -52,10 +52,10 @@ class Dancer extends Model
      */
     public function getBirthDateBrAttribute()
     {
-        if (!$this->birth_date) {
+        if (! $this->birth_date) {
             return null;
         }
-        
+
         return $this->birth_date->format('d/m/Y');
     }
 
@@ -67,13 +67,12 @@ class Dancer extends Model
         return $this->birth_date_br;
     }
 
-   public function getAgeAttribute()
-   {
-      if (!$this->birth_date) {
-         return null;
-      }
-      
-      return Carbon::createFromFormat('d/m/Y', $this->birth_date)->age . ' anos';
-   }
-    
+    public function getAgeAttribute()
+    {
+        if (! $this->birth_date) {
+            return null;
+        }
+
+        return Carbon::createFromFormat('d/m/Y', $this->birth_date)->age.' anos';
+    }
 }

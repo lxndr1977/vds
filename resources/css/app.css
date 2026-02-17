@@ -29,7 +29,7 @@
     --color-primary-300: #ed78a5;
     --color-primary-400: #e74d88;
     --color-primary-500: #cc2468; 
-    --color-primary-600: #b21653;
+    --color-primary-600: #ffad22;
     --color-primary-700: #931144;
     --color-primary-800: #740d36;
     --color-primary-900: #550926;
@@ -109,8 +109,10 @@ select:focus[data-flux-control] {
   color-scheme: light; 
 
 
-  --color-primary: #b21653;
-  --color-primary-content: #fff;
+    --color-primary:   #b21653;
+    --color-secondary: #313674;
+    --color-primary-content:   #ffffff;
+    --color-secondary-content: #ffffff;
 
  }
 

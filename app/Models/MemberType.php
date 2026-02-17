@@ -9,11 +9,11 @@ class MemberType extends Model
 {
     protected $fillable = ['name', 'description', 'max_limit'];
 
-    public function members() 
+    public function members()
     {
         return $this->hasMany(Member::class);
     }
-    
+
     public function fees(): HasMany
     {
         return $this->hasMany(MemberFee::class);

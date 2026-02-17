@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Registration;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 
 class RegistrationPrintController extends Controller
 {
@@ -14,7 +12,7 @@ class RegistrationPrintController extends Controller
         $record->load([
             'school.choreographies',
             'school.choreographies.dancers',
-            'school.choreographies.choreographers', 
+            'school.choreographies.choreographers',
             'school.choreographies.choreographyType',
             'school.choreographies.choreographyCategory',
             'school.choreographies.danceStyle',

@@ -54,4 +54,3 @@ class SchoolPolicy
         return $user->id === $school->user_id;
     }
 }
-

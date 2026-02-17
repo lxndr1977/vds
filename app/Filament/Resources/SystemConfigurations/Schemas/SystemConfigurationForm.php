@@ -71,6 +71,20 @@ class SystemConfigurationForm
                             ->helperText('Permite que os usuários editem suas inscrições após o envio inicial')
                             ->inline(false),
                     ]),
+
+                Section::make('Configurações de Envio de Email')
+                    ->schema([
+                        TextInput::make('notification_sender_email')
+                            ->label('Email que enviará notificações')
+                            ->helperText('Email que enviará notificações')
+                            ->email()
+                            ->required(),
+                        TextInput::make('notification_cc_email')
+                            ->label('Email que receberá cópia das notificações')
+                            ->helperText('Email que receberá cópia das notificações')
+                            ->email()
+                            ->nullable(),
+                    ]),
             ]);
     }
 }

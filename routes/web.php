@@ -1,10 +1,8 @@
 <?php
 
-use Livewire\Volt\Volt;
-use App\Models\Registration;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RegistrationPrintController;
+use Illuminate\Support\Facades\Route;
+use Livewire\Volt\Volt;
 
 Route::middleware(['auth'])->get('/', function () {
     return view('site');
@@ -26,12 +24,10 @@ Route::middleware(['auth'])->get('/inscricao', function () {
     return view('site');
 })->name('site');
 
-
 Route::get('/registration/{record}/print', [RegistrationPrintController::class, 'print'])
     ->name('registration.print')
-    ->middleware(['auth']); 
+    ->middleware(['auth']);
 
-    
 Route::get('/inicio', function () {
     return view('welcome');
 })->name('welcome');

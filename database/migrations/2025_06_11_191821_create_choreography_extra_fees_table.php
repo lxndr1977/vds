@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('choreography_extra_fees', function (Blueprint $table) {
             $table->id();
             $table->string('description');
-            $table->decimal('value', 10, 2); 
-            $table->boolean('active')->default(true); 
+            $table->decimal('value', 10, 2);
+            $table->boolean('active')->default(true);
             $table->timestamps();
         });
     }

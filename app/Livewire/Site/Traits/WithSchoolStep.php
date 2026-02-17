@@ -2,16 +2,15 @@
 
 namespace App\Livewire\Site\Traits;
 
-use App\Models\Registration;
 use App\Enums\BrazilStateEnum;
-use Illuminate\Validation\Rule;
+use App\Models\Registration;
 use App\Services\ZipCodeService;
 use Illuminate\Support\Facades\DB;
 
 trait WithSchoolStep
 {
     public $brazilStates;
-    
+
     // Propriedade para controlar a exibição do modal
     public $showExplanationModal = false;
 
@@ -30,7 +29,6 @@ trait WithSchoolStep
         'responsible_phone' => '',
     ];
 
-
     /**
      * Inicializa os dados da etapa da escola.
      *
@@ -44,7 +42,7 @@ trait WithSchoolStep
         }
 
         $this->brazilStates = BrazilStateEnum::toArray();
-        
+
         // Verifica se deve mostrar o modal explicativo
         $this->checkShowExplanationModal();
     }
@@ -58,8 +56,8 @@ trait WithSchoolStep
     {
         // Verifica se o cookie existe e se ainda é válido
         $lastShown = request()->cookie('school_step_modal_shown');
-        
-        if (!$lastShown || now()->diffInDays($lastShown) >= 2) {
+
+        if (! $lastShown || now()->diffInDays($lastShown) >= 2) {
             $this->showExplanationModal = true;
         }
     }
@@ -72,17 +70,15 @@ trait WithSchoolStep
     public function closeExplanationModal()
     {
         $this->showExplanationModal = false;
-        
+
         // Define o cookie para 2 dias
         cookie()->queue('school_step_modal_shown', now()->toDateString(), 60 * 24 * 2);
     }
 
-        /**
+    /**
      * Validação para os dados da escola.
-     *
-     * @return array
      */
-   protected function schoolRules(): array
+    protected function schoolRules(): array
     {
         return [
             'schoolState.name' => ['required', 'min:3', 'max:255'],
@@ -98,7 +94,7 @@ trait WithSchoolStep
             'schoolState.responsible_name' => ['required', 'string', 'min:3'],
             'schoolState.responsible_email' => ['required', 'email', 'max:255'],
             'schoolState.responsible_phone' => ['required', 'max:20'],
-        ]; 
+        ];
     }
 
     protected function schoolMessages(): array
@@ -176,13 +172,13 @@ trait WithSchoolStep
         $wasSaved = false;
 
         DB::transaction(function () use (&$wasSaved) {
-            
+
             // Verifica se há mudanças antes de salvar
             $this->school->fill($this->schoolState);
             $this->school->user_id = auth()->id();
 
             // Salva se for novo registro OU se houver mudanças
-            if (!$this->school->exists || $this->school->isDirty()) {
+            if (! $this->school->exists || $this->school->isDirty()) {
                 $this->school->save();
                 $wasSaved = true;
             }
@@ -193,14 +189,14 @@ trait WithSchoolStep
                 ['status_registration' => 'draft']
             );
         });
-        
+
         if ($wasSaved) {
             $this->success(
-                title: 'Atualizado', 
-                icon: 'o-check-circle', 
-                description:'Dados da escola atualizados com sucesso',
+                title: 'Atualizado',
+                icon: 'o-check-circle',
+                description: 'Dados da escola atualizados com sucesso',
                 position: 'toast-top toast-right',
-                css: "bg-green-100 border-green-100 text-green-900 text-md");
+                css: 'bg-green-100 border-green-100 text-green-900 text-md');
         }
 
         $this->nextStep();
@@ -216,7 +212,7 @@ trait WithSchoolStep
         try {
             $zipCodeService = app(ZipCodeService::class);
             $address = $zipCodeService->getAddressByZipCode($this->schoolState['zip_code']);
-            
+
             if ($address) {
                 $this->schoolState = array_merge($this->schoolState, $address);
             } else {

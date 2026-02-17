@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum BrazilStateEnum: string 
+enum BrazilStateEnum: string
 {
     case Acre = 'AC';
     case Alagoas = 'AL';

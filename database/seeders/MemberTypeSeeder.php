@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Models\MemberFee;
 use App\Models\MemberType;
 use Illuminate\Database\Seeder;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class MemberTypeSeeder extends Seeder
 {
@@ -26,7 +25,7 @@ class MemberTypeSeeder extends Seeder
                 'description' => 'Diretor da escola',
                 'fee' => 30.00,
                 'max_limit' => 1,
-            ], 
+            ],
         ];
 
         foreach ($types as $typeData) {
@@ -41,6 +40,6 @@ class MemberTypeSeeder extends Seeder
                 'amount' => $typeData['fee'],
                 'valid_until' => now()->addYear(),
             ]);
-        }     
+        }
     }
 }

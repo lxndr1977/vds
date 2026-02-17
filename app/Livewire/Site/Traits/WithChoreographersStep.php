@@ -2,27 +2,29 @@
 
 namespace App\Livewire\Site\Traits;
 
-use App\Models\Choreographer;
 use Illuminate\Database\Eloquent\Collection;
 
 trait WithChoreographersStep
 {
     public Collection $choreographers;
-    
+
     public bool $choreographerModal = false;
+
     public bool $confirmDeleteChoreographerModal = false;
 
     // Estado para o formulário de adição de novo coreógrafo
     public array $choreographerState = [
         'name' => '',
         'is_public_domain' => false,
-        'is_adaptation' => false, 
-        'is_attending' => false, 
-    ]; 
+        'is_adaptation' => false,
+        'is_attending' => false,
+    ];
 
     // Estados para edição
     public bool $isEditingChoreographer = false;
+
     public ?int $editingChoreographerId = null;
+
     public ?int $choreographerToDelete = null;
 
     /**
@@ -37,18 +39,16 @@ trait WithChoreographersStep
 
     /**
      * Carrega os coreógrafos associados à escola.
-     * 
+     *
      * @return void
      */
     public function loadChoreographers()
     {
-        $this->choreographers = $this->school->exists ? $this->school->choreographers()->get() : new Collection();
+        $this->choreographers = $this->school->exists ? $this->school->choreographers()->get() : new Collection;
     }
 
     /**
      * Validação para um novo coreógrafo.
-     *
-     * @return array
      */
     protected function choreographerRules(): array
     {
@@ -69,6 +69,7 @@ trait WithChoreographersStep
             'choreographerState.is_attending' => ['boolean'],
         ];
     }
+
     /**
      * Adiciona um novo coreógrafo à escola.
      *
@@ -86,11 +87,11 @@ trait WithChoreographersStep
         $this->closeChoreographerModal();
 
         $this->success(
-            icon: 'o-check-circle', 
-            title: 'Coreógrafo(a) Adicionado(a)', 
-            description:'O(a) coreógrafo(a) foi adicionado(a) com sucesso',
+            icon: 'o-check-circle',
+            title: 'Coreógrafo(a) Adicionado(a)',
+            description: 'O(a) coreógrafo(a) foi adicionado(a) com sucesso',
             position: 'toast-top toast-right',
-            css: "bg-green-100 border-green-100 text-green-900 text-md");
+            css: 'bg-green-100 border-green-100 text-green-900 text-md');
 
         $this->reset('choreographerState');
         $this->loadChoreographers();
@@ -99,25 +100,24 @@ trait WithChoreographersStep
     /**
      * Abre o modal para editar um coreógrafo existente.
      *
-     * @param int $choreographerId
      * @return void
      */
     public function editChoreographer(int $choreographerId)
     {
         $choreographer = $this->school->choreographers()->find($choreographerId);
-        
+
         if ($choreographer) {
             $this->isEditingChoreographer = true;
             $this->editingChoreographerId = $choreographerId;
-            
+
             // Preenche o estado com os dados do(a) coreógrafo(a)
             $this->choreographerState = [
                 'name' => $choreographer->name,
                 'is_public_domain' => $choreographer->is_public_domain,
-                'is_adaptation' => $choreographer->is_adaptation, 
-                'is_attending' => $choreographer->is_attending, 
+                'is_adaptation' => $choreographer->is_adaptation,
+                'is_attending' => $choreographer->is_attending,
             ];
-            
+
             $this->openChoreographerModal();
         }
     }
@@ -135,18 +135,18 @@ trait WithChoreographersStep
         );
 
         $choreographer = $this->school->choreographers()->find($this->editingChoreographerId);
-        
+
         if ($choreographer) {
             $choreographer->update($this->choreographerState);
-            
+
             $this->closeChoreographerModal();
 
             $this->success(
-                icon: 'o-check-circle', 
-                title: 'Coreǵrafoa(a) Atualizado(a)', 
-                description:'Os dados do(a) coreógrafo(a) foram atualizados com sucesso',
+                icon: 'o-check-circle',
+                title: 'Coreǵrafoa(a) Atualizado(a)',
+                description: 'Os dados do(a) coreógrafo(a) foram atualizados com sucesso',
                 position: 'toast-top toast-right',
-                css: "bg-green-100 border-green-100 text-green-900 text-md");
+                css: 'bg-green-100 border-green-100 text-green-900 text-md');
 
             $this->loadChoreographers();
         }
@@ -155,7 +155,6 @@ trait WithChoreographersStep
     /**
      * Prepara a exclusão de um coreógrafo (abre o modal de confirmação).
      *
-     * @param int $choreographerId
      * @return void
      */
     public function prepareDeleteChoreographer(int $choreographerId)
@@ -181,10 +180,9 @@ trait WithChoreographersStep
     /**
      * Remove um coreógrafo.
      *
-     * @param int $choreographerId
      * @return void
      */
-   public function removeChoreographer(int $choreographerId)
+    public function removeChoreographer(int $choreographerId)
     {
         $choreographer = $this->school->choreographers()->find($choreographerId);
 
@@ -192,20 +190,20 @@ trait WithChoreographersStep
             try {
                 $choreographer->delete();
                 $this->success(
-                    icon: 'o-check-circle', 
-                    title: 'Coreógrafo(a) Excluído', 
-                    description:'O(a) coreógrafo(a) foi excluído com sucesso',
+                    icon: 'o-check-circle',
+                    title: 'Coreógrafo(a) Excluído',
+                    description: 'O(a) coreógrafo(a) foi excluído com sucesso',
                     position: 'toast-top toast-right',
-                    css: "bg-green-100 border-green-100 text-green-900 text-md");
+                    css: 'bg-green-100 border-green-100 text-green-900 text-md');
 
                 $this->loadChoreographers();
             } catch (\Exception $e) {
                 $this->error(
-                    icon: 'o-information-circle', 
-                    title: 'Erro', 
+                    icon: 'o-information-circle',
+                    title: 'Erro',
                     description: $e->getMessage(),
                     position: 'toast-top toast-right',
-                    css: "bg-red-100 border-red-100 text-red-900 text-md");
+                    css: 'bg-red-100 border-red-100 text-red-900 text-md');
 
             }
         }

@@ -2,24 +2,22 @@
 
 namespace App\Models;
 
-use App\Models\Choreography;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Choreographer extends Model
 {
     protected $fillable = [
-        'name', 
+        'name',
         'school_id',
-        'is_attending', 
+        'is_attending',
         'is_public_domain',
-        'is_adaptation', 
+        'is_adaptation',
     ];
 
     protected $casts = [
-        'is_attending' => 'boolean', 
+        'is_attending' => 'boolean',
         'is_public_domain' => 'boolean',
-        'is_adaptation' => 'boolean', 
+        'is_adaptation' => 'boolean',
     ];
 
     protected static function boot()
@@ -38,22 +36,22 @@ class Choreographer extends Model
         return $this->belongsToMany(Choreography::class, 'choreography_choreographer', 'choreographer_id', 'choreography_id');
     }
 
-   public function getChoreographerTypesAttribute()
-   {
-      $types = [];
-      
-      if ($this->is_public_domain) {
-         $types[] = 'Domínio Público';
-      }
-      
-      if ($this->is_adaptation) {
-         $types[] = 'Responsável por Adaptação';
-      }
-      
-      if ($this->is_attending) {
-         $types[] = 'Participará Presencialmente';
-      }
-      
-      return implode(', ', $types);
-   }
+    public function getChoreographerTypesAttribute()
+    {
+        $types = [];
+
+        if ($this->is_public_domain) {
+            $types[] = 'Domínio Público';
+        }
+
+        if ($this->is_adaptation) {
+            $types[] = 'Responsável por Adaptação';
+        }
+
+        if ($this->is_attending) {
+            $types[] = 'Participará Presencialmente';
+        }
+
+        return implode(', ', $types);
+    }
 }
