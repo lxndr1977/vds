@@ -1,295 +1,336 @@
-{{-- resources/views/filament/resources/registration-resource/pages/view-registration-details.blade.php --}}
-
 <x-filament-panels::page>
-
-    {{-- Status da Inscrição --}}
-    @if ($record->is_finished)
-        <x-filament::section>
-            <div class="bg-green-50 border border-green-200 text-green-700 rounded-lg p-6 text-center">
-                <x-heroicon-o-check-circle class="w-12 h-12 mx-auto mb-4 text-green-600" />
-                <h2 class="text-2xl font-bold mb-2">Inscrição no Vem Dançar Sudamérica 2025 Confirmada!</h2>
-                <p class="text-sm">Atualizada em {{ $record->updated_at->format('d/m/Y H:i') }}</p>
-            </div>
-        </x-filament::section>
-    @endif
-
-    {{-- Estatísticas Resumo --}}
-    <x-filament::section>
-        <x-slot name="heading">
-            Resumo da Inscrição
-        </x-slot>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center">
-                <x-heroicon-o-users class="w-8 h-8 mx-auto mb-2 text-blue-600" />
-                <div class="text-2xl font-bold text-blue-900">
-                    {{ $record->school->members->count() + $record->school->dancers->count() + $record->school->choreographers->count() }}
+    <div class="space-y-6 text-gray-950 dark:text-white">
+        {{-- Status and Top Actions --}}
+        @if ($record->status_registration->value === 'finished')
+            <x-filament::section>
+                <div class="flex flex-col items-center justify-center py-6 text-center">
+                    <x-filament::icon
+                        icon="heroicon-o-check-circle"
+                        class="h-12 w-12 text-success-600 dark:text-success-400"
+                    />
+                    <h2 class="mt-4 text-2xl font-bold tracking-tight">
+                        Inscrição Confirmada!
+                    </h2>
+                    <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                        Esta inscrição foi finalizada com sucesso em {{ $record->updated_at->format('d/m/Y H:i') }}.
+                    </p>
                 </div>
-                <div class="text-sm text-blue-700">Participantes</div>
+            </x-filament::section>
+        @endif
+
+        {{-- Tabs Navigation --}}
+        <x-filament::tabs label="Detalhes da Inscrição">
+            <x-filament::tabs.item
+                :active="$activeTab === 'summary'"
+                wire:click="$set('activeTab', 'summary')"
+                icon="heroicon-m-clipboard-document-list"
+            >
+                Resumo
+            </x-filament::tabs.item>
+
+            <x-filament::tabs.item
+                :active="$activeTab === 'school'"
+                wire:click="$set('activeTab', 'school')"
+                icon="heroicon-m-building-office-2"
+            >
+                Instituição
+            </x-filament::tabs.item>
+
+            <x-filament::tabs.item
+                :active="$activeTab === 'participants'"
+                wire:click="$set('activeTab', 'participants')"
+                icon="heroicon-m-users"
+            >
+                Participantes
+            </x-filament::tabs.item>
+
+            <x-filament::tabs.item
+                :active="$activeTab === 'choreographies'"
+                wire:click="$set('activeTab', 'choreographies')"
+                icon="heroicon-m-musical-note"
+            >
+                Coreografias
+            </x-filament::tabs.item>
+        </x-filament::tabs>
+
+        {{-- Tab Content: Summary --}}
+        <div x-show="$wire.activeTab === 'summary'" class="space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {{-- Stat Card: Participants --}}
+                <x-filament::section>
+                    <div class="flex items-center gap-x-4">
+                        <div class="rounded-lg bg-primary-100 p-3 dark:bg-primary-900/40">
+                            <x-filament::icon
+                                icon="heroicon-o-users"
+                                class="h-6 w-6 text-primary-600 dark:text-primary-400"
+                            />
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Participantes</p>
+                            <p class="text-2xl font-bold tracking-tight">
+                                {{ ($record->school->members->count() ?? 0) + ($record->school->dancers->count() ?? 0) + ($record->school->choreographers->count() ?? 0) }}
+                            </p>
+                        </div>
+                    </div>
+                </x-filament::section>
+
+                {{-- Stat Card: Choreographies --}}
+                <x-filament::section>
+                    <div class="flex items-center gap-x-4">
+                        <div class="rounded-lg bg-info-100 p-3 dark:bg-info-900/40">
+                            <x-filament::icon
+                                icon="heroicon-o-musical-note"
+                                class="h-6 w-6 text-info-600 dark:text-info-400"
+                            />
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Coreografias</p>
+                            <p class="text-2xl font-bold tracking-tight">
+                                {{ $record->school->choreographies->count() ?? 0 }}
+                            </p>
+                        </div>
+                    </div>
+                </x-filament::section>
+
+                {{-- Stat Card: Status --}}
+                <x-filament::section>
+                    <div class="flex items-center gap-x-4">
+                        <div class="rounded-lg bg-warning-100 p-3 dark:bg-warning-900/40">
+                            <x-filament::icon
+                                icon="heroicon-o-tag"
+                                class="h-6 w-6 text-warning-600 dark:text-warning-400"
+                            />
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Status</p>
+                            <p class="text-lg font-bold tracking-tight">
+                                {{ $record->status_registration->getLabel() }}
+                            </p>
+                        </div>
+                    </div>
+                </x-filament::section>
             </div>
 
-            <div class="bg-purple-50 border border-purple-200 rounded-lg p-4 text-center">
-                <x-heroicon-o-musical-note class="w-8 h-8 mx-auto mb-2 text-purple-600" />
-                <div class="text-2xl font-bold text-purple-900">
-                    {{ $record->school->choreographies->count() }}
+            <x-filament::section heading="Visão Geral">
+                <div class="prose dark:prose-invert max-w-none text-gray-600 dark:text-gray-300">
+                    <p>Esta é a página de visualização detalhada da inscrição para o **Vem Dançar Sudamérica 2025**. Navegue pelas abas acima para conferir os dados da instituição, a lista de participantes e as coreografias cadastradas.</p>
                 </div>
-                <div class="text-sm text-purple-700">Coreografias</div>
-            </div>
-
-           <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 text-center">
-                <x-heroicon-o-building-office class="w-8 h-8 mx-auto mb-2 text-gray-600" />
-                <div class="text-sm text-gray-700 font-medium">Status</div>
-                <div class="text-lg font-bold">
-                    {{ $record->status_registration->getLabel() }}
-                </div>
+            </x-filament::section>
         </div>
-    </x-filament::section>
 
-    {{-- Dados da Escola --}}
-    <x-filament::section> 
-        <x-slot name="heading">
-            Grupo/Escola/Cia
-        </x-slot>
-        <x-slot name="description">
-            Informações de contato do Grupo/Escola/Cia
-        </x-slot>
+        {{-- Tab Content: School --}}
+        <div x-show="$wire.activeTab === 'school'" x-cloak>
+            <x-filament::section heading="Dados da Instituição">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                        <div class="flex justify-between border-b pb-2">
+                            <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Nome</span>
+                            <span class="font-semibold">{{ $record->school->name }}</span>
+                        </div>
+                        <div class="flex justify-between border-b pb-2">
+                            <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Responsável</span>
+                            <span>{{ $record->school->responsible_name }}</span>
+                        </div>
+                        <div class="flex justify-between border-b pb-2">
+                            <span class="text-sm font-medium text-gray-500 dark:text-gray-400">E-mail</span>
+                            <span>{{ $record->school->responsible_email }}</span>
+                        </div>
+                        <div class="flex justify-between border-b pb-2">
+                            <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Telefone/WhatsApp</span>
+                            <span>{{ $record->school->responsible_phone }}</span>
+                        </div>
+                    </div>
 
-        <div class="space-y-4">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Nome</label>
-                    <p class="mt-1 text-sm text-gray-900">{{ $record->school->name }}</p>
+                    <div class="space-y-2">
+                         <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Endereço</span>
+                         <div class="text-sm text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-800/50 p-3 rounded-lg">
+                            {{ $record->school->street }}, {{ $record->school->number }}<br>
+                            @if($record->school->complement) {{ $record->school->complement }}<br> @endif
+                            {{ $record->school->district }}<br>
+                            {{ $record->school->city }} - {{ $record->school->state }}<br>
+                            {{ $record->school->zip_code }}
+                        </div>
+                    </div>
                 </div>
-                
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Responsável</label>
-                    <p class="mt-1 text-sm text-gray-900">{{ $record->school->responsible_name }}</p>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Email do Responsável</label>
-                    <p class="mt-1 text-sm text-gray-900">{{ $record->school->responsible_email }}</p>
-                </div>
-                
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">WhatsApp do Responsável</label>
-                    <p class="mt-1 text-sm text-gray-900">{{ $record->school->responsible_phone }}</p>
-                </div>
-            </div>
-
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Endereço</label>
-                <p class="mt-1 text-sm text-gray-900">
-                    {{ $record->school->street }}, {{ $record->school->number }}
-                    @if($record->school->complement), {{ $record->school->complement }}@endif, 
-                    {{ $record->school->district }}, {{ $record->school->city }}/{{ $record->school->state }}
-                </p>
-            </div>
+            </x-filament::section>
         </div>
-    </x-filament::section>
 
-    {{-- Participantes --}}
-    <x-filament::section>
-        <x-slot name="heading">
-            Participantes
-        </x-slot>
-        <x-slot name="description">
-            Relação da Equipe Diretiva, Coreógrafos e Bailarinos que participarão do evento
-        </x-slot>
-
-        <div class="space-y-6">
+        {{-- Tab Content: Participants --}}
+        <div x-show="$wire.activeTab === 'participants'" x-cloak class="space-y-6">
             {{-- Equipe Diretiva --}}
-            <div class="border border-gray-200 rounded-lg">
-                <div class="bg-gray-50 px-4 py-3 border-b border-gray-200">
-                    <h3 class="text-lg font-medium text-gray-900">
-                        Equipe Diretiva ({{ $record->school->members->count() }})
-                    </h3>
-                </div>
-                <div class="p-4">
+            <x-filament::section collapsible>
+                <x-slot name="heading">
+                    <div class="flex items-center">
+                         Equipe Diretiva
+                        <x-filament::badge color="gray" size="sm" class="ml-2">
+                            {{ $record->school->members->count() }}
+                        </x-filament::badge>
+                    </div>
+                </x-slot>
+
+                <div class="divide-y divide-gray-100 dark:divide-white/5">
                     @forelse($record->school->members as $member)
-                        <div class="flex justify-between items-center py-2 {{ !$loop->last ? 'border-b border-gray-100' : '' }}">
-                            <div>
-                                <span class="font-medium">{{ $member->name }}</span>
+                        <div class="flex items-center justify-between py-3">
+                            <div class="text-sm font-medium">
+                                {{ $member->name }}
                             </div>
-                            <div>
-                                <span class="text-sm text-gray-500">{{ $member->memberType->name ?? 'Não definido' }}</span>
-                            </div>
+                            <x-filament::badge color="primary">
+                                {{ $member->memberType->name ?? 'Não definido' }}
+                            </x-filament::badge>
                         </div>
                     @empty
-                        <p class="text-gray-500 italic">Nenhum membro da equipe diretiva cadastrado.</p>
+                        <p class="py-4 text-center text-sm text-gray-500 italic">Nenhum membro da equipe diretiva cadastrado.</p>
                     @endforelse
                 </div>
-            </div>
+            </x-filament::section>
 
             {{-- Coreógrafos --}}
-            <div class="border border-gray-200 rounded-lg">
-                <div class="bg-gray-50 px-4 py-3 border-b border-gray-200">
-                    <h3 class="text-lg font-medium text-gray-900">
-                        Coreógrafos ({{ $record->school->choreographers->count() }})
-                    </h3>
-                </div>
-                <div class="p-4">
+            <x-filament::section collapsible>
+                <x-slot name="heading">
+                    <div class="flex items-center">
+                        Coreógrafos
+                        <x-filament::badge color="gray" size="sm" class="ml-2">
+                            {{ $record->school->choreographers->count() }}
+                        </x-filament::badge>
+                    </div>
+                </x-slot>
+
+                <div class="divide-y divide-gray-100 dark:divide-white/5">
                     @forelse($record->school->choreographers as $choreographer)
-                        <div class="flex justify-between items-center py-2 {{ !$loop->last ? 'border-b border-gray-100' : '' }}">
-                            <div>
-                                <span class="font-medium">{{ $choreographer->name }}</span>
+                        <div class="flex items-center justify-between py-3">
+                            <div class="text-sm font-medium">
+                                {{ $choreographer->name }}
                             </div>
-                            <div>
-                                <span class="text-sm text-gray-500">{{ $choreographer->choreographer_types }}</span>
+                            <div class="text-sm text-gray-500">
+                                {{ $choreographer->choreographer_types }}
                             </div>
                         </div>
                     @empty
-                        <p class="text-gray-500 italic">Nenhum coreógrafo cadastrado.</p>
+                        <p class="py-4 text-center text-sm text-gray-500 italic">Nenhum coreógrafo cadastrado.</p>
                     @endforelse
                 </div>
-            </div>
+            </x-filament::section>
 
             {{-- Bailarinos --}}
-            <div class="border border-gray-200 rounded-lg">
-                <div class="bg-gray-50 px-4 py-3 border-b border-gray-200">
-                    <h3 class="text-lg font-medium text-gray-900">
-                        Bailarinos ({{ $record->school->dancers->count() }})
-                    </h3>
-                </div>
-                <div class="p-4">
+            <x-filament::section collapsible>
+                <x-slot name="heading">
+                    <div class="flex items-center">
+                        Bailarinos
+                        <x-filament::badge color="gray" size="sm" class="ml-2">
+                            {{ $record->school->dancers->count() }}
+                        </x-filament::badge>
+                    </div>
+                </x-slot>
+
+                <div class="divide-y divide-gray-100 dark:divide-white/5">
                     @forelse($record->school->dancers as $dancer)
-                        <div class="flex justify-between items-center py-2 {{ !$loop->last ? 'border-b border-gray-100' : '' }}">
-                            <div>
-                                <span class="font-medium">{{ $dancer->name }}</span>
+                        <div class="flex items-center justify-between py-3">
+                            <div class="text-sm font-medium">
+                                {{ $dancer->name }}
                             </div>
-                            <div>
-                                <span class="text-sm text-gray-500">{{ $dancer->birth_date }} </span>
+                            <div class="text-sm text-gray-500">
+                                {{ $dancer->birth_date }}
                             </div>
                         </div>
                     @empty
-                        <p class="text-gray-500 italic">Nenhum bailarino cadastrado.</p>
+                        <p class="py-4 text-center text-sm text-gray-500 italic">Nenhum bailarino cadastrado.</p>
                     @endforelse
                 </div>
-            </div>
+            </x-filament::section>
         </div>
-    </x-filament::section>
 
-    {{-- Coreografias --}}
-    <x-filament::section>
-        <x-slot name="heading">
-            Coreografias ({{ $record->school->choreographies->count() }})
-        </x-slot>
-        <x-slot name="description">
-            Relação das Coreografias inscritas no evento
-        </x-slot>
-
-        <div class="space-y-4">
+        {{-- Tab Content: Choreographies --}}
+        <div x-show="$wire.activeTab === 'choreographies'" x-cloak class="space-y-6">
             @forelse($record->school->choreographies as $choreography)
-                <div class="border border-gray-200 rounded-lg">
-                    <div class="bg-gray-50 px-4 py-3 border-b border-gray-200">
-                        <div class="flex flex-col md:flex-row md:items-center md:justify-between">
-                            <h3 class="text-lg font-semibold text-gray-900">{{ $choreography->name }}</h3>
-                            <div class="mt-2 md:mt-0 flex flex-wrap gap-2">
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                    Formação: {{ $choreography->choreographyType->name }}
-                                </span>
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
-                                    Categoria: {{ $choreography->choreographyCategory->name }}
-                                </span>
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                    Modalidade: {{ $choreography->danceStyle->name }}
-                                </span>
+                <x-filament::section collapsible>
+                    <x-slot name="heading">
+                        <div class="flex flex-col md:flex-row md:items-center gap-3">
+                            <span class="text-lg font-bold tracking-tight">{{ $choreography->name }}</span>
+                            <div class="flex flex-wrap gap-2">
+                                <x-filament::badge color="info" size="sm">
+                                    {{ $choreography->choreographyType->name }}
+                                </x-filament::badge>
+                                <x-filament::badge color="warning" size="sm">
+                                    {{ $choreography->choreographyCategory->name }}
+                                </x-filament::badge>
+                                <x-filament::badge color="success" size="sm">
+                                    {{ $choreography->danceStyle->name }}
+                                </x-filament::badge>
                             </div>
                         </div>
-                    </div>
-                    
-                    <div class="p-4">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            {{-- Informações da Coreografia --}}
-                            <div class="space-y-3">
-                                <h4 class="font-semibold text-gray-900 uppercase text-sm">Informações</h4>
-                                <div class="space-y-2 text-sm">
-                                    <div>
-                                        <span class="font-medium text-gray-700">Projeto Social:</span>
-                                        <span class="text-gray-900">{{ $choreography->is_social_project ? 'Sim' : 'Não' }}</span>
-                                    </div>
-                                    <div>
-                                        <span class="font-medium text-gray-700">Projeto Universitário:</span>
-                                        <span class="text-gray-900">{{ $choreography->is_university_project ? 'Sim' : 'Não' }}</span>
-                                    </div>
-                                    <div>
-                                        <span class="font-medium text-gray-700">Música:</span>
-                                        <span class="text-gray-900">{{ $choreography->music }}</span>
-                                    </div>
-                                    <div>
-                                        <span class="font-medium text-gray-700">Compositor:</span>
-                                        <span class="text-gray-900">{{ $choreography->music_composer }}</span>
-                                    </div>
-                                    <div>
-                                        <span class="font-medium text-gray-700">Duração:</span>
-                                        <span class="text-gray-900">{{ $choreography->duration }}</span>
-                                    </div>
-                                </div>
-                            </div>
+                    </x-slot>
 
-                            {{-- Participantes da Coreografia --}}
-                            <div class="space-y-3">
-                                <h4 class="font-semibold text-gray-900 uppercase text-sm">Participantes</h4>
-                                
-                                {{-- Coreógrafos --}}
-                                <div>
-                                    <h5 class="font-medium text-gray-700 mb-2">Coreógrafos ({{ $choreography->choreographers->count() }})</h5>
-                                    @if($choreography->choreographers->count())
-                                        <div class="space-y-1">
-                                            @foreach($choreography->choreographers as $choreographer)
-                                                <div class="text-sm">
-                                                    <span class="text-gray-900">{{ $choreographer->name }}</span>
-                                                    <span class="text-gray-500">- {{ $choreographer->choreographer_types }}</span>
-                                                </div>
-                                            @endforeach
-                                        </div>
-                                    @else
-                                        <p class="text-gray-500 italic text-sm">Sem coreógrafos cadastrados.</p>
-                                    @endif
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4">
+                        {{-- Basic Info --}}
+                        <div class="space-y-4">
+                            <h4 class="text-xs font-bold uppercase tracking-wider text-gray-400 border-b pb-1">Informações Técnicas</h4>
+                            <div class="space-y-2">
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gray-500">Música:</span>
+                                    <span>{{ $choreography->music }}</span>
                                 </div>
-
-                                {{-- Dançarinos --}}
-                                <div>
-                                    <h5 class="font-medium text-gray-700 mb-2">Bailarinos ({{ $choreography->dancers->count() }})</h5>
-                                    @if($choreography->dancers->count())
-                                        <div class="space-y-1 max-h-32 overflow-y-auto">
-                                            @foreach($choreography->dancers as $dancer)
-                                                <div class="text-sm">
-                                                    <span class="text-gray-900">{{ $dancer->name }}</span>
-                                                    <span class="text-gray-500">- {{ $dancer->birth_date }} </span>
-                                                </div>
-                                            @endforeach
-                                        </div>
-                                    @else
-                                        <p class="text-gray-500 italic text-sm">Sem bailarinos cadastrados.</p>
-                                    @endif
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gray-500">Compositor:</span>
+                                    <span>{{ $choreography->music_composer }}</span>
                                 </div>
-
-                                
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gray-500">Duração:</span>
+                                    <span>{{ $choreography->duration }}</span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gray-500">Projeto Social:</span>
+                                    <span>{{ $choreography->is_social_project ? 'Sim' : 'Não' }}</span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gray-500">Projeto Universitário:</span>
+                                    <span>{{ $choreography->is_university_project ? 'Sim' : 'Não' }}</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    {{-- Resumo de Participantes --}}
-                                <div class="mt-4 p-3 bg-gray-50 rounded-lg">
-                                    <h5 class="font-medium text-gray-700 mb-2 text-sm">Total de Participantes</h5>
-                                    <div class="text-sm space-y-1">
-                                        @foreach($choreography->school->getMembersCountByType() as $typeName => $count)
-                                            <div class="text-gray-600">{{ $typeName }}es: {{ $count }}</div>
+
+                        {{-- Participants in this Choreography --}}
+                        <div class="space-y-4">
+                            <h4 class="text-xs font-bold uppercase tracking-wider text-gray-400 border-b pb-1">Escalado para esta Obra</h4>
+                            
+                            <div class="space-y-4">
+                                {{-- Step Coreógrafos --}}
+                                <div>
+                                    <p class="text-xs font-semibold text-gray-500 mb-2 underline decoration-primary-500/30">Coreógrafos ({{ $choreography->choreographers->count() }})</p>
+                                    <div class="space-y-1">
+                                        @foreach($choreography->choreographers as $choreographer)
+                                            <div class="text-sm flex justify-between">
+                                                <span>{{ $choreographer->name }}</span>
+                                                <span class="text-gray-400 text-xs">{{ $choreographer->choreographer_types }}</span>
+                                            </div>
                                         @endforeach
-                                        <div class="text-gray-600">Coreógrafos: {{ $choreography->choreographers->count() }}</div>
-                                        <div class="text-gray-600">Bailarinos: {{ $choreography->dancers->count() }}</div>
                                     </div>
                                 </div>
-                </div>
+
+                                {{-- Step Bailarinos --}}
+                                <div>
+                                    <p class="text-xs font-semibold text-gray-500 mb-2 underline decoration-info-500/30">Bailarinos ({{ $choreography->dancers->count() }})</p>
+                                    <div class="max-h-40 overflow-y-auto pr-2 space-y-1">
+                                        @foreach($choreography->dancers as $dancer)
+                                            <div class="text-sm flex justify-between">
+                                                <span>{{ $dancer->name }}</span>
+                                                <span class="text-gray-400 text-xs">{{ $dancer->birth_date }}</span>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </x-filament::section>
             @empty
-                <div class="text-center py-8">
-                    <x-heroicon-o-musical-note class="w-8 h-8 mx-auto text-gray-400 mb-4" />
-                    <p class="text-gray-500 italic">Nenhuma coreografia cadastrada.</p>
+                <div class="flex flex-col items-center justify-center py-12 text-center text-gray-500">
+                    <x-filament::icon
+                        icon="heroicon-o-musical-note"
+                        class="h-12 w-12 opacity-30"
+                    />
+                    <p class="mt-4 text-sm italic">Nenhuma coreografia cadastrada.</p>
                 </div>
             @endforelse
         </div>
-    </x-filament::section>
-
+    </div>
 </x-filament-panels::page>

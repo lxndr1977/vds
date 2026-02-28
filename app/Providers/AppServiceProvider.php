@@ -23,5 +23,13 @@ class AppServiceProvider extends ServiceProvider
         if ($this->app->environment('production')) {
             URL::forceScheme('https');
         }
+
+        // Share SystemConfiguration with all views and set app.name
+        $config = \App\Models\SystemConfiguration::current();
+        if ($config) {
+            config(['app.name' => $config->festival_name ?? config('app.name')]);
+        }
+
+        view()->share('systemConfig', $config);
     }
 }

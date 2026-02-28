@@ -26,6 +26,8 @@ class ViewRegistrationDetails extends Page
 
     public $showTotals = true;
 
+    public string $activeTab = 'summary';
+
     public function getView(): string
     {
         return 'filament.resources.registration-resource.pages.view-registration-details';

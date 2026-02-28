@@ -49,6 +49,7 @@ class SystemConfigurationForm
                             ->image()
                             ->imageEditor()
                             ->directory('logos')
+                            ->disk('public')
                             ->visibility('public')
                             ->columnSpanFull(),
 
@@ -83,6 +84,10 @@ class SystemConfigurationForm
                             ->label('Email que receberá cópia das notificações')
                             ->helperText('Email que receberá cópia das notificações')
                             ->email()
+                            ->nullable(),
+                        TextInput::make('notification_whatsapp')
+                            ->label('WhatsApp de contato (com código do país, sem sinais)')
+                            ->helperText('Número para contato/pagamento, ex: 5551993120404')
                             ->nullable(),
                     ]),
             ]);

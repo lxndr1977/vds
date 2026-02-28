@@ -13,11 +13,13 @@ use App\Filament\Resources\Registrations\RelationManagers\ChoreographiesRelation
 use App\Filament\Resources\Registrations\RelationManagers\DancersRelationManager;
 use App\Filament\Resources\Registrations\RelationManagers\MembersRelationManager;
 use App\Models\Registration;
+use App\Models\User;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Fieldset;
@@ -48,68 +50,85 @@ class RegistrationResource extends Resource
             ->schema([
                 Section::make('Informações da Inscrição')
                     ->schema([
-                        Fieldset::make('Informações de contato do Grupo/Escola/Cia')
-                            ->relationship('school')
-                            ->schema([
-                                Grid::make(3)->schema([
-                                    TextInput::make('name')
-                                        ->label('Nome do Grupo/Escola/Cia')
-                                        ->required()
-                                        ->columnSpanFull(),
-
-                                    TextInput::make('street')
-                                        ->label('Rua')
-                                        ->columnSpan(2),
-
-                                    TextInput::make('number')
-                                        ->label('Número')
-                                        ->maxLength(10),
-
-                                    TextInput::make('complement')
-                                        ->label('Complemento')
-                                        ->columnSpan(1),
-
-                                    TextInput::make('district')
-                                        ->label('Bairro')
-                                        ->columnSpan(1),
-
-                                    TextInput::make('city')
-                                        ->label('Cidade')
-                                        ->columnSpan(1),
-
-                                    TextInput::make('state')
-                                        ->label('Estado')
-                                        ->maxLength(2)
-                                        ->columnSpan(1),
-
-                                    TextInput::make('zip_code')
-                                        ->label('CEP')
-                                        ->mask('99999-999')
-                                        ->maxLength(9)
-                                        ->columnSpan(1),
-
-                                    TextInput::make('responsible_name')
-                                        ->label('Responsável')
-                                        ->columnSpanFull(),
-
-                                    TextInput::make('responsible_email')
-                                        ->label('E-mail do Responsável')
-                                        ->email()
-                                        ->columnSpan(2),
-
-                                    TextInput::make('responsible_phone')
-                                        ->label('Telefone do Responsável')
-                                        ->tel()
-                                        ->columnSpan(1),
-                                ]),
-                            ]),
-
-                        Forms\Components\Select::make('status_registration')
-                            ->label('Status da Inscrição')
-                            ->options(RegistrationStatusEnum::class)
-                            ->required(),
+                        static::getSchoolFormSchema(),
+                        static::getRegistrationStatusFormSchema(),
                     ]),
             ]);
+    }
+
+    public static function getSchoolFormSchema(): Fieldset
+    {
+        return Fieldset::make('Informações de contato do Grupo/Escola/Cia')
+            ->statePath('school')
+            ->schema([
+                Grid::make(3)->schema([
+                    TextInput::make('name')
+                        ->label('Nome do Grupo/Escola/Cia')
+                        ->required()
+                        ->columnSpanFull(),
+
+                    Select::make('user_id')
+                        ->label('Usuário Responsável')
+                        ->options(User::all()->pluck('name', 'id'))
+                        ->searchable()
+                        ->required()
+                        ->columnSpanFull(),
+
+                    TextInput::make('street')
+                        ->label('Rua')
+                        ->columnSpan(2),
+
+                    TextInput::make('number')
+                        ->label('Número')
+                        ->maxLength(10),
+
+                    TextInput::make('complement')
+                        ->label('Complemento')
+                        ->columnSpan(1),
+
+                    TextInput::make('district')
+                        ->label('Bairro')
+                        ->columnSpan(1),
+
+                    TextInput::make('city')
+                        ->label('Cidade')
+                        ->columnSpan(1),
+
+                    TextInput::make('state')
+                        ->label('Estado')
+                        ->maxLength(2)
+                        ->columnSpan(1),
+
+                    TextInput::make('zip_code')
+                        ->label('CEP')
+                        ->mask('99999-999')
+                        ->maxLength(9)
+                        ->columnSpan(1),
+
+                    TextInput::make('responsible_name')
+                        ->label('Responsável')
+                        ->columnSpanFull(),
+
+                    TextInput::make('responsible_email')
+                        ->label('E-mail do Responsável')
+                        ->email()
+                        ->columnSpan(2),
+
+                    TextInput::make('responsible_phone')
+                        ->label('Telefone do Responsável')
+                        ->tel()
+                        ->columnSpan(1),
+                ]),
+            ]);
+    }
+
+    public static function getRegistrationStatusFormSchema(): Forms\Components\Select
+    {
+        return Forms\Components\Select::make('status_registration')
+            ->label('Status da Inscrição')
+            ->options(RegistrationStatusEnum::class)
+            ->default(RegistrationStatusEnum::Draft)
+            ->required();
     }
 
     public static function table(Table $table): Table

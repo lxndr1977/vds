@@ -178,13 +178,57 @@
             </div>
             
             <div class="description">
-                Você pode revisar os detalhes da sua inscrição a qualquer momento acessando o painel de controle.
+                Segue abaixo um resumo completo da sua inscrição.
             </div>
-            
-            <div class="cta-container">
-                <a href="https://inscricoes.vemdancarsudamerica.com.br" class="cta-button">
-                    Acessar Painel
-                </a>
+
+            <div style="margin-top:20px;">
+                <h3 style="color:#111827">Dados da Escola</h3>
+                <p><strong>Nome:</strong> {{ $registration->school->name }}</p>
+                <p><strong>Responsável:</strong> {{ $registration->school->responsible_name }}</p>
+                <p><strong>Email do responsável:</strong> {{ $registration->school->responsible_email }}</p>
+                <p><strong>Whatsapp:</strong> {{ $registration->school->responsible_phone }}</p>
+                <p><strong>Endereço:</strong> {{ $registration->school->street }}, {{ $registration->school->number }} {{ $registration->school->complement ? ', ' . $registration->school->complement : '' }} - {{ $registration->school->city }}/{{ $registration->school->state }}</p>
+
+                <hr style="margin:18px 0">
+
+                <h3 style="color:#111827">Equipe</h3>
+                @if(isset($registration->registration_data['members']) && count($registration->registration_data['members']))
+                    @foreach($registration->registration_data['members'] as $member)
+                        <p>{{ $member['name'] }} — {{ $member['member_type'] ?? 'Tipo' }} — R$ {{ number_format($member['fee_amount'] ?? 0, 2, ',', '.') }}</p>
+                    @endforeach
+                @else
+                    <p>Nenhum membro cadastrado.</p>
+                @endif
+
+                <hr style="margin:18px 0">
+
+                <h3 style="color:#111827">Coreografias</h3>
+                @if(isset($registration->registration_data['choreographies']) && count($registration->registration_data['choreographies']))
+                    @foreach($registration->registration_data['choreographies'] as $ch)
+                        <div style="margin-bottom:10px;">
+                            <p><strong>{{ $ch['name'] }}</strong> — {{ $ch['type'] }} </p>
+                            <p>Participantes: {{ count($ch['dancers'] ?? []) + count($ch['choreographers'] ?? []) }}</p>
+                            <p>Taxa por participante: R$ {{ number_format($ch['fee_per_participant'] ?? 0, 2, ',', '.') }}</p>
+                        </div>
+                    @endforeach
+                @else
+                    <p>Nenhuma coreografia cadastrada.</p>
+                @endif
+
+                <hr style="margin:18px 0">
+
+                <h3 style="color:#111827">Resumo Financeiro</h3>
+                @php $fs = $registration->registration_data['financial_summary'] ?? null; @endphp
+                @if($fs)
+                    <p><strong>Total Membros:</strong> R$ {{ number_format($fs['total_member_fees'] ?? 0, 2, ',', '.') }}</p>
+                    <p><strong>Total Coreografias:</strong> R$ {{ number_format($fs['total_choreography_fees'] ?? 0, 2, ',', '.') }}</p>
+                    <p><strong>Taxas Extras:</strong> R$ {{ number_format($fs['total_extra_fees'] ?? 0, 2, ',', '.') }}</p>
+                    <p><strong>Total Geral:</strong> R$ {{ number_format($fs['total_general'] ?? 0, 2, ',', '.') }}</p>
+                @endif
+
+                <div class="cta-container">
+                    <a href="{{ url('/home') }}" class="cta-button">Acessar Painel</a>
+                </div>
             </div>
         </div>
         

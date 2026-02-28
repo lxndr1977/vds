@@ -21,4 +21,23 @@ class EditRegistration extends EditRecord
     {
         return true;
     }
+
+    protected function mutateFormDataBeforeFill(array $data): array
+    {
+        if ($this->record && $this->record->school) {
+            $data['school'] = $this->record->school->toArray();
+        }
+
+        return $data;
+    }
+
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        if (isset($data['school'])) {
+            $this->record->school?->update($data['school']);
+            unset($data['school']);
+        }
+
+        return $data;
+    }
 }

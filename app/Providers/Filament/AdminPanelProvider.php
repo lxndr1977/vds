@@ -17,6 +17,7 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class AdminPanelProvider extends PanelProvider
@@ -51,12 +52,22 @@ class AdminPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ])
-            ->colors(fn () => [
+            ->colors(fn() => [
                 'primary' => Schema::hasTable('system_configurations')
                     ? (SystemConfiguration::first()?->primary_color ?? '#b21653')
                     : '#b21653',
             ])
-            ->brandLogo(asset('logo-vds-2025-colorido.jpg'))
+            ->brandLogo(function () {
+                if (!Schema::hasTable('system_configurations')) {
+                    return asset('logo-vds-2025-colorido.jpg');
+                }
+
+                $config = SystemConfiguration::first();
+
+                return $config?->logo_path
+                    ? Storage::disk('public')->url($config->logo_path)
+                    : asset('logo-vds-2025-colorido.jpg');
+            })
             ->brandLogoHeight('2.5rem')
             ->favicon(asset('apple-touch-icon.png'))
             ->darkMode(false);

@@ -25,6 +25,7 @@ class SystemConfiguration extends Model
         'secondary_color',
         'text_color',
         'allow_edit_after_submit',
+        'notification_whatsapp',
         'notification_sender_email',
         'notification_cc_email',
     ];
@@ -57,16 +58,52 @@ class SystemConfiguration extends Model
             get: function (): bool {
                 $now = now();
 
-                if ($this->registration_start_date && $now->lt($this->registration_start_date)) {
+                $start = $this->registration_start_date ? $this->registration_start_date->startOfDay() : null;
+                $end = $this->registration_end_date ? $this->registration_end_date->endOfDay() : null;
+
+                if ($start && $now->lt($start)) {
                     return false;
                 }
 
-                if ($this->registration_end_date && $now->gt($this->registration_end_date)) {
+                if ($end && $now->gt($end)) {
                     return false;
                 }
 
                 return true;
             },
         );
+    }
+
+    /**
+     * Return the currently stored configuration (first record).
+     */
+    public static function current(): ?self
+    {
+        return static::first();
+    }
+
+    /**
+     * Accessor for full logo URL usable in views.
+     */
+    protected function logoUrl(): Attribute
+    {
+        return Attribute::make(
+            get: fn (): string => $this->computeLogoUrl(),
+        );
+    }
+
+    protected function computeLogoUrl(): string
+    {
+        $path = $this->logo_path;
+
+        if (! $path) {
+            return asset('logo-vds-2025-colorido.jpg');
+        }
+
+        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+            return $path;
+        }
+
+        return \Illuminate\Support\Facades\Storage::disk('public')->url($path);
     }
 }

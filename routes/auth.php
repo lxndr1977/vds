@@ -8,10 +8,9 @@ Route::middleware('guest')->group(function () {
     Volt::route('login', 'auth.login')
         ->name('login');
 
-    // DESATIVADO MANUALMENTE - Corrigir na proxima atualizacao para ocultar register se inscricoes estiverem encerradas
-
-    //  Volt::route('cadastre-se', 'auth.register')
-    //      ->name('register');
+     Volt::route('cadastre-se', 'auth.register')
+         ->middleware('registrations.open')
+         ->name('register');
 
     Volt::route('recuperar-senha', 'auth.forgot-password')
         ->name('password.request');

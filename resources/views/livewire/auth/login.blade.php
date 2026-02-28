@@ -126,12 +126,12 @@ new #[Layout('components.layouts.auth')] class extends Component {
         </form>
     </div>
 
-    {{-- @if (Route::has('register'))
+     @if (Route::has('register'))
         <div class="space-x-1 rtl:space-x-reverse text-center text-sm text-zinc-600 dark:text-zinc-400">
             {{ __('Don\'t have an account?') }}
              <x-mary-button link="{{route('register')}}" class="btn-primary btn-soft w-full mt-2" wire:navigate>
                 {{ __('Sign up') }}
             </x-mary-button>
         </div>
-    @endif --}}
+    @endif 
 </div>

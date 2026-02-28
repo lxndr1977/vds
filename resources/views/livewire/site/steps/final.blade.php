@@ -4,7 +4,8 @@
    <div class="bg-green-50 border border-green-100 text-green-900 rounded-lg shadow-md p-6 text-center mb-6">
       <div class="max-w-3xl  mx-auto">
          <x-mary-icon name="o-check-circle" class="w-12 h-12 mb-6" />
-         <h2 class="text-xl font-bold mb-4">Sua inscrição no Vem Dançar Sudamérica 2025 foi recebida com sucesso!</h2>
+         <h1 class="text-xl font-bold mb-4">{{ $systemConfig?->festival_name ?? config('app.name') }}</h1>
+         <h2 class="text-xl font-bold mb-4">Sua inscrição  foi recebida com sucesso!</h2>
          <p class="mb-2">Atualizada em {{ $registration->updated_at_brazilian }}</p>
          @if ($canEditAfterSubmission)
          <p class="mb-2">Se você identificar algum erro ou precisar corrigir alguma informação, basta clicar no botão "Editar Inscrição" e navegar entre as etapas para fazer as atualizações necessárias.</p>

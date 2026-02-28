@@ -12,6 +12,9 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->redirectGuestsTo(fn () => route('welcome'));
+        $middleware->alias([
+            'registrations.open' => \App\Http\Middleware\EnsureRegistrationsOpen::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

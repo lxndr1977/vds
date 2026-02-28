@@ -3,12 +3,12 @@
 namespace App\Filament\Resources\Registrations\RelationManagers;
 
 use App\Filament\Resources\Choreographies\ChoreographyResource;
+use App\Filament\Resources\Choreographies\Schemas\ChoreographyForm;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
-use Filament\Forms;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Tables;
@@ -16,19 +16,13 @@ use Filament\Tables\Table;
 
 class ChoreographiesRelationManager extends RelationManager
 {
-    protected static string $relationship = 'Choreographies';
+    protected static string $relationship = 'choreographies';
 
     protected static ?string $title = 'Coreografias';
 
     public function form(Schema $form): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->label('Nome')
-                    ->required()
-                    ->maxLength(255),
-            ]);
+        return ChoreographyForm::configure($form, hideSchool: true, schoolId: $this->getOwnerRecord()->school_id);
     }
 
     public function table(Table $table): Table
@@ -41,36 +35,40 @@ class ChoreographiesRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('name')
                     ->label('Nome')
                     ->sortable()
-                    ->searchable(),
+                    ->searchable()
+                    ->weight('bold'),
 
                 Tables\Columns\TextColumn::make('choreographyType.name')
                     ->label('Formação')
                     ->searchable()
                     ->sortable()
-                    ->badge(),
+                    ->badge()
+                    ->color('primary'),
 
-                Tables\Columns\TextColumn::make('name')
-                    ->label('Nome da Coreografia')
+                Tables\Columns\TextColumn::make('choreographyCategory.name')
+                    ->label('Categoria')
                     ->searchable()
-                    ->sortable()
-                    ->weight('medium')
-                    ->limit(30),
-
-                Tables\Columns\TextColumn::make('created_at')
-                    ->label('Criado em')
-                    ->dateTime('d/m/Y H:i')
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->label('Atualizado em')
-                    ->dateTime('d/m/Y H:i')
+                Tables\Columns\TextColumn::make('danceStyle.name')
+                    ->label('Gênero')
+                    ->searchable()
+                    ->sortable(),
+
+                Tables\Columns\TextColumn::make('duration')
+                    ->label('Duração')
                     ->sortable(),
             ])
             ->filters([
                 //
             ])
             ->headerActions([
-                CreateAction::make(),
+                CreateAction::make()
+                    ->mutateFormDataUsing(function (array $data): array {
+                        $data['school_id'] = $this->getOwnerRecord()->school_id;
+
+                        return $data;
+                    }),
             ])
             ->actions([
                 Action::make('edit')

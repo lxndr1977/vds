@@ -63,7 +63,7 @@ class RegistrationForm extends Component
     {
         $config = SystemConfiguration::first();
         $this->registrationsOpenToPublic = $config ? $config->registrations_open_to_public : true;
-        $this->canEditAfterSubmission = $config ? $config->can_edit_registration_after_submission : false;
+        $this->canEditAfterSubmission = $config ? ($config->allow_edit_after_submit ?? false) : false;
 
         // Garante que a escola do usuário autenticado seja carregada ou uma nova seja criada
         // Isso evita que um usuário veja os dados de outro

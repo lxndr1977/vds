@@ -3,12 +3,13 @@
    <div class="p-6">
       <div class=" md:block mb-6">
          <div class="md:h-10 xl:h-16 flex justify-center md:justify-start">
-            <img src="/images/logo-vds-2025.png" alt="Logo Vem Dançar Sudamérica" width="900" height="156"
+            <img src="{{ $systemConfig?->logo_url ?? asset('images/logo-vds-2025.png') }}"
+               alt="{{ $systemConfig?->festival_name ?? config('app.name') }}" width="900" height="156"
                class="max-h-10 xl:max-h-10 w-auto">
          </div>
       </div>
 
-      <h1 class="text-white text-sm font-bold mb-4 text-center md:text-start md:block mb-6 xl:mb-8">Inscrição VDS 2025
+      <h1 class="text-white text-sm font-bold mb-4 text-center md:text-start md:block mb-6 xl:mb-8">{{ $systemConfig?->festival_name ?? config('app.name') }}
       </h1>
 
       <div class="flex flex-row justify-around md:flex-col space-y-1 xl:space-y-8 text-white">

@@ -75,10 +75,26 @@ trait WithFinalStep
 
         // Tentativa de envio do email (fora do try-catch principal)
         if ($this->registration->school && $this->registration->school->user && $this->registration->school->user->email) {
-            // try {
+            $config = \App\Models\SystemConfiguration::current();
+
+            $mailable = new RegistrationFinished($this->registration);
+
+            // Use replyTo instead of from to avoid SMTP provider rejecting custom From addresses.
+            // If you really need to change the From header, ensure your SMTP provider allows sending
+            // from that address (SPF/DKIM/authorized sender). Reply-To will direct replies to the
+            // configured email without changing the From header used for SMTP.
+            if ($config?->notification_sender_email) {
+                $fromName = $config->festival_name ?? null;
+                $mailable->replyTo($config->notification_sender_email, $fromName);
+            }
+
+            // Add cc if provided
+            if ($config?->notification_cc_email) {
+                $mailable->cc($config->notification_cc_email);
+            }
+
             Mail::to($this->registration->school->user->email)
-                ->bcc('pereira.alexandre@gmail.com')
-                ->send(new RegistrationFinished($this->registration));
+                ->send($mailable);
 
             //  Mail::raw('Este é um e-mail de teste enviado pelo sistema.', function ($message) {
             //         $message->to('pereira.alexandre@gmail.com')
@@ -206,12 +222,19 @@ trait WithFinalStep
 
     public function getLinkPayment(): string
     {
-        if (! $this->school || ! $this->school->name) {
-            return 'https://wa.me/5551993120404'; // fallback
+        $config = \App\Models\SystemConfiguration::current();
+
+        $whatsapp = $config?->notification_whatsapp;
+
+        if (! $whatsapp) {
+            // fallback
+            $whatsapp = '5551993120404';
         }
 
-        return 'https://wa.me/5551993120404?text='.urlencode(
-            'Olá! Quero efetuar o pagamento da inscrição da(o) *'.$this->school->name.'* no Vem Dançar Sudamérica 2025.'
-        );
+        $number = preg_replace('/[^0-9]/', '', $whatsapp);
+
+        $text = 'Olá! Quero efetuar o pagamento da inscrição da(o) *'.$this->school->name.'* no '.($config?->festival_name ?? config('app.name'));
+
+        return 'https://wa.me/'.$number.'?text='.urlencode($text);
     }
 }
